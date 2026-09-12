@@ -2,56 +2,44 @@ import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Lock, Activity, Users } from 'lucide-react';
 import styles from './landing.module.css';
-import { publicNavigationConfig } from '@/lib/config/navigation';
 
 export default function Hero() {
-  const isPublicHealth = publicNavigationConfig.primaryAudience === "public-health";
-
   return (
     <section className={styles.heroSection}>
       <div className={styles.heroLeft}>
-        <p style={{ color: '#0d9488', fontWeight: 600, fontSize: '0.875rem', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '1rem' }}>
-          {isPublicHealth ? "AI-ASSISTED PUBLIC HEALTH COORDINATION" : "AI-ASSISTED RURAL CARE COORDINATION"}
+        <p style={{ color: '#6366f1', fontWeight: 600, fontSize: '0.875rem', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '1rem' }}>
+          NEXT-GEN AI-FIRST HEALTHCARE
         </p>
         <h1 className={styles.heroTitle}>
-          Care that reaches. Coordination that connects.
+          Triage intelligence. <br/> Seamless care.
         </h1>
         <p className={styles.heroSubtitle}>
-          CareSanchaar helps frontline workers, Medical Officers, facilities, and district teams coordinate care from community intake to referral, queue support, and follow-up—even in low-connectivity settings.
+          DiagnoVerse AI leverages multimodal generative models to analyze medical records instantly, empowering clinicians with structured insights and giving patients zero-friction triage support.
         </p>
         <div className={styles.heroActions} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1.5rem' }}>
-          {publicNavigationConfig.showPatientEntry && (
-            <Link href="/en/auth/patient" className={styles.btnPrimary} style={{ background: 'transparent', color: '#64748b', border: '1px solid #cbd5e1' }}>
-              Patient Portal
-            </Link>
-          )}
-          {publicNavigationConfig.showDistrictEntry && (
-            <Link href="/en/auth/district" className={styles.btnPrimary} style={{ background: '#0f172a' }}>
-              District Command
-            </Link>
-          )}
-          {publicNavigationConfig.showWorkerEntry && (
-            <Link href="/en/auth/worker" className={styles.btnPrimary} style={{ background: 'transparent', border: '1px solid #0d9488', color: '#0d9488' }}>
-              ASHA Worker Portal
-            </Link>
-          )}
+          <Link href="/auth/login" className={styles.btnPrimary} style={{ background: '#6366f1', color: '#fff', border: 'none' }}>
+            Clinician Portal
+          </Link>
+          <Link href="/auth/login" className={styles.btnPrimary} style={{ background: 'transparent', color: '#64748b', border: '1px solid #cbd5e1' }}>
+            Patient Portal
+          </Link>
         </div>
         <div className={styles.trustStrip}>
           <div className={styles.trustItem}>
-            <ShieldCheck size={18} color="#0d9488" />
-            <span>Protocol-Guided</span>
+            <ShieldCheck size={18} color="#6366f1" />
+            <span>AI-Guided</span>
           </div>
           <div className={styles.trustItem}>
-            <Lock size={18} color="#0d9488" />
-            <span>Consent-Aware Records</span>
+            <Lock size={18} color="#6366f1" />
+            <span>HIPAA Compliant</span>
           </div>
           <div className={styles.trustItem}>
-            <Activity size={18} color="#0d9488" />
-            <span>Trackable Referrals</span>
+            <Activity size={18} color="#6366f1" />
+            <span>Real-time Triage</span>
           </div>
           <div className={styles.trustItem}>
-            <Users size={18} color="#0d9488" />
-            <span>Built for Rural Care</span>
+            <Users size={18} color="#6366f1" />
+            <span>B2B & B2C</span>
           </div>
         </div>
       </div>
@@ -60,56 +48,49 @@ export default function Hero() {
           <div className={styles.phoneNotch}></div>
           <div className={styles.workflowApp}>
             <div className={styles.workflowHeader}>
-              <div className={styles.workflowBrand}>CareSanchaar Field</div>
+              <div className={styles.workflowBrand}>DiagnoVerse AI</div>
               <div className={styles.offlineIndicator}>
-                <span className={styles.offlineDot}></span>
-                Offline Mode
+                <span className={styles.offlineDot} style={{ background: '#22c55e' }}></span>
+                System Online
               </div>
             </div>
             <div className={styles.workflowContent}>
 
               <div className={styles.workflowCard}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.caseId}>Case P-042</span>
-                  <span className={styles.badgeYellow}>MO Review</span>
+                  <span className={styles.caseId}>Scan Uploaded</span>
+                  <span className={styles.badgeYellow} style={{ background: '#e0e7ff', color: '#4f46e5' }}>AI Processing</span>
                 </div>
                 <div className={styles.cardBody}>
                   <div className={styles.cardRow}>
-                    <ShieldCheck size={14} color="#0d9488" />
-                    <span>Consent Recorded</span>
+                    <ShieldCheck size={14} color="#6366f1" />
+                    <span>Analyzing Anomaly</span>
                   </div>
                   <div className={styles.cardRow}>
-                    <Activity size={14} color="#0d9488" />
-                    <span>Offline Intake Saved</span>
+                    <Activity size={14} color="#6366f1" />
+                    <span>Extracting Findings</span>
                   </div>
                 </div>
               </div>
 
               <div className={styles.workflowCard}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.caseId}>Referral Assigned</span>
-                  <span className={styles.badgeGreen}>Active</span>
+                  <span className={styles.caseId}>Triage Complete</span>
+                  <span className={styles.badgeGreen}>Reviewed</span>
                 </div>
                 <div className={styles.cardBody}>
                   <div className={styles.cardRow}>
-                    <strong>Facility:</strong> PHC Rural Center
+                    <strong>Confidence:</strong> 92%
                   </div>
                   <div className={styles.cardRow}>
-                    <strong>Token:</strong> A-042
+                    <strong>Clinician:</strong> Dr. Smith
                   </div>
-                </div>
-              </div>
-
-              <div className={styles.workflowCard}>
-                <div className={styles.cardHeader}>
-                  <span className={styles.caseId}>Follow-up Due</span>
-                  <span className={styles.badgeGray}>In 3 Days</span>
                 </div>
               </div>
 
             </div>
             <div className={styles.workflowFooter}>
-              Syncs when online...
+              Powered by Multimodal GenAI
             </div>
           </div>
         </div>

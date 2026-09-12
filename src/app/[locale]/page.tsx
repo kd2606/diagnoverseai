@@ -25,10 +25,6 @@ export default function LandingPage({ params: { locale } }: { params: { locale: 
 
       {/* Hero Section */}
       <section className="py-20 px-6 text-center max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
-          <Brain className="h-4 w-4" />
-          Powered by Gemini AI
-        </div>
         <h1 className="text-5xl font-extrabold tracking-tight mb-6 leading-tight">
           Multimodal Healthcare Intelligence <br/> for the Modern Era
         </h1>
@@ -54,7 +50,7 @@ export default function LandingPage({ params: { locale } }: { params: { locale: 
               <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
                 <Brain className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Genkit/Gemini AI</h3>
+              <h3 className="text-xl font-bold mb-2">Multimodal AI Models</h3>
               <p className="text-slate-600">Advanced multimodal models that analyze text, images, and patient history for accurate insights.</p>
             </div>
             <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">

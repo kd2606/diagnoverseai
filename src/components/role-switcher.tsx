@@ -32,8 +32,8 @@ export function RoleSwitcher() {
   const locale = (parts.length > 1 && parts[1].length === 2) ? parts[1] : 'en';
 
   const roles = [
-    { label: "ASHA Worker (B2B)", path: `/${locale}/dashboard/worker`, icon: Activity, color: "text-emerald-400" },
-    { label: "DHO District", path: `/${locale}/dashboard/district`, icon: Building2, color: "text-amber-400" },
+    { label: "Patient Portal", path: `/${locale}/dashboard/patient`, icon: User, color: "text-emerald-400" },
+    { label: "Clinician Portal", path: `/${locale}/dashboard/doctor`, icon: Activity, color: "text-amber-400" },
   ];
 
   return (

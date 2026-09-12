@@ -15,9 +15,9 @@ const notoSansDevanagari = Noto_Sans_Devanagari({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://diagnoverse.ai"),
-  title: "CareSanchaar - Care that reaches. Coordination that connects.",
+  title: "DiagnoVerse AI - Next Generation AI-First Healthcare",
   description:
-    "CareSanchaar is an offline-first public-health care-coordination platform that connects ASHA workers, Medical Officers, healthcare facilities, and district teams.",
+    "DiagnoVerse AI is an advanced SaaS platform bringing multimodal AI triage and seamless patient-clinician experiences to modern healthcare.",
   icons: {
     icon: "/icon.svg",
   },
@@ -39,17 +39,17 @@ export default function RootLayout({
     "@graph": [
       {
         "@type": "Organization",
-        name: "CareSanchaar",
+        name: "DiagnoVerse AI",
         url: "https://diagnoverse.ai",
         logo: "https://diagnoverse.ai/icon.svg",
         description:
-          "CareSanchaar is an offline-first public-health care-coordination platform that connects ASHA workers, Medical Officers, healthcare facilities, and district teams across intake, triage, referral, queue, and follow-up workflows.",
+          "DiagnoVerse AI is an advanced SaaS platform bringing multimodal AI triage and seamless patient-clinician experiences to modern healthcare.",
       },
       {
         "@type": "MedicalWebPage",
-        name: "CareSanchaar - Care that reaches. Coordination that connects.",
+        name: "DiagnoVerse AI - Next Generation AI-First Healthcare",
         description:
-          "CareSanchaar is an offline-first public-health care-coordination platform that connects ASHA workers, Medical Officers, healthcare facilities, and district teams across intake, triage, referral, queue, and follow-up workflows.",
+          "DiagnoVerse AI is an advanced SaaS platform bringing multimodal AI triage and seamless patient-clinician experiences to modern healthcare.",
         url: "https://diagnoverse.ai",
       },
     ],
