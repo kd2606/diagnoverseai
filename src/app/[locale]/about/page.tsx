@@ -1,29 +1,23 @@
-import React from 'react';
-
 export default function AboutPage() {
-    return (
-        <div className="container mx-auto max-w-4xl py-16 px-4 space-y-8 text-foreground">
-            <h1 className="text-4xl font-extrabold tracking-tight leading-tight border-b border-border pb-4">
-                About CareSanchaar
-            </h1>
-            
-            <p className="text-lg leading-relaxed text-muted-foreground">
-                In rural and underserved communities, patients often travel long distances only to face fragmented records and disconnected care. CareSanchaar is designed to solve this by providing an offline-first workflow, protocol-guided triage, and secure QR handoff. We connect ASHA workers, Medical Officers, healthcare facilities, and district teams into a single, coordinated care continuity network.
-            </p>
-
-            <h2 className="text-2xl font-bold mt-8">Our Approach</h2>
-            <ul className="list-disc list-inside text-lg leading-relaxed text-muted-foreground space-y-2">
-                <li><strong>Offline-First Workflow:</strong> Enabling frontline workers to capture structured information even in the most remote areas with zero connectivity.</li>
-                <li><strong>Protocol-Guided Triage:</strong> Aiding workers with risk review systems to flag urgent cases while preserving clinical judgment.</li>
-                <li><strong>Secure QR Handoff:</strong> Ensuring privacy and security by replacing paper slips with encrypted QR tokens.</li>
-            </ul>
-
-            <div className="mt-12 p-6 bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500 rounded-r-md">
-                <h3 className="text-lg font-bold text-amber-900 dark:text-amber-400 mb-2">Prototype Status Disclosure</h3>
-                <p className="text-amber-800 dark:text-amber-500/90">
-                    CareSanchaar is currently a production-oriented public-health platform foundation demonstrated with synthetic/staging data.
-                </p>
-            </div>
+  return (
+    <div className="min-h-screen bg-white p-8">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold mb-6 text-blue-900">About DiagnoVerse AI</h1>
+        <p className="text-lg text-slate-700 mb-6">
+          At DiagnoVerse AI, our mission is to revolutionize healthcare by bridging the gap between advanced artificial intelligence and clinical practice. 
+        </p>
+        <p className="text-lg text-slate-700 mb-6">
+          Using multimodal Gemini AI models, we empower clinicians with unparalleled insights, analyzing everything from medical imagery to unstructured patient histories in seconds. Our B2B/B2C SaaS platform ensures secure, role-based access for both doctors and patients, maintaining the highest standards of data privacy and clinical accuracy.
+        </p>
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold mb-4">Our Vision</h2>
+          <ul className="list-disc pl-6 space-y-2 text-slate-700">
+            <li>Democratize access to specialist-level diagnostics</li>
+            <li>Reduce diagnostic latency through instant multimodal analysis</li>
+            <li>Provide a seamless, unified platform for healthcare providers and patients</li>
+          </ul>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

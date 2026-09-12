@@ -1,274 +1,364 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useRef } from "react";
-import { useTranslations } from "next-intl";
-import { 
-    User, Settings, Plus, Activity, Brain, HeartPulse, Hospital, 
-    FileText, ChevronRight, LogOut, Smartphone, X, LayoutDashboard, 
-    ShieldCheck, Database, Zap, Bell, Menu
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useUser } from "@/firebase/auth/useUser";
-import { useRouter, useParams } from "next/navigation";
-import { 
-    collection, 
-    query, 
-    where, 
-    orderBy, 
-    limit, 
-    onSnapshot,
-    doc,
-    getDoc
-} from "firebase/firestore";
-import { db, auth } from "@/firebase/clientApp";
-import { AddVitalsModal } from "@/components/dashboard/add-vitals-modal";
-import { RuralHospitalList, MedicinePriceCard, FamilyCardsList, GovSchemesCard, VoiceAssistantButton } from "@/components/dashboard/rural-features";
-import { ExpandableCard } from "@/components/dashboard/expandable-card";
-import { UserProfileModal } from "@/components/dashboard/user-profile";
-import Link from "next/link";
-import { signOut } from "firebase/auth";
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase/client';
+import { Upload, FileText, PhoneCall, Loader2, WifiOff, CloudSync } from 'lucide-react';
+import { addToQueue, flushQueue, getQueueCount } from '@/lib/offlineQueue';
+import VoiceCallUI from '@/components/VoiceCallUI';
 
-export default function DashboardPage() {
-    const { user, loading } = useUser();
-    const router = useRouter();
-    const params = useParams();
-    const locale = params.locale as string;
-    const [scrolled, setScrolled] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    
-    const t = useTranslations("dashboard");
-    const tNav = useTranslations("nav");
-    
-    const [vitals, setVitals] = useState<any>(null);
-    const [vitalsHistory, setVitalsHistory] = useState<any[]>([]);
+export default function PatientDashboard() {
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push(`/${locale}/auth/patient`);
-        }
-    }, [user, loading, router, locale]);
+  const [isOffline, setIsOffline] = useState(false);
+  const [pendingSyncCount, setPendingSyncCount] = useState(0);
+  const [isVoiceCallActive, setIsVoiceCallActive] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    // Real-time Vitals Subscription
-    useEffect(() => {
-        if (!user) return;
-
-        const vitalsQuery = query(
-            collection(db, "users", user.uid, "vitals"),
-            orderBy("updatedAt", "desc"),
-            limit(10)
-        );
-
-        const unsubscribe = onSnapshot(vitalsQuery, (snapshot) => {
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            if (data.length > 0) {
-                setVitals(data[0]);
-                setVitalsHistory(data);
-            }
-        });
-
-        return () => unsubscribe();
-    }, [user]);
-
-    const handleLogout = async () => {
-        await signOut(auth);
-        router.push(`/${locale}/auth/patient`);
+  useEffect(() => {
+    const updateQueueCount = async () => {
+      try {
+        const count = await getQueueCount();
+        setPendingSyncCount(count);
+      } catch (e) {
+        // Ignored
+      }
     };
 
-    if (loading || !user) {
-        return (
-            <div className="min-h-screen bg-[#FAFAF9] dark:bg-[#0B1120] flex items-center justify-center">
-                <div className="relative">
-                    <div className="h-24 w-24 rounded-full border-t-2 border-[#0D9488] dark:border-[#14B8A6] animate-spin" />
-                    <HeartPulse className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-[#0D9488] dark:text-[#14B8A6] animate-pulse" />
-                </div>
-            </div>
-        );
+    if (typeof window !== 'undefined') {
+      setIsOffline(!navigator.onLine);
+      updateQueueCount();
     }
 
-    const navItems = [
-        { icon: LayoutDashboard, label: tNav("home"), active: true, path: `/${locale}/dashboard` },
-        { icon: Activity, label: tNav("symptomChecker"), path: `/${locale}/symptom-checker` },
-        { icon: ShieldCheck, label: tNav("govtSchemes"), path: `/${locale}/govt-schemes` },
-        { icon: Database, label: tNav("healthRecords"), path: `/${locale}/health-records` },
-        { icon: Zap, label: tNav("trends"), path: `/${locale}/health-trends` },
-    ];
+    const handleOnline = async () => {
+      setIsOffline(false);
+      setSuccessMsg("Back online! Syncing pending uploads...");
+      await flushQueue();
+      await updateQueueCount();
+      setSuccessMsg("Sync complete!");
+      setTimeout(() => setSuccessMsg(null), 3000);
+    };
 
-    return (
-        <div className="min-h-screen bg-[#FAFAF9] dark:bg-[#0B1120] text-muted-foreground dark:text-muted-foreground font-sans flex overflow-hidden">
-            
-            {/* Sidebar Navigation */}
-            <aside className={`
-                fixed inset-y-0 left-0 z-50 w-24 bg-[#0B1120] dark:bg-[#0B1120]/80 backdrop-blur-3xl border-r border-border dark:border-border 
-                flex flex-col items-center py-10 transition-transform duration-500 ease-in-out
-                md:relative md:translate-x-0
-                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-            `}>
-                <div className="mb-12">
-                    <Link href={`/${locale}/dashboard`}>
-                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-indigo-600 flex items-center justify-center emerald-glow group cursor-pointer transition-transform duration-500 hover:rotate-12">
-                            <HeartPulse className="w-6 h-6 text-white" />
-                        </div>
-                    </Link>
-                </div>
-                
-                <nav className="flex flex-col gap-8 flex-1">
-                    {navItems.map((item, index) => (
-                        <Link key={index} href={item.path || "#"} className="group relative" onClick={() => setIsSidebarOpen(false)}>
-                            <item.icon className={`w-6 h-6 transition-all duration-300 ${item.active ? 'text-[#0D9488] dark:text-[#14B8A6]' : 'text-muted-foreground dark:text-muted-foreground group-hover:text-muted-foreground dark:group-hover:text-muted-foreground'}`} />
-                            {item.active && <div className="absolute -left-10 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0D9488] dark:bg-[#14B8A6] rounded-r-full shadow-[0_0_15px_rgba(13,148,136,0.5)] dark:shadow-[0_0_15px_rgba(20,184,166,0.5)]" />}
-                            <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-[#0B1120] dark:bg-secondary text-muted-foreground dark:text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase tracking-tighter z-50 shadow-xl border border-border dark:border-border">
-                                {item.label}
-                            </span>
-                        </Link>
-                    ))}
-                </nav>
+    const handleOffline = () => {
+      setIsOffline(true);
+    };
 
-                <div className="flex flex-col gap-6 pt-8 border-t border-border dark:border-border w-full items-center">
-                    <UserProfileModal>
-                        <Settings className="w-6 h-6 text-muted-foreground hover:text-muted-foreground dark:text-muted-foreground dark:hover:text-muted-foreground cursor-pointer transition-colors" />
-                    </UserProfileModal>
-                    <UserProfileModal>
-                        <button className="h-10 w-10 rounded-full border border-border dark:border-border overflow-hidden hover:border-[#0D9488]/50 dark:hover:border-[#14B8A6]/50 transition-all">
-                            {user.photoURL ? (
-                                <img src={user.photoURL} alt="P" className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="w-full h-full bg-secondary dark:bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground dark:text-muted-foreground">U</div>
-                            )}
-                        </button>
-                    </UserProfileModal>
-                    <button onClick={handleLogout} className="p-2 text-muted-foreground dark:text-muted-foreground hover:text-red-500 transition-colors">
-                        <LogOut className="w-5 h-5" />
-                    </button>
-                </div>
-            </aside>
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
-            {/* Mobile Overlay */}
-            <AnimatePresence>
-                {isSidebarOpen && (
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setIsSidebarOpen(false)}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-                    />
-                )}
-            </AnimatePresence>
+    if (typeof window !== 'undefined' && navigator.onLine) {
+       handleOnline();
+    }
 
-            {/* Main Content Area */}
-            <main className="flex-1 h-screen overflow-y-auto relative scrollbar-hide">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-12">
-                    
-                    {/* Top Command Bar */}
-                    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
-                        <div className="flex items-center gap-6">
-                            <button 
-                                onClick={() => setIsSidebarOpen(true)}
-                                className="p-3 bg-[#0B1120] dark:bg-secondary border border-border dark:border-border rounded-xl md:hidden hover:bg-slate-50 dark:hover:bg-secondary/80 transition-all"
-                            >
-                                <Menu className="w-5 h-5" />
-                            </button>
-                            <div className="space-y-1">
-                                <p className="text-[10px] text-[#0D9488]/80 dark:text-[#14B8A6]/80 font-sans font-bold tracking-[0.3em] uppercase">
-                                    {t("welcome")}
-                                </p>
-                                <h1 className="text-4xl font-heading font-bold tracking-tighter text-[#0F172A] dark:text-[#F8FAFC]">
-                                    {t("health")} <span className="text-muted-foreground dark:text-muted-foreground">{t("dashboardSpan")}</span>
-                                </h1>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3 self-end sm:self-auto">
-                            <div className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0B1120] dark:bg-secondary border border-border dark:border-border">
-                                <div className="h-2 w-2 rounded-full bg-[#0D9488] dark:bg-[#14B8A6] animate-pulse" />
-                                <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-muted-foreground dark:text-muted-foreground">{t("systemOnline")}</span>
-                            </div>
-                            <AddVitalsModal />
-                            <VoiceAssistantButton />
-                        </div>
-                    </header>
+    // Polling fallback to keep UI in sync if another tab modifies IDB
+    const interval = setInterval(updateQueueCount, 5000);
 
-                    {/* Layout Grid */}
-                    <div className="grid grid-cols-12 gap-8">
-                        
-                        {/* Hero Section: AI Diagnostic Vector */}
-                        <section className="col-span-12 group relative rounded-[24px] border border-border dark:border-border bg-[#0B1120] dark:bg-[#1E293B] p-12 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none">
-                            
-                            <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center">
-                                <div className="space-y-10">
-                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0D9488]/10 dark:bg-[#14B8A6]/10 border border-[#0D9488]/20 dark:border-[#14B8A6]/20">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-[#0D9488] dark:bg-[#14B8A6] animate-pulse" />
-                                        <span className="text-[10px] font-bold text-[#0D9488] dark:text-[#14B8A6] uppercase tracking-[0.2em]">{t("aiHelperReady")}</span>
-                                    </div>
-                                    
-                                    <div className="space-y-4">
-                                        <h2 className="text-5xl md:text-6xl font-heading font-bold tracking-tight leading-tight text-muted-foreground dark:text-white">
-                                            {t("quick")} <br/> 
-                                            <span className="text-[#0D9488] dark:text-[#14B8A6]">{t("healthCheck")}</span>
-                                        </h2>
-                                        <p className="text-xl text-muted-foreground dark:text-muted-foreground font-medium leading-relaxed max-w-lg">
-                                            {t("heroDesc")}
-                                        </p>
-                                    </div>
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      clearInterval(interval);
+    };
+  }, []);
 
-                                    <div className="flex flex-wrap items-center gap-6 pt-4">
-                                        <Link href={`/${locale}/skin-scan`}>
-                                            <button className="h-16 px-10 rounded-[16px] bg-[#0D9488] text-white dark:bg-[#14B8A6] dark:text-muted-foreground font-bold flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-[#0D9488]/20 dark:shadow-[#14B8A6]/20 group">
-                                                {t("startScan")}
-                                                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                            </button>
-                                        </Link>
-                                        <div className="flex items-center gap-4 px-6 h-16 rounded-[16px] border border-border dark:border-border bg-white/50 dark:bg-[#1E293B]/50 backdrop-blur-xl">
-                                            <div className="flex -space-x-3">
-                                                {[1, 2, 3].map(i => (
-                                                    <div key={i} className="h-8 w-8 rounded-full border-2 border-[#FAFAF9] dark:border-[#0B1120] bg-secondary dark:bg-secondary flex items-center justify-center text-[8px] font-bold">U{i}</div>
-                                                ))}
-                                            </div>
-                                            <span className="text-xs font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-widest">{t("connectDoctors")}</span>
-                                        </div>
-                                    </div>
-                                </div>
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
 
-                                <div className="hidden lg:flex items-center justify-center relative">
-                                    <div className="relative w-72 h-72 rounded-full bg-[#0D9488]/5 dark:bg-[#14B8A6]/5 flex items-center justify-center">
-                                        <div className="absolute inset-0 rounded-full border border-[#0D9488]/10 dark:border-[#14B8A6]/10 animate-[spin_15s_linear_infinite]"></div>
-                                        <div className="absolute inset-8 rounded-full border border-dashed border-[#0D9488]/20 dark:border-[#14B8A6]/20 animate-[spin_25s_linear_reverse_infinite]"></div>
-                                        <div className="w-32 h-32 rounded-full bg-[#0B1120] dark:bg-[#1E293B] shadow-[0_0_40px_rgba(13,148,136,0.15)] dark:shadow-[0_0_40px_rgba(20,184,166,0.1)] flex items-center justify-center relative z-10 transition-transform duration-700 hover:scale-110">
-                                            <Activity className="w-14 h-14 text-[#0D9488] dark:text-[#14B8A6]" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+  const compressImage = (file: File): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        const canvas = document.createElement('canvas');
+        const MAX_DIM = 1200;
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > height) {
+          if (width > MAX_DIM) {
+            height *= MAX_DIM / width;
+            width = MAX_DIM;
+          }
+        } else {
+          if (height > MAX_DIM) {
+            width *= MAX_DIM / height;
+            height = MAX_DIM;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject(new Error("Canvas not supported"));
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Blob conversion failed"));
+          },
+          'image/webp',
+          0.7
+        );
+      };
+      
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Image load failed"));
+      };
+      
+      img.src = objectUrl;
+    });
+  };
 
+  const handleUpload = async () => {
+    if (!file) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    setSuccessMsg(null);
 
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) throw new Error("Not authenticated");
+      const userId = session.user.id;
 
-                        {/* Feature Components */}
-                        <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-                            <div className="xl:col-span-1"><ExpandableCard><MedicinePriceCard /></ExpandableCard></div>
-                            <div className="xl:col-span-1"><ExpandableCard><FamilyCardsList /></ExpandableCard></div>
-                            <div className="xl:col-span-1"><ExpandableCard><GovSchemesCard /></ExpandableCard></div>
-                            <div className="xl:col-span-1"><ExpandableCard><RuralHospitalList /></ExpandableCard></div>
-                        </div>
+      // 1. Compress image client-side to save bandwidth
+      const compressedBlob = await compressImage(file);
+      const recordId = crypto.randomUUID();
+      const storagePath = `${userId}/${recordId}/scan.webp`;
 
-                    </div>
-                    
-                    {/* Footer System Status */}
-                    <footer className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 opacity-30">
-                        <div className="flex items-center gap-6">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.3em]">{t("version")}</span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.3em]">{t("locationActive")}</span>
-                        </div>
-                        <p className="text-[10px] font-bold">{t("copyright")}</p>
-                    </footer>
+      if (isOffline || !navigator.onLine) {
+        // Offline Flow: Add to IndexedDB
+        await addToQueue(recordId, compressedBlob, storagePath, userId, file.name);
+        const count = await getQueueCount();
+        setPendingSyncCount(count);
+        setSuccessMsg("Saved offline. Will sync automatically when connection returns.");
+        setFile(null); // Reset file
+        setLoading(false);
+        return;
+      }
 
-                </div>
-            </main>
+      // Online Flow
+      // 2. Insert DB record to establish ownership and permissions
+      const { error: dbError } = await supabase
+        .from('medical_records')
+        .insert({
+          id: recordId,
+          patient_id: userId,
+          title: file.name || 'Uploaded Scan',
+          document_type: 'xray',
+          storage_path: storagePath
+        });
+
+      if (dbError) throw new Error("Failed to save database record: " + dbError.message);
+
+      // 3. Upload compressed WebP to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('medical-records')
+        .upload(storagePath, compressedBlob, { contentType: 'image/webp' });
+
+      if (uploadError) throw new Error("Failed to upload image: " + uploadError.message);
+
+      // 4. Generate signed URL for Genkit API
+      const { data: signedData, error: signError } = await supabase.storage
+        .from('medical-records')
+        .createSignedUrl(storagePath, 3600);
+
+      if (signError || !signedData) throw new Error("Failed to generate signed URL");
+
+      // 5. Call Genkit AI analysis endpoint
+      const res = await fetch('/api/ai/analyze-scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          record_id: recordId,
+          image_url: signedData.signedUrl
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "AI Analysis failed");
+
+      setResult(data.data);
+      setFile(null); // Reset after successful online upload
+
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0B1120] text-gray-100 p-6 font-sans">
+      <header className="mb-8 flex justify-between items-center max-w-6xl mx-auto">
+        <div>
+          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+            Patient Dashboard
+            {isOffline && (
+              <span className="flex items-center gap-1 text-xs bg-amber-900/50 text-amber-500 px-3 py-1 rounded-full border border-amber-500/30">
+                <WifiOff size={14} /> Offline Mode
+              </span>
+            )}
+            {!isOffline && pendingSyncCount > 0 && (
+              <span className="flex items-center gap-1 text-xs bg-blue-900/50 text-blue-400 px-3 py-1 rounded-full border border-blue-500/30 animate-pulse">
+                <CloudSync size={14} /> Syncing {pendingSyncCount} record(s)...
+              </span>
+            )}
+          </h1>
+          <p className="text-gray-400 mt-2">Upload your scans for AI analysis</p>
         </div>
-    );
+        <button 
+          onClick={() => setIsVoiceCallActive(true)}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-blue-500/20">
+          <PhoneCall size={20} />
+          Voice Assistant (Call Now)
+        </button>
+      </header>
+
+      {isVoiceCallActive && (
+        <VoiceCallUI onClose={() => setIsVoiceCallActive(false)} />
+      )}
+
+      <main className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <section className="bg-[#1E293B] rounded-xl p-6 shadow-xl border border-slate-700">
+          <h2 className="text-xl font-semibold mb-4 text-white flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Upload size={20} className="text-blue-400" />
+              Upload Medical Record
+            </div>
+            {pendingSyncCount > 0 && (
+              <span className="text-sm font-normal text-amber-500 bg-amber-500/10 px-2 py-1 rounded">
+                {pendingSyncCount} pending upload(s)
+              </span>
+            )}
+          </h2>
+          
+          <div className="border-2 border-dashed border-slate-600 rounded-xl p-8 text-center bg-[#0f172a] hover:border-blue-500 transition-colors">
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleFileChange}
+              className="block w-full text-sm text-slate-400
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-600 file:text-white
+                hover:file:bg-blue-700
+                cursor-pointer"
+            />
+            {file && (
+              <p className="mt-4 text-sm text-emerald-400 font-medium truncate">Selected: {file.name}</p>
+            )}
+          </div>
+
+          <button 
+            onClick={handleUpload}
+            disabled={!file || loading}
+            className="w-full mt-6 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-colors"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={20} />
+                Processing...
+              </>
+            ) : isOffline ? (
+              'Save Offline (Queue Sync)'
+            ) : (
+              'Analyze with Genkit AI'
+            )}
+          </button>
+
+          {successMsg && (
+            <div className="mt-4 p-4 bg-emerald-900/30 border border-emerald-500/30 text-emerald-300 rounded-lg text-sm flex items-center gap-2">
+              <CloudSync size={16} />
+              {successMsg}
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-4 p-4 bg-red-900/50 border border-red-500/50 text-red-200 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+        </section>
+
+        <section className="bg-[#1E293B] rounded-xl p-6 shadow-xl border border-slate-700">
+          <h2 className="text-xl font-semibold mb-4 text-white flex items-center gap-2">
+            <FileText size={20} className="text-purple-400" />
+            AI Analysis Results
+          </h2>
+          
+          {!result && !loading && (
+            <div className="h-48 flex items-center justify-center text-slate-500 border border-slate-700 border-dashed rounded-lg bg-[#0f172a]">
+              {isOffline 
+                ? "You are currently offline. Analysis results will be available after syncing." 
+                : "No analysis results yet. Upload a scan to begin."}
+            </div>
+          )}
+
+          {loading && (
+            <div className="h-48 flex flex-col items-center justify-center text-slate-400 space-y-4 bg-[#0f172a] rounded-lg border border-slate-700">
+              <Loader2 className="animate-spin text-blue-500" size={32} />
+              <p className="animate-pulse">
+                {isOffline ? "Saving record offline..." : "Gemini 1.5 Flash is analyzing your record..."}
+              </p>
+            </div>
+          )}
+
+          {result && (
+            <div className="space-y-6 animate-in fade-in duration-500">
+              <div className="bg-[#0f172a] p-4 rounded-lg border border-slate-700">
+                <h3 className="text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Clinical Summary</h3>
+                <p className="text-white text-lg leading-relaxed">{result.clinical_summary}</p>
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider">Findings</h3>
+                <ul className="space-y-2">
+                  {result.findings?.map((finding: string, i: number) => (
+                    <li key={i} className="flex gap-2 text-slate-300">
+                      <span className="text-blue-400 mt-1">•</span>
+                      {finding}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider">Differential Diagnosis</h3>
+                <div className="flex flex-wrap gap-2">
+                  {result.differential_diagnosis?.map((dx: string, i: number) => (
+                    <span key={i} className="px-3 py-1 bg-purple-900/40 text-purple-200 border border-purple-500/30 rounded-full text-sm">
+                      {dx}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-4 border-t border-slate-700">
+                <span className="text-slate-400 text-sm">Confidence Score:</span>
+                <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-emerald-500 rounded-full transition-all duration-1000 ease-out" 
+                    style={{ width: `${(result.confidence_score || 0) * 100}%` }}
+                  />
+                </div>
+                <span className="text-emerald-400 font-medium">
+                  {Math.round((result.confidence_score || 0) * 100)}%
+                </span>
+              </div>
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
 }

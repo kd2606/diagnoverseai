@@ -8,7 +8,13 @@ import { FirebaseProvider } from "@/firebase/provider";
 import { Toaster } from "@/components/ui/sonner";
 import { PatientLayoutWrapper } from "@/components/patient-layout-wrapper";
 import { RoleSwitcher } from "@/components/role-switcher";
+import { Metadata } from "next";
 import "../globals.css";
+
+export const metadata: Metadata = {
+    title: "DiagnoVerse AI | Multimodal Healthcare Intelligence",
+    description: "Multimodal Healthcare Intelligence for the Modern Era",
+};
 
 const plusJakartaSans = Plus_Jakarta_Sans({
     variable: "--font-plus-jakarta-sans",
