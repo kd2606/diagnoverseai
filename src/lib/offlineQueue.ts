@@ -1,5 +1,6 @@
 import { openDB, DBSchema } from 'idb';
 import { supabase } from '@/lib/supabase/client';
+import * as tus from 'tus-js-client';
 
 interface DiagnoVerseDBSchema extends DBSchema {
   syncQueue: {
@@ -52,6 +53,9 @@ export async function flushQueue(): Promise<void> {
 
   if (allItems.length === 0) return;
 
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return;
+
   for (const item of allItems) {
     try {
       // 1. Insert into DB (Idempotent: ignore duplicate key error if already inserted)
@@ -70,15 +74,33 @@ export async function flushQueue(): Promise<void> {
         continue;
       }
 
-      // 2. Upload to Storage
-      const { error: uploadError } = await supabase.storage
-        .from('medical-records')
-        .upload(item.storagePath, item.blob, { contentType: 'image/webp', upsert: true });
+      // 2. Upload to Storage via TUS resumable uploads with exponential backoff
+      await new Promise<void>((resolve, reject) => {
+        const upload = new tus.Upload(item.blob, {
+          endpoint: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/upload/resumable`,
+          retryDelays: [2000, 4000, 8000, 16000], // Exponential backoff
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            'x-upsert': 'true',
+          },
+          uploadDataDuringCreation: true,
+          metadata: {
+            bucketName: 'medical-records',
+            objectName: item.storagePath,
+            contentType: 'image/webp',
+          },
+          chunkSize: 6 * 1024 * 1024, // 6MB chunking
+          onError: (error) => reject(error),
+          onSuccess: () => resolve(),
+        });
 
-      if (uploadError) {
-        console.error("Flush Upload Error:", uploadError);
-        continue;
-      }
+        upload.findPreviousUploads().then((previousUploads) => {
+          if (previousUploads.length) {
+            upload.resumeFromPreviousUpload(previousUploads[0]);
+          }
+          upload.start();
+        }).catch(reject);
+      });
 
       // 3. Generate Signed URL
       const { data: signedData, error: signError } = await supabase.storage

@@ -74,7 +74,6 @@ export default function PatientDashboard() {
       const objectUrl = URL.createObjectURL(file);
       
       img.onload = () => {
-        URL.revokeObjectURL(objectUrl);
         const canvas = document.createElement('canvas');
         const MAX_DIM = 1200;
         let width = img.width;
@@ -95,11 +94,20 @@ export default function PatientDashboard() {
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
-        if (!ctx) return reject(new Error("Canvas not supported"));
+        if (!ctx) {
+          URL.revokeObjectURL(objectUrl);
+          return reject(new Error("Canvas not supported"));
+        }
         
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob(
           (blob) => {
+            // Aggressive RAM cleanup to prevent OOM on 2GB RAM devices
+            ctx.clearRect(0, 0, width, height);
+            canvas.width = 0;
+            canvas.height = 0;
+            URL.revokeObjectURL(objectUrl);
+            
             if (blob) resolve(blob);
             else reject(new Error("Blob conversion failed"));
           },
@@ -209,7 +217,7 @@ export default function PatientDashboard() {
             )}
             {!isOffline && pendingSyncCount > 0 && (
               <span className="flex items-center gap-1 text-xs bg-blue-900/50 text-blue-400 px-3 py-1 rounded-full border border-blue-500/30 animate-pulse">
-                <CloudSync size={14} /> Syncing {pendingSyncCount} record(s)...
+                <CloudSync size={14} /> Syncing {pendingSyncCount} record(s)... (Do not close app)
               </span>
             )}
           </h1>
