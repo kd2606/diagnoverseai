@@ -1,9 +1,14 @@
-import { useTranslations } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import Link from 'next/link';
-import { ArrowRight, Activity, Brain, Shield } from 'lucide-react';
+import { ArrowRight, Activity, Shield, Brain } from 'lucide-react';
 
-export default function LandingPage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('Index'); // if exists, but we'll use static text for the skeleton
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function LandingPage({ params }: Props) {
+  const { locale } = await params;
+  const messages = await getMessages();
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
