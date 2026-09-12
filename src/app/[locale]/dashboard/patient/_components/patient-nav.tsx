@@ -6,15 +6,18 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity, CloudUpload, FileHeart, Menu, ShieldCheck, Sparkles, WifiOff, X,
+  ScanLine, Stethoscope, ClipboardList, FolderLock
 } from 'lucide-react';
 import { useOfflineQueue } from '@/hooks/use-offline-queue';
 import { formatBytes } from '@/lib/patient/format';
 import { cn } from '@/lib/utils';
 
 const LINKS = [
-  { key: 'hub',     href: '',                  label: 'My Health Hub',    Icon: Activity },
-  { key: 'upload',  href: '/upload',           label: 'Upload Scan',      Icon: CloudUpload },
-  { key: 'records', href: '/records',          label: 'Clinical Records', Icon: FileHeart },
+  { key: 'hub',         href: '',              label: 'Health Hub',  Icon: Activity },
+  { key: 'scanner',     href: '/scanner',      label: 'Scanner',     Icon: ScanLine },
+  { key: 'respiratory', href: '/respiratory',  label: 'Respiratory', Icon: Stethoscope },
+  { key: 'assessments', href: '/assessments',  label: 'Assessments', Icon: ClipboardList },
+  { key: 'vault',       href: '/vault',        label: 'Vault',       Icon: FolderLock },
 ] as const;
 
 export function PatientNav({ locale }: { locale: string }) {
