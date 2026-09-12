@@ -105,3 +105,22 @@ body {
   html { color-scheme: dark; }
   ::selection { background: rgba(99, 102, 241, 0.3); }
 }
+
+/* Hairline scrollbar -- stops the OS chrome breaking the glass illusion. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.07);
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.35); background-clip: content-box; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
