@@ -1,5 +1,6 @@
 // src/app/[locale]/dashboard/patient/layout.tsx
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { AmbientBackground } from '@/components/ambient-background';
 import { PatientNav } from './_components/patient-nav';
 
@@ -35,9 +36,19 @@ export default async function PatientLayout({ children, params }: PatientLayoutP
           {children}
         </main>
         <footer className="mx-auto w-full max-w-[1440px] px-5 pb-10 sm:px-8 lg:px-12">
-          <div className="flex flex-col gap-2 border-t border-white/[0.05] pt-6 text-[11px] font-mono uppercase tracking-[0.18em] text-white/25 sm:flex-row sm:items-center sm:justify-between">
-            <span>DiagnoVerse AI · Patient Portal</span>
-            <span>E2EE · Zero-Trust Session · Edge-First</span>
+          <div className="flex flex-col gap-4 border-t border-white/[0.05] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-white/25">
+              <span>DiagnoVerse AI · Patient Portal</span>
+              <span>E2EE · Zero-Trust Session · Edge-First</span>
+            </div>
+            <div className="flex items-center gap-6 text-[11px] font-mono uppercase tracking-[0.18em]">
+              <Link href={`/${locale}/dashboard/patient/about`} className="text-white/25 transition-colors hover:text-white/70">
+                About
+              </Link>
+              <Link href={`/${locale}/dashboard/patient/privacy`} className="text-white/25 transition-colors hover:text-white/70">
+                Privacy Policy
+              </Link>
+            </div>
           </div>
         </footer>
       </div>
