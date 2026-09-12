@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, Mail, Lock, User } from 'lucide-react';
+import { Loader2, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { AmbientBackground } from '@/components/AmbientBackground';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -51,14 +53,19 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col justify-center items-center p-4">
-      <div className="w-full max-w-md p-8 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1/2 bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none" />
-        
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#050505] p-4">
+      <AmbientBackground />
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-md p-8 bg-white/[0.02] border border-white/[0.05] backdrop-blur-3xl rounded-3xl shadow-2xl relative"
+      >
         <div className="relative z-10">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Create Account</h1>
-            <p className="text-neutral-400 font-light">Join DiagnoVerse AI today</p>
+            <p className="text-white/40 text-[15px] leading-relaxed tracking-tight">Join DiagnoVerse AI today</p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-5">
@@ -69,92 +76,95 @@ export default function RegisterPage() {
             )}
             
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-neutral-300 ml-1">Full Name</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">Full Name</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User size={18} className="text-neutral-500" />
+                  <User size={18} className="text-white/30" />
                 </div>
                 <input 
                   type="text" 
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all" 
+                  className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-sm" 
                   placeholder="John Doe"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-neutral-300 ml-1">Email</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">Email</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail size={18} className="text-neutral-500" />
+                  <Mail size={18} className="text-white/30" />
                 </div>
                 <input 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all" 
+                  className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-sm" 
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-neutral-300 ml-1">Password</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">Password</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock size={18} className="text-neutral-500" />
+                  <Lock size={18} className="text-white/30" />
                 </div>
                 <input 
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all" 
+                  className="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-sm" 
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5 pt-2">
-              <label className="block text-sm font-medium text-neutral-300 ml-1 mb-2">I am a...</label>
-              <div className="flex gap-4">
-                <label className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border cursor-pointer transition-all bg-black/50 hover:bg-black/80 ${role === 'patient' ? 'border-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-white/10 text-neutral-400'}`}
+              <label className="block text-[13px] font-medium text-white/60 ml-1 mb-2">I am a...</label>
+              <div className="flex bg-black/50 p-1 rounded-xl border border-white/10">
+                <button
+                  type="button"
                   onClick={() => setRole('patient')}
+                  className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-medium transition-all ${role === 'patient' ? 'bg-white/10 text-white shadow-sm' : 'text-white/40 hover:text-white/70'}`}
                 >
-                  <input type="radio" name="role" value="patient" className="hidden" checked={role === 'patient'} readOnly />
                   Patient
-                </label>
-                <label className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border cursor-pointer transition-all bg-black/50 hover:bg-black/80 ${role === 'doctor' ? 'border-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-white/10 text-neutral-400'}`}
+                </button>
+                <button
+                  type="button"
                   onClick={() => setRole('doctor')}
+                  className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-medium transition-all ${role === 'doctor' ? 'bg-white/10 text-white shadow-sm' : 'text-white/40 hover:text-white/70'}`}
                 >
-                  <input type="radio" name="role" value="doctor" className="hidden" checked={role === 'doctor'} readOnly />
                   Clinician
-                </label>
+                </button>
               </div>
             </div>
 
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full py-3.5 px-4 mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-medium tracking-wide shadow-[0_0_20px_rgba(79,70,229,0.2)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="group w-full py-3.5 px-4 mt-6 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-400 hover:to-blue-400 text-white rounded-xl text-sm font-semibold tracking-wide shadow-[0_0_20px_rgba(79,70,229,0.25)] transition-all duration-300 disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2"
             >
-              {loading && <Loader2 className="animate-spin" size={18} />}
-              Create Account
+              {loading ? <Loader2 className="animate-spin" size={16} /> : null}
+              <span>Create Account</span>
+              {!loading && <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-neutral-400 text-sm font-light">
+          <p className="mt-8 text-center text-white/40 text-[13px]">
             Already have an account?{' '}
             <Link href="/auth/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
               Sign in
             </Link>
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
