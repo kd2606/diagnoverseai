@@ -95,3 +95,13 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* globals.css — mono stack drives every ID, score, and byte count */
+@layer base {
+  :root {
+    --font-mono: var(--font-geist-mono), "JetBrains Mono", ui-monospace, monospace;
+  }
+  .font-mono { font-family: var(--font-mono); font-feature-settings: "zero" 1, "ss01" 1; }
+  html { color-scheme: dark; }
+  ::selection { background: rgba(99, 102, 241, 0.3); }
+}
