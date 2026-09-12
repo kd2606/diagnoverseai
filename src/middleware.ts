@@ -33,7 +33,13 @@ export default async function proxy(request: NextRequest) {
     try {
       const cookieVal = request.cookies.get(authCookieName)?.value;
       if (cookieVal) {
-         const parsed = JSON.parse(cookieVal);
+         let parsedVal = cookieVal;
+         try {
+           parsedVal = decodeURIComponent(cookieVal);
+         } catch (e) {
+           // Ignore
+         }
+         const parsed = JSON.parse(parsedVal);
          token = parsed.access_token;
       }
     } catch {
@@ -59,7 +65,10 @@ export default async function proxy(request: NextRequest) {
 
   if (!role) {
     const url = request.nextUrl.clone();
-    let authPath = '/auth/login';
+    let authPath = '/auth/patient/login';
+    if (path.startsWith('/dashboard/doctor')) {
+      authPath = '/auth/doctor/login';
+    }
     url.pathname = localized(locale, authPath);
     url.search = `?next=${encodeURIComponent(request.nextUrl.pathname)}`;
     return NextResponse.redirect(url);
