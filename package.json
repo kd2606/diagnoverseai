@@ -22,7 +22,7 @@
     "dexie-react-hooks": "^4.4.0",
     "firebase": "^12.18.0",
     "firebase-admin": "^14.3.0",
-    "framer-motion": "^12.34.3",
+    "framer-motion": "^12.43.0",
     "genkit": "^1.42.0",
     "genkitx-openai": "^0.30.0",
     "html2canvas": "^1.4.1",
@@ -42,7 +42,7 @@
     "react-dom": "^18.2.0",
     "recharts": "^3.7.0",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.5.0",
+    "tailwind-merge": "^3.6.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

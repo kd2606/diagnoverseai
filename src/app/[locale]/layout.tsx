@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { Plus_Jakarta_Sans, DM_Sans, Space_Grotesk } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, DM_Sans, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { FirebaseProvider } from "@/firebase/provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -10,9 +10,22 @@ import { PatientLayoutWrapper } from "@/components/patient-layout-wrapper";
 import { Metadata } from "next";
 import "../globals.css";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-    title: "DiagnoVerse AI | Multimodal Healthcare Intelligence",
-    description: "Multimodal Healthcare Intelligence for the Modern Era",
+  title: "DiagnoVerse AI — Clinical Intelligence. Anywhere on Earth.",
+  description:
+    "Edge-resilient multimodal AI for clinical triage. From low-bandwidth offline scans to instant clinician verification.",
+  openGraph: {
+    title: "DiagnoVerse AI",
+    description:
+      "Empowering clinicians and patients with edge-resilient multimodal AI.",
+    type: "website",
+  },
 };
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -49,7 +62,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     return (
         <html lang={locale} suppressHydrationWarning>
             <body
-                className={`${plusJakartaSans.variable} ${dmSans.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+                className={`${inter.variable} ${plusJakartaSans.variable} ${dmSans.variable} ${spaceGrotesk.variable} font-sans antialiased`}
                 suppressHydrationWarning
             >
                 <ThemeProvider
