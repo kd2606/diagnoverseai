@@ -82,12 +82,12 @@ export function Navbar() {
           {/* Desktop CTAs */}
           <div className="hidden items-center gap-2 md:flex">
             <Link
-              href="/auth/login"
+              href="/auth/patient/login"
               className="rounded-xl px-4 py-2 text-[13.5px] font-medium tracking-tight text-white/70 transition-colors duration-300 hover:text-white"
             >
               Sign In
             </Link>
-            <Link href="/auth/register" className="group relative">
+            <Link href="/auth/patient/register" className="group relative">
               <motion.span
                 whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.97 }}
@@ -140,14 +140,14 @@ export function Navbar() {
                 ))}
                 <div className="mt-3 grid grid-cols-2 gap-2 pt-2">
                   <Link
-                    href="/auth/login"
+                    href="/auth/patient/login"
                     onClick={() => setOpen(false)}
                     className="rounded-xl border border-white/[0.07] bg-white/[0.02] py-2.5 text-center text-sm font-medium text-white/80"
                   >
                     Sign In
                   </Link>
                   <Link
-                    href="/auth/register"
+                    href="/auth/patient/register"
                     onClick={() => setOpen(false)}
                     className="rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-black"
                   >

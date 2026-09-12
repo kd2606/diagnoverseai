@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'patient' | 'doctor'>('patient');
+  const role = 'patient';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -40,15 +40,11 @@ export default function RegisterPage() {
     }
 
     if (data.session) {
-      if (role === 'doctor') {
-        router.push('/dashboard/doctor');
-      } else {
-        router.push('/dashboard/patient');
-      }
+      router.push('/dashboard/patient');
     } else {
       // Sometimes email confirmation is required, handle gracefully
       alert('Registration successful! Please check your email to verify your account.');
-      router.push('/auth/login');
+      router.push('/auth/patient/login');
     }
   };
 
@@ -65,7 +61,7 @@ export default function RegisterPage() {
         <div className="relative z-10">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Create Account</h1>
-            <p className="text-white/40 text-[15px] leading-relaxed tracking-tight">Join DiagnoVerse AI today</p>
+            <p className="text-white/40 text-[15px] leading-relaxed tracking-tight">Join Patient Portal</p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-5">
@@ -126,26 +122,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="space-y-1.5 pt-2">
-              <label className="block text-[13px] font-medium text-white/60 ml-1 mb-2">I am a...</label>
-              <div className="flex bg-black/50 p-1 rounded-xl border border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setRole('patient')}
-                  className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-medium transition-all ${role === 'patient' ? 'bg-white/10 text-white shadow-sm' : 'text-white/40 hover:text-white/70'}`}
-                >
-                  Patient
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole('doctor')}
-                  className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-medium transition-all ${role === 'doctor' ? 'bg-white/10 text-white shadow-sm' : 'text-white/40 hover:text-white/70'}`}
-                >
-                  Clinician
-                </button>
-              </div>
-            </div>
-
             <button 
               type="submit" 
               disabled={loading}
@@ -159,7 +135,7 @@ export default function RegisterPage() {
 
           <p className="mt-8 text-center text-white/40 text-[13px]">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+            <Link href="/auth/patient/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
               Sign in
             </Link>
           </p>

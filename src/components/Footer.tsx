@@ -9,8 +9,8 @@ const COLUMNS = [
   {
     heading: "Product",
     links: [
-      { label: "Patient Portal", href: "/auth/register" },
-      { label: "Clinician Dashboard", href: "/auth/login" },
+      { label: "Patient Portal", href: "/auth/patient/register" },
+      { label: "Clinician Dashboard", href: "/auth/doctor/login" },
     ],
   },
   {

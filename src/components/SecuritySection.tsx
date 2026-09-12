@@ -88,14 +88,14 @@ export function SecuritySection() {
           </p>
           <div className="relative mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/auth/register"
+              href="/auth/patient/register"
               className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold tracking-tight text-black transition-transform duration-300 hover:-translate-y-0.5 sm:w-auto"
             >
               Get Started
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <Link
-              href="/auth/login"
+              href="/auth/patient/login"
               className="flex w-full items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-7 py-3.5 text-sm font-semibold tracking-tight text-white/85 backdrop-blur-3xl transition-colors duration-300 hover:border-white/15 hover:bg-white/[0.06] sm:w-auto"
             >
               Sign In

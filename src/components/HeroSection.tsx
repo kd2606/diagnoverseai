@@ -151,7 +151,7 @@ export function HeroSection() {
         transition={{ duration: 1, ease: EASE_EXPO, delay: 0.92 }}
         className="relative z-10 mt-10 flex w-full max-w-md flex-col items-center gap-3 sm:w-auto sm:flex-row"
       >
-        <Link href="/auth/register" className="group w-full sm:w-auto">
+        <Link href="/auth/patient/register" className="group w-full sm:w-auto">
           <motion.span
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.975 }}
@@ -168,7 +168,7 @@ export function HeroSection() {
           </motion.span>
         </Link>
 
-        <Link href="/auth/login" className="group w-full sm:w-auto">
+        <Link href="/auth/doctor/login" className="group w-full sm:w-auto">
           <motion.span
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.975 }}
