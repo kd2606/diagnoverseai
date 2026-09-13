@@ -60,14 +60,14 @@ export async function flushQueue(): Promise<void> {
     try {
       // 1. Insert into DB (Idempotent: ignore duplicate key error if already inserted)
       const { error: dbError } = await supabase
-        .from('medical_records')
+        .from('medical_records' as any)
         .insert({
           id: item.recordId,
           patient_id: item.userId,
           title: item.filename || 'Offline Uploaded Scan',
           document_type: 'xray',
           storage_path: item.storagePath
-        });
+        } as any);
 
       if (dbError && !dbError.message.toLowerCase().includes('duplicate key')) {
         console.error("Flush DB Error:", dbError);

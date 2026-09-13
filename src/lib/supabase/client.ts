@@ -1,27 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+'use client';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+import { createBrowserClient } from '@supabase/ssr';
+import type { Database } from '@/types/database.types';
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from './env';
 
-const customStorage = {
-  getItem: (key: string) => {
-    if (typeof window === 'undefined') return null;
-    return window.localStorage.getItem(key);
-  },
-  setItem: (key: string, value: string) => {
-    if (typeof window === 'undefined') return;
-    window.localStorage.setItem(key, value);
-    document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
-  },
-  removeItem: (key: string) => {
-    if (typeof window === 'undefined') return;
-    window.localStorage.removeItem(key);
-    document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-  }
-};
+export function createClient() {
+  return createBrowserClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    storage: typeof window !== 'undefined' ? customStorage : undefined,
-  },
-});
+export const supabase = createClient();
+export type SupabaseBrowserClient = ReturnType<typeof createClient>;

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
-import { decodeJwt } from 'jose';
+
 
 const handleI18n = createMiddleware(routing);
 
@@ -17,55 +17,32 @@ function localized(locale: string, path: string) {
   return `/${locale}${path}`;
 }
 
+import { updateSession } from '@/lib/supabase/proxy';
+
 export default async function proxy(request: NextRequest) {
   const { locale, path } = stripLocale(request.nextUrl.pathname);
 
+  // First let next-intl generate the base response
+  const intlResponse = handleI18n(request);
+
   if (!path.startsWith('/dashboard')) {
-    return handleI18n(request);
+    // Even if it's not a dashboard route, we should refresh the session if present.
+    await updateSession(request, intlResponse);
+    return intlResponse;
   }
 
-  // Supabase auth token is usually stored in cookies
-  // Find any cookie that looks like a Supabase auth token
-  const authCookieName = request.cookies.getAll().find(c => c.name.startsWith('sb-') && c.name.endsWith('-auth-token'))?.name;
-  let token = null;
-
-  if (authCookieName) {
-    try {
-      const cookieVal = request.cookies.get(authCookieName)?.value;
-      if (cookieVal) {
-         let parsedVal = cookieVal;
-         try {
-           parsedVal = decodeURIComponent(cookieVal);
-         } catch (e) {
-           // Ignore
-         }
-         const parsed = JSON.parse(parsedVal);
-         token = parsed.access_token;
-      }
-    } catch {
-       token = null;
-    }
-  }
-
-  // Fallback for custom session cookies if they implemented it that way
-  if (!token) {
-     token = request.cookies.get('__session')?.value;
-  }
-
+  // Check auth using Supabase proxy
+  const { user } = await updateSession(request, intlResponse);
+  
   let role: 'doctor' | 'patient' | null = null;
-
-  if (token) {
-    try {
-      const payload = decodeJwt(token);
-      const rawRole = (payload.app_metadata as any)?.role;
-      if (rawRole === 'doctor' || rawRole === 'patient') {
-        role = rawRole;
-      } else {
-        // If JWT doesn't have a role, infer it from where they are trying to go
-        role = path.startsWith('/dashboard/doctor') ? 'doctor' : 'patient';
-      }
-    } catch {
-      role = null;
+  if (user) {
+    const rawRole = (user.user_metadata as any)?.role || (user.app_metadata as any)?.role;
+    if (rawRole === 'clinician' || rawRole === 'doctor') {
+      role = 'doctor';
+    } else if (rawRole === 'patient') {
+      role = 'patient';
+    } else {
+      role = path.startsWith('/dashboard/doctor') ? 'doctor' : 'patient';
     }
   }
 
@@ -77,7 +54,11 @@ export default async function proxy(request: NextRequest) {
     }
     url.pathname = localized(locale, authPath);
     url.search = `?next=${encodeURIComponent(request.nextUrl.pathname)}`;
-    return NextResponse.redirect(url);
+    
+    // Create redirect response but copy cookies from intlResponse
+    const redirectRes = NextResponse.redirect(url);
+    intlResponse.cookies.getAll().forEach(c => redirectRes.cookies.set(c.name, c.value));
+    return redirectRes;
   }
 
   const allowed =
@@ -88,10 +69,12 @@ export default async function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = localized(locale, `/dashboard/${role}`);
     url.search = '';
-    return NextResponse.redirect(url);
+    const redirectRes = NextResponse.redirect(url);
+    intlResponse.cookies.getAll().forEach(c => redirectRes.cookies.set(c.name, c.value));
+    return redirectRes;
   }
 
-  return handleI18n(request);
+  return intlResponse;
 }
 
 export const config = {
