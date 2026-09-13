@@ -22,13 +22,17 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       if (!session) {
         if (!cancelled) {
           setState('redirecting');
-          router.replace(`/${currentLocale}/auth/login?next=${encodeURIComponent(pathname)}`);
+          const loginPath = purePath.startsWith('/dashboard/doctor') ? '/auth/doctor/login' : '/auth/patient/login';
+          router.replace(`/${currentLocale}${loginPath}?next=${encodeURIComponent(pathname)}`);
         }
         return;
       }
 
       const role = session.user.app_metadata?.role;
-      const effectiveRole = role === 'doctor' ? 'doctor' : 'patient';
+      let effectiveRole = role === 'doctor' || role === 'patient' ? role : null;
+      if (!effectiveRole) {
+        effectiveRole = purePath.startsWith('/dashboard/doctor') ? 'doctor' : 'patient';
+      }
       const homePath = `/dashboard/${effectiveRole}`;
 
       // Root dashboard redirect
@@ -66,7 +70,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session && state === 'authorized') {
         const currentLocale = pathname.split('/')[1] || 'en';
-        router.replace(`/${currentLocale}/auth/login`);
+        const purePath = pathname.replace(new RegExp('^/' + currentLocale), '') || '/';
+        const loginPath = purePath.startsWith('/dashboard/doctor') ? '/auth/doctor/login' : '/auth/patient/login';
+        router.replace(`/${currentLocale}${loginPath}`);
       }
     });
 

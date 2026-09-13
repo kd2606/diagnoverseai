@@ -57,7 +57,13 @@ export default async function proxy(request: NextRequest) {
   if (token) {
     try {
       const payload = decodeJwt(token);
-      role = (payload.app_metadata as any)?.role === 'doctor' ? 'doctor' : 'patient';
+      const rawRole = (payload.app_metadata as any)?.role;
+      if (rawRole === 'doctor' || rawRole === 'patient') {
+        role = rawRole;
+      } else {
+        // If JWT doesn't have a role, infer it from where they are trying to go
+        role = path.startsWith('/dashboard/doctor') ? 'doctor' : 'patient';
+      }
     } catch {
       role = null;
     }

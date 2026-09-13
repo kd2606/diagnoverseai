@@ -32,7 +32,7 @@ export default function LoginPage() {
     }
 
     if (data.session) {
-      // Decode JWT role to determine redirect
+      // If login originated from patient flow, strictly push to patient dashboard
       const role = data.session.user.app_metadata.role;
       if (role === 'doctor') {
         router.push('/dashboard/doctor');
