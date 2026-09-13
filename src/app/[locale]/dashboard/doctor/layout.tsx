@@ -1,51 +1,49 @@
-import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { AmbientBackground } from "@/components/ambient-background";
-import { ClinicianSidebar } from "./_components/clinician-sidebar";
-import { ClinicianTopbar } from "./_components/clinician-topbar";
-import { TRIAGE_CASES } from "@/lib/triage/mock-cases";
-import { runSafetyProtocols } from "@/lib/triage/safety-protocols";
 
-export const metadata: Metadata = {
-  title: "Clinician Console · DiagnoVerse AI",
-  description: "Zero-Trust adjudication queue for AI-assisted diagnostic triage.",
-};
+import ClinicianTopNav, { type ClinicianIdentity } from "./_components/clinician-topnav";
 
-export default async function DoctorLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+/**
+ * Replace with your session/tRPC/DB read, e.g.
+ *   const clinician = await getClinicianSession();
+ * Resolved on the server so the countdown prop is stable across hydration.
+ */
+async function getClinician(): Promise<ClinicianIdentity> {
+  return {
+    name: "Dr. Amara Osei",
+    credential: "MD, FACEP",
+    specialty: "Emergency Medicine · Attending",
+    npi: "1861792304",
+    attestationDueAt: new Date(Date.now() + 38 * 60 * 60 * 1000).toISOString(),
+    pendingTriage: 7,
+  };
+}
 
-  // Badge counts are computed server-side from the same deterministic
-  // protocol engine the table uses — no drift between nav and content.
-  const pending = TRIAGE_CASES.filter((c) => c.modelStatus === "pending").length;
-  const escalations = TRIAGE_CASES.filter(
-    (c) => runSafetyProtocols({ narrative: c.narrative, triageNote: c.triageNote }).length > 0,
-  ).length;
+export default async function ClinicianLayout({ children }: { children: ReactNode }) {
+  const clinician = await getClinician();
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-zinc-200 antialiased selection:bg-indigo-500/30">
-      <AmbientBackground />
-
-      <div className="relative flex min-h-screen">
-        <ClinicianSidebar locale={locale} queueCount={pending} escalationCount={escalations} />
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <ClinicianTopbar escalationCount={escalations} />
-          <main className="min-w-0 flex-1 px-5 pb-10 pt-6 lg:px-8">{children}</main>
-
-          <footer className="border-t border-white/[0.04] px-5 py-4 lg:px-8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/25">
-              DiagnoVerse AI · Clinical decision support · Not a substitute for licensed medical judgement ·
-              Region {locale.toUpperCase()} · Model DV-VISION-4.2.1
-            </p>
-          </footer>
-        </div>
+    <div className="relative min-h-screen bg-black text-white antialiased selection:bg-white/10">
+      {/* Ambient depth: two soft blooms + a faint technical grid. */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute -top-40 left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.10),transparent_65%)] blur-3xl" />
+        <div className="absolute -bottom-56 right-[-10rem] h-[38rem] w-[38rem] rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.07),transparent_65%)] blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_top,black,transparent_72%)]" />
       </div>
+
+      <a
+        href="#clinician-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-black"
+      >
+        Skip to content
+      </a>
+
+      <ClinicianTopNav clinician={clinician} />
+
+      <main id="clinician-content" className="relative z-10">
+        <div className="mx-auto w-full max-w-[1500px] px-4 pb-24 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }
