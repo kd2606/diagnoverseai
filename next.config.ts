@@ -23,15 +23,16 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: '/:locale/dashboard/patient/skin-scan', destination: '/:locale/dashboard/patient/scanner', permanent: true },
-      { source: '/:locale/dashboard/patient/vision-scan', destination: '/:locale/dashboard/patient/scanner', permanent: true },
-      { source: '/:locale/dashboard/patient/eye-scan', destination: '/:locale/dashboard/patient/scanner', permanent: true },
-      { source: '/:locale/dashboard/patient/cough-analysis', destination: '/:locale/dashboard/patient/respiratory', permanent: true },
-      { source: '/:locale/dashboard/patient/mental-health', destination: '/:locale/dashboard/patient/assessments', permanent: true },
-      { source: '/:locale/dashboard/patient/cardio-wellness', destination: '/:locale/dashboard/patient/assessments', permanent: true },
-      { source: '/:locale/dashboard/patient/health-records', destination: '/:locale/dashboard/patient/vault', permanent: true },
-      { source: '/:locale/dashboard/patient/reminders', destination: '/:locale/dashboard/patient/vault', permanent: true },
-      { source: '/:locale/dashboard/patient/govt-schemes', destination: '/:locale/dashboard/patient/vault', permanent: true },
+      { source: '/:locale/symptom-checker', destination: '/:locale/dashboard/patient/assessments', permanent: true },
+      { source: '/:locale/vision-scan', destination: '/:locale/dashboard/patient/scanner', permanent: true },
+      { source: '/:locale/skin-scan', destination: '/:locale/dashboard/patient/scanner', permanent: true },
+      { source: '/:locale/cough-analysis', destination: '/:locale/dashboard/patient/respiratory', permanent: true },
+      { source: '/:locale/mental-health', destination: '/:locale/dashboard/patient/assessments', permanent: true },
+      { source: '/:locale/cardio-check', destination: '/:locale/dashboard/patient/assessments', permanent: true },
+      { source: '/:locale/health-trends', destination: '/:locale/dashboard/patient/vault', permanent: true },
+      { source: '/:locale/health-records', destination: '/:locale/dashboard/patient/vault', permanent: true },
+      { source: '/:locale/govt-schemes', destination: '/:locale/dashboard/patient/vault', permanent: true },
+      { source: '/:locale/reminders', destination: '/:locale/dashboard/patient/vault', permanent: true },
     ];
   },
   images: {
