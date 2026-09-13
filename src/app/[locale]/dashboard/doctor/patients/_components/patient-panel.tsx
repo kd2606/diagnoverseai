@@ -70,7 +70,22 @@ const SORTS: Array<{ key: SortKey; label: string }> = [
 /* Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export function PatientPanel({ patients }: { patients: PatientRecord[] }) {
+export function PatientPanel({ patients }: { patients: any[] }) {
+
+      const mappedPatients = (patients || []).map(p => ({
+        id: p.id,
+        name: p.fullName || 'Unknown Patient',
+        mrn: p.mrn || 'UNKNOWN',
+        age: p.age || 0,
+        sex: (p.sex || 'U') as "M" | "F" | "X",
+        riskTier: (p.latestConfidence ? (p.latestConfidence < 60 ? 'critical' : p.latestConfidence < 80 ? 'high' : 'moderate') : 'low') as RiskTier,
+        riskScore: p.latestConfidence || 0,
+        chiefComplaint: p.chiefComplaint || 'No complaint recorded',
+        lastTriageAt: p.lastSeenAt || p.createdAt || new Date().toISOString(),
+        status: (p.latestStatus === 'verified' ? 'discharged' : p.latestStatus === 'escalated' ? 'active' : 'monitoring') as CareStatus,
+        openActions: p.openCases || 0
+      }));
+    
   const params = useParams<{ locale: string }>();
   const locale = params?.locale ?? "en";
 
@@ -82,7 +97,7 @@ export function PatientPanel({ patients }: { patients: PatientRecord[] }) {
     const needle = query.trim().toLowerCase();
     const tierWeight: Record<RiskTier, number> = { critical: 0, high: 1, moderate: 2, low: 3 };
 
-    return patients.filter((patient) => {
+    return mappedPatients.filter((patient) => {
       const matchesTier = tier === "all" || patient.riskTier === tier;
       const matchesQuery =
         !needle ||
@@ -99,10 +114,10 @@ export function PatientPanel({ patients }: { patients: PatientRecord[] }) {
 
   const stats = useMemo(
     () => [
-      { label: "Patients in panel", value: patients.length, hint: "Assigned to you" },
-      { label: "Critical stratification", value: patients.filter((p) => p.riskTier === "critical").length, hint: "Needs same-shift review" },
-      { label: "Open clinical actions", value: patients.reduce((sum, p) => sum + p.openActions, 0), hint: "Across all records" },
-      { label: "Triaged last 24h", value: patients.filter((p) => p.lastTriageAt >= "2026-09-12T06:00:00.000Z").length, hint: "Model-assisted" },
+      { label: "Patients in panel", value: mappedPatients.length, hint: "Assigned to you" },
+      { label: "Critical stratification", value: mappedPatients.filter((p) => p.riskTier === "critical").length, hint: "Needs same-shift review" },
+      { label: "Open clinical actions", value: mappedPatients.reduce((sum, p) => sum + p.openActions, 0), hint: "Across all records" },
+      { label: "Triaged last 24h", value: mappedPatients.filter((p) => p.lastTriageAt >= "2026-09-12T06:00:00.000Z").length, hint: "Model-assisted" },
     ],
     [],
   );
@@ -120,7 +135,7 @@ export function PatientPanel({ patients }: { patients: PatientRecord[] }) {
           <GlowPill>
             <span className="inline-flex items-center gap-1.5 text-[11px]">
               <Users className="h-3 w-3" aria-hidden />
-              {patients.length} records synced
+              {mappedPatients.length} records synced
             </span>
           </GlowPill>
           <button

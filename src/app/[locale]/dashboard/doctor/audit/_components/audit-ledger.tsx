@@ -147,14 +147,28 @@ const FILTERS: Array<{ key: AuditKind | "all"; label: string }> = [
 /* Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export function AuditLedger({ events: rawEvents, integrity }: { events: AuditEvent[], integrity: { intact: boolean, totalEntries: number, brokenAt: number[] } | null }) {
+export function AuditLedger({ events: rawEvents, integrity }: { events: any[], integrity: { intact: boolean, totalEntries: number, brokenAt: number[] } | null }) {
+
+      const mappedEvents = (rawEvents || []).map(e => ({
+        id: e.id,
+        kind: (e.actionType || 'inference') as AuditKind,
+        at: e.createdAt || new Date().toISOString(),
+        actor: { name: e.actorName || 'System', role: e.actorRole || 'system' },
+        subject: { mrn: 'MRN-' + (e.caseId ? e.caseId.slice(0,6).toUpperCase() : 'UNKNOWN'), label: 'Triage Case' },
+        summary: e.summary || '',
+        hash: e.hash || '',
+        prevHash: e.prevHash || '',
+        model: undefined as any,
+        protocol: undefined as any
+      }));
+    
   const [filter, setFilter] = useState<AuditKind | "all">("all");
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState<string | null>(rawEvents[0]?.id ?? null);
+  const [expanded, setExpanded] = useState<string | null>(mappedEvents[0]?.id ?? null);
 
   const events = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return rawEvents.filter((event) => {
+    return mappedEvents.filter((event) => {
       const matchesKind = filter === "all" || event.kind === filter;
       const matchesQuery =
         !needle ||
