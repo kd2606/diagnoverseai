@@ -6,7 +6,7 @@ import { Inter, Plus_Jakarta_Sans, DM_Sans, Space_Grotesk } from "next/font/goog
 import { ThemeProvider } from "@/components/theme-provider";
 import { FirebaseProvider } from "@/firebase/provider";
 import { Toaster } from "@/components/ui/sonner";
-import { PatientLayoutWrapper } from "@/components/patient-layout-wrapper";
+import { FloatingChat } from "@/components/floating-chat";
 import { Metadata } from "next";
 import "../globals.css";
 
@@ -73,9 +73,8 @@ export default async function LocaleLayout({ children, params }: Props) {
                 >
                     <NextIntlClientProvider messages={messages}>
                         <FirebaseProvider>
-                            <PatientLayoutWrapper locale={locale}>
-                                {children}
-                            </PatientLayoutWrapper>
+                            {children}
+                            <FloatingChat />
                             <Toaster />
                         </FirebaseProvider>
                     </NextIntlClientProvider>
