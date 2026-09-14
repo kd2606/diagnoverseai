@@ -1,6 +1,7 @@
 "use server";
 
 import { generateWithModelFallback } from "@/ai/generate-with-fallback";
+import { retrieveClinicalContext, formatContextBlock, buildRetrievalQuery } from "@/lib/rag/retrieve";
 import { z } from "genkit";
 
 // --- Backwards-compatible export (consumed by /api/pulse/route.ts) ---
@@ -98,7 +99,7 @@ export async function pulseChatFlow(input: PulseChatInput): Promise<PulseChatOut
         ],
         output: { schema: PulseChatOutputSchema, format: 'json' },
         config: {
-            temperature: 0.1,           // Was 0.7 — far too creative for triage.
+            temperature: 0,           // Was 0.7 — far too creative for triage.
             topP: 0.8,
             topK: 20,
             maxOutputTokens: 1024,
@@ -127,6 +128,10 @@ export async function chatWithPulse(
     try {
         // Build dynamic prompt with user context (existing behavior preserved).
         let dynamicPrompt = PULSE_TRIAGE_SYSTEM_PROMPT;
+
+        const ragChunks = await retrieveClinicalContext(newMessage, { matchCount: 5 });
+        const ragContextString = formatContextBlock(ragChunks);
+        dynamicPrompt += `\n\nCLINICAL KNOWLEDGE BASE:\n`;
 
         if (userContext) {
             const formatReminders = (reminders: any[]) => {
@@ -174,7 +179,7 @@ If user asks "how am I doing?" or "mera health kaisa hai?" — answer using this
                 { role: "user", content: [{ text: newMessage }] },
             ],
             config: {
-                temperature: 0.1,       // Hardened: was 0.7.
+                temperature: 0,       // Hardened: was 0.7.
                 topP: 0.8,
                 topK: 20,
                 maxOutputTokens: 1024,

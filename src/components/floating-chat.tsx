@@ -21,6 +21,7 @@ import { db } from '@/firebase/clientApp';
 import { doc, getDoc, setDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { createTriageCase } from '@/actions/clinical-data';
 
 export type ChatMessage = {
   id?: string;
@@ -506,6 +507,7 @@ export function FloatingChat() {
                 }
 
                 const isUser = msg.role === 'user';
+                const isTriageResult = !isUser && msg.content && (msg.content.includes('triage guidance') || msg.content.includes('Visit doctor') || msg.content.includes('diagnos'));
                 return (
                   <motion.div
                     key={idx}
@@ -529,17 +531,39 @@ export function FloatingChat() {
                       >
                         {msg.content}
                         {!isUser && msg.content && (
-                          <button
-                            type="button"
-                            onClick={() => playTTS(msg.content, idx.toString())}
-                            className="mt-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-indigo-300/70 transition-colors hover:text-indigo-300"
-                          >
-                            {isSpeaking === idx.toString() ? (
-                              <><VolumeX className="h-3 w-3" /> Stop</>
-                            ) : (
-                              <><Volume2 className="h-3 w-3" /> Listen</>
+                          <div className="flex flex-col gap-2 mt-3">
+                            <button
+                              type="button"
+                              onClick={() => playTTS(msg.content, idx.toString())}
+                              className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-indigo-300/70 transition-colors hover:text-indigo-300"
+                            >
+                              {isSpeaking === idx.toString() ? (
+                                <><VolumeX className="h-3 w-3" /> Stop</>
+                              ) : (
+                                <><Volume2 className="h-3 w-3" /> Listen</>
+                              )}
+                            </button>
+                            {isTriageResult && (
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  try {
+                                    await createTriageCase({
+                                      patient_id: user?.uid || 'pat_8f3c19',
+                                      chief_complaint: messages.filter(m => m.role === 'user').map(m => m.content).join(' '),
+                                      ai_diagnosis: msg.content
+                                    });
+                                    toast.success('Report sent to doctor');
+                                  } catch (err) {
+                                    toast.error('Failed to send report');
+                                  }
+                                }}
+                                className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-emerald-400/80 transition-colors hover:text-emerald-400"
+                              >
+                                Send Reports to Doctor
+                              </button>
                             )}
-                          </button>
+                          </div>
                         )}
                       </div>
                       <span className="mt-1.5 px-1 font-mono text-[9.5px] text-white/30">{formatTime(msg.timestamp)}</span>
