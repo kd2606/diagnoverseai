@@ -15,7 +15,7 @@ import {
   ScrollText,
   Settings,
   ShieldCheck,
-  Stethoscope,
+  Stethoscope, User,
   TimerReset,
   X,
 } from "lucide-react";
@@ -341,6 +341,7 @@ export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIde
                       <Tag>Attending</Tag>
                     </div>
                   </div>
+                  <MenuLink href={`${base}/profile`} icon={User} label="Edit Profile" />
                   <MenuLink href={`${base}/settings`} icon={Settings} label="Clinician preferences" />
                   <MenuLink href={`${base}/audit`} icon={ScrollText} label="My audit trail" />
                   <MenuLink href="/support" icon={LifeBuoy} label="Clinical support" />

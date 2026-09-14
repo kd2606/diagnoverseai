@@ -24,6 +24,7 @@ const LINKS = [
 export function PatientNav({ locale }: { locale: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const { stats, online } = useOfflineQueue();
 
   const base = `/${locale}/dashboard/patient`;

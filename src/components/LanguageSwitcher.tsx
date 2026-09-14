@@ -4,6 +4,22 @@ import { usePathname, useRouter } from "next/navigation";
 import { Globe } from "lucide-react";
 import { useState, useTransition } from "react";
 
+const LOCALES = [
+  { code: 'en', label: 'English' },
+  { code: 'hi', label: '?????? (Hindi)' },
+  { code: 'bn', label: '????? (Bengali)' },
+  { code: 'te', label: '?????? (Telugu)' },
+  { code: 'mr', label: '????? (Marathi)' },
+  { code: 'ta', label: '????? (Tamil)' },
+  { code: 'ur', label: '???? (Urdu)' },
+  { code: 'gu', label: '??????? (Gujarati)' },
+  { code: 'kn', label: '????? (Kannada)' },
+  { code: 'or', label: '????? (Odia)' },
+  { code: 'ml', label: '?????? (Malayalam)' },
+  { code: 'pa', label: '?????? (Punjabi)' },
+  { code: 'as', label: '??????? (Assamese)' }
+];
+
 export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
@@ -13,7 +29,6 @@ export function LanguageSwitcher() {
   const changeLanguage = (nextLocale: string) => {
     setIsOpen(false);
     startTransition(() => {
-      // Replaces the current locale in the URL (e.g., /en/dashboard -> /hi/dashboard)
       const segments = pathname.split('/');
       segments[1] = nextLocale;
       router.replace(segments.join('/'));
@@ -31,20 +46,17 @@ export function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 origin-top-right rounded-xl border border-white/[0.08] bg-[#0a0a0a] shadow-lg shadow-black/50 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+        <div className="absolute right-0 mt-2 w-48 max-h-[300px] overflow-y-auto origin-top-right rounded-xl border border-white/[0.08] bg-[#0a0a0a] shadow-lg shadow-black/50 ring-1 ring-black ring-opacity-5 focus:outline-none z-50 custom-scrollbar">
           <div className="py-1">
-            <button
-              onClick={() => changeLanguage('en')}
-              className="block w-full px-4 py-2 text-left text-sm text-white/70 hover:bg-white/[0.05] hover:text-white"
-            >
-              English
-            </button>
-            <button
-              onClick={() => changeLanguage('hi')}
-              className="block w-full px-4 py-2 text-left text-sm text-white/70 hover:bg-white/[0.05] hover:text-white"
-            >
-              हिंदी (Hindi)
-            </button>
+            {LOCALES.map((locale) => (
+              <button
+                key={locale.code}
+                onClick={() => changeLanguage(locale.code)}
+                className="block w-full px-4 py-2 text-left text-sm text-white/70 hover:bg-white/[0.05] hover:text-white transition-colors"
+              >
+                {locale.label}
+              </button>
+            ))}
           </div>
         </div>
       )}
