@@ -60,7 +60,13 @@ export default async function LocaleLayout({ children, params }: Props) {
     const messages = await getMessages();
 
     return (
-        <html lang={locale} suppressHydrationWarning>
+                <html lang={locale} suppressHydrationWarning>
+            <head>
+                <link rel="manifest" href="/manifest.json" />
+                <meta name="theme-color" content="#050505" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            </head>
             <body
                 className={`${inter.variable} ${plusJakartaSans.variable} ${dmSans.variable} ${spaceGrotesk.variable} font-sans antialiased`}
                 suppressHydrationWarning
