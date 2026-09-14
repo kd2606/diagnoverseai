@@ -238,8 +238,8 @@ export function FloatingChat() {
       if (!response.ok) throw new Error('TTS failed');
 
       const data = await response.json();
-      if (data.audios?.[0]) {
-        const audioSrc = `data:audio/wav;base64,${data.audios[0]}`;
+      if (data.audioBase64) {
+        const audioSrc = `data:audio/wav;base64,${data.audioBase64}`;
         if (audioPlayerRef.current) {
           audioPlayerRef.current.src = audioSrc;
           audioPlayerRef.current.play();
@@ -253,7 +253,8 @@ export function FloatingChat() {
       }
     } catch (err) {
       console.error('TTS Error:', err);
-      toast.error('Speech playback failed');
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      toast.error(`Speech playback failed: ${msg}`);
       setIsSpeaking(null);
     }
   };
