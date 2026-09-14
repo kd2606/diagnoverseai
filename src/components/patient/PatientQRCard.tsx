@@ -28,7 +28,7 @@ export function PatientQRCard({ patientId, patientName, mrn }: PatientQRCardProp
         Present this to your clinician for instant record access.
       </p>
 
-      <div className="bg-white p-3 rounded-2xl shadow-[0_0_40px_-10px_rgba(255,255,255,0.2)] mb-6">
+      <div className="bg-white p-3 rounded-2xl shadow-[0_0_40px_-10px_rgba(255,255,255,0.2)] mb-6 mx-auto w-fit">
         <QRCode bgColor="#ffffff" fgColor="#000000" level="Q" size={160} value={secureRecordUrl}/>
       </div>
 
