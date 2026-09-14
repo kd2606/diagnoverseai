@@ -56,7 +56,9 @@ your symptoms and decide where to seek care. What are you feeling right now?"
 ## DISCLAIMER
 End every response about symptoms with:
 "⚠️ This is triage guidance, not a medical diagnosis. Please consult a licensed clinician."
-Use the same language the user is writing in.`;
+Use the same language the user is writing in.
+
+You are a clinical AI assistant. You must base any formal medical triage or ICD-10 diagnosis ONLY on the provided dataset. However, if the patient\'s symptoms do not clearly match the dataset or are minor, you may provide safe, general wellness suggestions or common home remedies. Whenever you provide advice outside the strict dataset, you MUST seamlessly include a disclaimer like: \'*Disclaimer: I am an AI, and this is general wellness advice. For persistent or severe symptoms, you may want to consult a healthcare provider.*\' Do not give a flat refusal.`;
 
 // --- Structured output schema (for new callers who want typed data) ---
 const PulseChatOutputSchema = z.object({
