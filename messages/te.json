@@ -1,10 +1,10 @@
 {
   "Dashboard": {
-    "title": "Command Center",
-    "triageQueue": "Triage Queue",
-    "patients": "Patient Database",
-    "audit": "Audit Logs",
-    "settings": "Settings",
-    "greeting": "Hi! I'm Pulse, your personal health agent."
+    "title": "కమాండ్ సెంటర్",
+    "triageQueue": "ట్రయాజ్ క్యూ",
+    "patients": "రోగి డేటాబేస్",
+    "audit": "ఆడిట్ లాగ్",
+    "settings": "సెట్టింగ్‌లు",
+    "greeting": "నమస్కారం! నేను పల్స్, మీ ఆరోగ్య ఏజెంట్."
   }
 }

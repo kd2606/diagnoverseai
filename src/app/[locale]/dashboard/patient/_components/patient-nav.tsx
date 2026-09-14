@@ -25,6 +25,7 @@ export function PatientNav({ locale }: { locale: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const router = useRouter();
   const { stats, online } = useOfflineQueue();
 
   const base = `/${locale}/dashboard/patient`;
@@ -124,15 +125,41 @@ export function PatientNav({ locale }: { locale: string }) {
 
           <LanguageSwitcher />
 
-          <button
-            type="button"
-            className="group flex items-center gap-2.5 rounded-full border border-white/[0.07] bg-white/[0.02] py-1 pl-1 pr-1 backdrop-blur-xl transition-colors hover:border-white/15 sm:pr-3.5"
-          >
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-indigo-400/80 to-violet-500/70 text-[12px] font-semibold text-[#050505]">
-              JM
-            </span>
-            <span className="hidden text-[13px] font-medium text-white/70 sm:block">John M.</span>
-          </button>
+          <div className="relative inline-block text-left">
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              type="button"
+              className="group flex items-center gap-2.5 rounded-full border border-white/[0.07] bg-white/[0.02] py-1 pl-1 pr-1 backdrop-blur-xl transition-colors hover:border-white/15 sm:pr-3.5"
+            >
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-indigo-400/80 to-violet-500/70 text-[12px] font-semibold text-[#050505]">
+                JM
+              </span>
+              <span className="hidden text-[13px] font-medium text-white/70 sm:block">John M.</span>
+            </button>
+            {profileOpen && (
+              <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-xl border border-white/[0.08] bg-[#0a0a0a] shadow-lg shadow-black/50 ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      router.push(`/${locale}/dashboard/patient/profile`);
+                    }}
+                    className="flex w-full items-center px-4 py-2.5 text-sm text-white/70 hover:bg-white/[0.05] hover:text-white transition-colors"
+                  >
+                    Edit Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                    }}
+                    className="flex w-full items-center px-4 py-2.5 text-sm text-rose-400/80 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           <button
             type="button"

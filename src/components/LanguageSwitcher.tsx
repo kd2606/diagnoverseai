@@ -6,18 +6,18 @@ import { useState, useTransition } from "react";
 
 const LOCALES = [
   { code: 'en', label: 'English' },
-  { code: 'hi', label: '?????? (Hindi)' },
-  { code: 'bn', label: '????? (Bengali)' },
-  { code: 'te', label: '?????? (Telugu)' },
-  { code: 'mr', label: '????? (Marathi)' },
-  { code: 'ta', label: '????? (Tamil)' },
-  { code: 'ur', label: '???? (Urdu)' },
-  { code: 'gu', label: '??????? (Gujarati)' },
-  { code: 'kn', label: '????? (Kannada)' },
-  { code: 'or', label: '????? (Odia)' },
-  { code: 'ml', label: '?????? (Malayalam)' },
-  { code: 'pa', label: '?????? (Punjabi)' },
-  { code: 'as', label: '??????? (Assamese)' }
+  { code: 'hi', label: 'हिन्दी (Hindi)' },
+  { code: 'bn', label: 'বাংলা (Bengali)' },
+  { code: 'te', label: 'తెలుగు (Telugu)' },
+  { code: 'mr', label: 'मराठी (Marathi)' },
+  { code: 'ta', label: 'தமிழ் (Tamil)' },
+  { code: 'ur', label: 'اردو (Urdu)' },
+  { code: 'gu', label: 'ગુજરાતી (Gujarati)' },
+  { code: 'kn', label: 'ಕನ್ನಡ (Kannada)' },
+  { code: 'or', label: 'ଓଡ଼ିଆ (Odia)' },
+  { code: 'ml', label: 'മലയാളം (Malayalam)' },
+  { code: 'pa', label: 'ਪੰਜਾਬੀ (Punjabi)' },
+  { code: 'as', label: 'অসমীয়া (Assamese)' }
 ];
 
 export function LanguageSwitcher() {
@@ -31,7 +31,7 @@ export function LanguageSwitcher() {
     startTransition(() => {
       const segments = pathname.split('/');
       segments[1] = nextLocale;
-      router.replace(segments.join('/'));
+      router.push(segments.join('/'));
     });
   };
 
