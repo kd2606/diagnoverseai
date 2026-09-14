@@ -9,25 +9,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
     }
 
-    // Forward to Sarvam AI API
+    // Using Sarvam AI's translate endpoint. 
+    // It auto-detects Indian regional languages and translates them to English.
     const sarvamRes = await fetch('https://api.sarvam.ai/speech-to-text-translate', {
       method: 'POST',
       headers: {
         'api-subscription-key': process.env.SARVAM_API_KEY || '',
       },
-      body: formData, // Passes the multipart/form-data directly
+      body: formData, 
     });
 
     if (!sarvamRes.ok) {
       const errorText = await sarvamRes.text();
-      console.error('[Sarvam API Error]:', errorText);
-      return NextResponse.json({ error: 'Failed to process voice via Sarvam AI' }, { status: sarvamRes.status });
+      console.error('[Sarvam Translation Error]:', errorText);
+      return NextResponse.json({ error: 'Translation API failed' }, { status: sarvamRes.status });
     }
 
     const data = await sarvamRes.json();
-    return NextResponse.json({ transcript: data.transcript || data.text });
+    
+    // data.transcript will contain the English translated text of the regional speech
+    return NextResponse.json({ 
+      transcript: data.transcript || data.text,
+      isTranslated: true 
+    });
   } catch (error) {
-    console.error('[Voice API Catch Error]:', error);
+    console.error('[Voice Translation Catch Error]:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
