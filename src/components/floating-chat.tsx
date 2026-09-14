@@ -184,7 +184,7 @@ export function FloatingChat() {
           const formData = new FormData();
           formData.append('file', audioBlob);
 
-          const response = await fetch('/api/stt', { method: 'POST', body: formData });
+          const response = await fetch('/api/voice', { method: 'POST', body: formData });
           if (!response.ok) throw new Error('STT failed');
 
           const data = await response.json();

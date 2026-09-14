@@ -3,6 +3,7 @@ import { GreetingHeader } from './_components/greeting-header';
 import { NovaVoiceTriage } from './_components/nova-voice-triage';
 import { EdgeUploadZone } from './_components/edge-upload-zone';
 import { AnalysisResultsGrid } from './_components/analysis-results-grid';
+import { PatientQRCard } from '@/components/patient/PatientQRCard';
 import type { HealthSignal, ScanRecord } from '@/lib/patient/types';
 
 export const metadata: Metadata = {
@@ -70,6 +71,14 @@ export default function PatientDashboardPage() {
   return (
     <div className="flex flex-col gap-12 sm:gap-14">
       <GreetingHeader firstName="John" signals={SIGNALS} />
+      
+      {/* Patient Health Passport (QR) */}
+      <PatientQRCard 
+        patientId="pat_8f3c19" 
+        patientName="John Doe" 
+        mrn="MRN-884120" 
+      />
+
       <NovaVoiceTriage />
       <EdgeUploadZone patientId="pat_8f3c19" />
       <AnalysisResultsGrid scans={SCANS} />
