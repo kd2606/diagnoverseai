@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import { GlowPill, Tag, glass } from "@/components/patient/ui";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const ACCENT = "#38bdf8"; // Light blue for clinician theme
 const cx = (...parts: Array<string | false | null | undefined>) =>
@@ -278,6 +279,8 @@ export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIde
           <div className="hidden md:block">
             <ReattestPill dueAt={clinician.attestationDueAt} />
           </div>
+
+          <LanguageSwitcher />
 
           {/* Identity / NPI */}
           <div className="relative" ref={menuRef}>

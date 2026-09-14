@@ -11,6 +11,7 @@ import {
 import { useOfflineQueue } from '@/hooks/use-offline-queue';
 import { formatBytes } from '@/lib/patient/format';
 import { cn } from '@/lib/utils';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const LINKS = [
   { key: 'hub',         href: '',              label: 'Health Hub',  Icon: Activity },
@@ -119,6 +120,8 @@ export function PatientNav({ locale }: { locale: string }) {
           <div className="hidden items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/40 lg:flex">
             <ShieldCheck className="h-3 w-3 text-indigo-300" strokeWidth={2} /> E2EE
           </div>
+
+          <LanguageSwitcher />
 
           <button
             type="button"
