@@ -22,7 +22,7 @@ const schema = z.object({
 
 export const env = schema.parse({
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY,
-  SUPABASE_URL: process.env.SUPABASE_URL,
+  SUPABASE_URL: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL,
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   GEMINI_EMBEDDING_MODEL: process.env.GEMINI_EMBEDDING_MODEL,
   GEMINI_GENERATION_MODEL: process.env.GEMINI_GENERATION_MODEL,
