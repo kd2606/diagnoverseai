@@ -76,8 +76,8 @@ export function FeaturesGrid() {
             <div className="flex h-full flex-col justify-between gap-8 p-7 sm:p-8">
               <CardHeader
                 icon={<Mic className="h-[18px] w-[18px] text-sky-300" />}
-                title="Zero-Friction Voice Triage"
-                body="OpenAI Nova TTS and native speech recognition. Zero typing required for low-literacy accessibility."
+                title="Pan-India Multilingual Voice"
+                body="Sarvam AI cross-lingual speech-to-text. Speaks 13+ Indian languages with flawless native translation. Zero typing required."
               />
               <VoiceVisual />
             </div>
@@ -90,8 +90,8 @@ export function FeaturesGrid() {
             <div className="flex h-full flex-col justify-between gap-8 p-7 sm:p-8">
               <CardHeader
                 icon={<UserCheck className="h-[18px] w-[18px] text-emerald-300" />}
-                title="Human-in-the-Loop Verification"
-                body="Zero-trust clinician dashboards for 1-click triage approval and AI oversight."
+                title="SaMD & DPDP Compliant"
+                body="Strict regulatory compliance. Granular opt-in consent, zero raw 'diagnoses', and fully authenticated doctor verification."
               />
               <ApprovalVisual />
             </div>

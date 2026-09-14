@@ -11,5 +11,66 @@
     "openCases": "ತೆರೆದ ಪ್ರಕರಣಗಳು",
     "dataSaved": "ಡೇಟಾ ಉಳಿಸಲಾಗಿದೆ",
     "lastSync": "ಕೊನೆಯ ಸಿಂಕ್"
+  },
+  "Nav": {
+    "healthHub": "ಹೆಲ್ತ್ ಹಬ್",
+    "scanner": "ಸ್ಕ್ಯಾನರ್",
+    "respiratory": "ಉಸಿರಾಟ",
+    "assessments": "ಮೌಲ್ಯಮಾಪನಗಳು",
+    "vault": "ವಾಲ್ಟ್",
+    "editProfile": "ಪ್ರೊಫೈಲ್",
+    "signOut": "ಸೈನ್ ಔಟ್",
+    "patientPortal": "ಪೋರ್ಟಲ್",
+    "synced": "ಸಿಂಕ್",
+    "offline": "ಆಫ್‌ಲೈನ್",
+    "queued": "ಸರತಿ",
+    "toggleNav": "ಟಾಗಲ್"
+  },
+  "Chat": {
+    "pulseHealthAgent": "ಏಜೆಂಟ್",
+    "online": "ಆನ್‌ಲೈನ್",
+    "listen": "ಆಲಿಸಿ",
+    "stop": "ನಿಲ್ಲಿಸಿ",
+    "sendReports": "ಕಳುಹಿಸಿ",
+    "listening": "ಆಲಿಸುತ್ತಿದೆ...",
+    "tapToSpeak": "ಟ್ಯಾಪ್ ಮಾಡಿ...",
+    "retryIn": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+    "pulseResting": "ವಿಶ್ರಾಂತಿ",
+    "checking": "ಪರಿಶೀಲಿಸುತ್ತಿದೆ...",
+    "failedSendReport": "ವಿಫಲವಾಗಿದೆ"
+  },
+  "Passport": {
+    "healthPassport": "ಪಾಸ್‌ಪೋರ್ಟ್",
+    "presentToClinician": "ತೋರಿಸಿ",
+    "patient": "ರೋಗಿ",
+    "encrypted": "ಎನ್‌ಕ್ರಿಪ್ಟ್"
+  },
+  "Common": {
+    "novaHealthIntelligence": "ನೋವಾ",
+    "live": "ಲೈವ್",
+    "healthIntelligenceActive": "ಸಕ್ರಿಯ",
+    "capturesWatched": "ವೀಕ್ಷಿಸಲಾಗಿದೆ",
+    "uploadScan": "ಅಪ್‌ಲೋಡ್",
+    "uploadDescription": "ಸರತಿ",
+    "dragOrBrowse": "ಎಳೆಯಿರಿ",
+    "releaseToDrop": "ಬಿಡಿ",
+    "novaVoiceTriage": "ಧ್ವನಿ",
+    "alwaysListening": "ಆಲಿಸುತ್ತಿದೆ",
+    "tapToSpeakSymptoms": "ಟ್ಯಾಪ್",
+    "offlineQueue": "ಆಫ್‌ಲೈನ್ ಸರತಿ"
+  },
+  "Profile": {
+    "editProfile": "ಪ್ರೊಫೈಲ್",
+    "manageInfo": "ಮಾಹಿತಿ",
+    "fullName": "ಹೆಸರು",
+    "email": "ಇಮೇಲ್",
+    "phone": "ಫೋನ್",
+    "address": "ವಿಳಾಸ",
+    "bloodGroup": "ರಕ್ತ",
+    "dateOfBirth": "ಹುಟ್ಟಿದ ದಿನ",
+    "saveChanges": "ಉಳಿಸಿ",
+    "saving": "ಉಳಿಸುತ್ತಿದೆ...",
+    "medicalLicense": "ಪರವಾನಗಿ",
+    "verified": "ಪರಿಶೀಲಿಸಲಾಗಿದೆ"
   }
 }

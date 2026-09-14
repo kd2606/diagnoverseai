@@ -11,5 +11,66 @@
     "openCases": "Open cases",
     "dataSaved": "Data saved",
     "lastSync": "Last sync"
+  },
+  "Nav": {
+    "healthHub": "Health Hub",
+    "scanner": "Scanner",
+    "respiratory": "Respiratory",
+    "assessments": "Assessments",
+    "vault": "Vault",
+    "editProfile": "Edit Profile",
+    "signOut": "Sign Out",
+    "patientPortal": "Patient Portal",
+    "synced": "Synced",
+    "offline": "Offline",
+    "queued": "queued",
+    "toggleNav": "Toggle navigation"
+  },
+  "Chat": {
+    "pulseHealthAgent": "Pulse Health Agent",
+    "online": "Online",
+    "listen": "Listen",
+    "stop": "Stop",
+    "sendReports": "Send Reports to Doctor",
+    "listening": "Listening...",
+    "tapToSpeak": "Tap to speak or type...",
+    "retryIn": "Retry in",
+    "pulseResting": "Pulse is resting right now. Please try again later.",
+    "checking": "Pulse is checking your health data...",
+    "failedSendReport": "Failed to send report"
+  },
+  "Passport": {
+    "healthPassport": "Health Passport",
+    "presentToClinician": "Present this to your clinician for instant record access.",
+    "patient": "Patient",
+    "encrypted": "Encrypted & HIPAA Compliant"
+  },
+  "Common": {
+    "novaHealthIntelligence": "Nova Health Intelligence",
+    "live": "Live",
+    "healthIntelligenceActive": "Your health intelligence is active.",
+    "capturesWatched": "Three captures are being watched by Nova and your care team. Speak your symptoms any time — no typing, no forms, works without signal.",
+    "uploadScan": "Upload a scan",
+    "uploadDescription": "Compressed on your device, encrypted, then queued. Works on 2G, works on no G.",
+    "dragOrBrowse": "Drag a scan here, or tap to browse",
+    "releaseToDrop": "Release to compress on-device",
+    "novaVoiceTriage": "Nova Voice Triage",
+    "alwaysListening": "Always listening.",
+    "tapToSpeakSymptoms": "Tap to speak your symptoms",
+    "offlineQueue": "Offline queue — persisted"
+  },
+  "Profile": {
+    "editProfile": "Edit Profile",
+    "manageInfo": "Manage your personal and contact information",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "address": "Address",
+    "bloodGroup": "Blood Group",
+    "dateOfBirth": "Date of Birth",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "medicalLicense": "Medical License (RMP ID)",
+    "verified": "Verified"
   }
 }

@@ -11,5 +11,66 @@
     "openCases": "ଖୋଲା ମାମଲା",
     "dataSaved": "ଡାଟା ସଞ୍ଚିତ",
     "lastSync": "ଶେଷ ସିଙ୍କ୍"
+  },
+  "Nav": {
+    "healthHub": "ହେଲ୍ଥ ହବ୍",
+    "scanner": "ସ୍କାନର୍",
+    "respiratory": "ଶ୍ୱାସକ୍ରିୟା",
+    "assessments": "ମୂଲ୍ୟାଙ୍କନ",
+    "vault": "ଭଲ୍ଟ",
+    "editProfile": "ପ୍ରୋଫାଇଲ୍",
+    "signOut": "ସାଇନ୍ ଆଉଟ୍",
+    "patientPortal": "ପୋର୍ଟାଲ୍",
+    "synced": "ସିଙ୍କ୍",
+    "offline": "ଅଫଲାଇନ୍",
+    "queued": "କ୍ୟୁରେ",
+    "toggleNav": "ଟୋଗଲ୍"
+  },
+  "Chat": {
+    "pulseHealthAgent": "ଏଜେଣ୍ଟ",
+    "online": "ଅନଲାଇନ୍",
+    "listen": "ଶୁଣନ୍ତୁ",
+    "stop": "ବନ୍ଦ",
+    "sendReports": "ପଠାନ୍ତୁ",
+    "listening": "ଶୁଣୁଛି...",
+    "tapToSpeak": "ଟାପ୍...",
+    "retryIn": "ପୁନର୍ବାର",
+    "pulseResting": "ବିଶ୍ରାମ",
+    "checking": "ଯାଞ୍ଚ...",
+    "failedSendReport": "ବିଫଳ"
+  },
+  "Passport": {
+    "healthPassport": "ପାସପୋର୍ଟ",
+    "presentToClinician": "ଦେଖାନ୍ତୁ",
+    "patient": "ରୋଗୀ",
+    "encrypted": "ଏନକ୍ରିପ୍ଟ"
+  },
+  "Common": {
+    "novaHealthIntelligence": "ନୋଭା",
+    "live": "ଲାଇଭ୍",
+    "healthIntelligenceActive": "ସକ୍ରିୟ",
+    "capturesWatched": "ଦେଖାଯାଇଛି",
+    "uploadScan": "ଅପଲୋଡ୍",
+    "uploadDescription": "କ୍ୟୁ",
+    "dragOrBrowse": "ଟାଣନ୍ତୁ",
+    "releaseToDrop": "ଛାଡନ୍ତୁ",
+    "novaVoiceTriage": "ଭଏସ୍",
+    "alwaysListening": "ଶୁଣୁଛି",
+    "tapToSpeakSymptoms": "ଟାପ୍",
+    "offlineQueue": "ଅଫଲାଇନ୍ କ୍ୟୁ"
+  },
+  "Profile": {
+    "editProfile": "ପ୍ରୋଫାଇଲ୍",
+    "manageInfo": "ସୂଚନା",
+    "fullName": "ନାମ",
+    "email": "ଇମେଲ୍",
+    "phone": "ଫୋନ୍",
+    "address": "ଠିକଣା",
+    "bloodGroup": "ରକ୍ତ",
+    "dateOfBirth": "ଜନ୍ମ ତାରିଖ",
+    "saveChanges": "ସେଭ୍",
+    "saving": "ସେଭ୍...",
+    "medicalLicense": "ଲାଇସେନ୍ସ",
+    "verified": "ଯାଞ୍ଚ"
   }
 }

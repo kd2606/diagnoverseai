@@ -11,5 +11,66 @@
     "openCases": "खुले खटले",
     "dataSaved": "डेटा सुरक्षित",
     "lastSync": "शेवटचा सिंक"
+  },
+  "Nav": {
+    "healthHub": "आरोग्य हब",
+    "scanner": "स्कॅनर",
+    "respiratory": "श्वसन",
+    "assessments": "मूल्यांकन",
+    "vault": "व्हॉल्ट",
+    "editProfile": "प्रोफाइल संपादित करा",
+    "signOut": "साइन आउट",
+    "patientPortal": "रुग्ण पोर्टल",
+    "synced": "सिंक केले",
+    "offline": "ऑफलाइन",
+    "queued": "रांगेत",
+    "toggleNav": "नेव्हिगेशन टॉगल करा"
+  },
+  "Chat": {
+    "pulseHealthAgent": "पल्स हेल्थ एजंट",
+    "online": "ऑनलाइन",
+    "listen": "ऐका",
+    "stop": "थांबा",
+    "sendReports": "डॉक्टरला पाठवा",
+    "listening": "ऐकत आहे...",
+    "tapToSpeak": "बोलण्यासाठी टॅप करा...",
+    "retryIn": "पुन्हा प्रयत्न करा",
+    "pulseResting": "विश्रांती घेत आहे.",
+    "checking": "तपासत आहे...",
+    "failedSendReport": "अयशस्वी"
+  },
+  "Passport": {
+    "healthPassport": "आरोग्य पासपोर्ट",
+    "presentToClinician": "दाखवा.",
+    "patient": "रुग्ण",
+    "encrypted": "एनक्रिप्टेड"
+  },
+  "Common": {
+    "novaHealthIntelligence": "नोव्हा इंटेलिजन्स",
+    "live": "थेट",
+    "healthIntelligenceActive": "सक्रिय",
+    "capturesWatched": "पाहिले जात आहेत.",
+    "uploadScan": "स्कॅन अपलोड करा",
+    "uploadDescription": "वर्णन",
+    "dragOrBrowse": "ड्रॅग किंवा ब्राउझ करा",
+    "releaseToDrop": "सोडा",
+    "novaVoiceTriage": "आवाज",
+    "alwaysListening": "ऐकत आहे.",
+    "tapToSpeakSymptoms": "लक्षणे सांगा",
+    "offlineQueue": "ऑफलाइन रांग"
+  },
+  "Profile": {
+    "editProfile": "प्रोफाइल",
+    "manageInfo": "माहिती",
+    "fullName": "नाव",
+    "email": "ईमेल",
+    "phone": "फोन",
+    "address": "पत्ता",
+    "bloodGroup": "रक्त गट",
+    "dateOfBirth": "जन्म तारीख",
+    "saveChanges": "जतन करा",
+    "saving": "जतन करत आहे...",
+    "medicalLicense": "परवाना",
+    "verified": "सत्यापित"
   }
 }

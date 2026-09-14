@@ -11,5 +11,66 @@
     "openCases": "खुले मामले",
     "dataSaved": "डेटा सुरक्षित",
     "lastSync": "अंतिम सिंक"
+  },
+  "Nav": {
+    "healthHub": "स्वास्थ्य हब",
+    "scanner": "स्कैनर",
+    "respiratory": "श्वसन",
+    "assessments": "मूल्यांकन",
+    "vault": "तिजोरी",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "signOut": "साइन आउट",
+    "patientPortal": "रोगी पोर्टल",
+    "synced": "सिंक किया गया",
+    "offline": "ऑफ़लाइन",
+    "queued": "कतारबद्ध",
+    "toggleNav": "नेविगेशन टॉगल करें"
+  },
+  "Chat": {
+    "pulseHealthAgent": "पल्स स्वास्थ्य एजेंट",
+    "online": "ऑनलाइन",
+    "listen": "सुनें",
+    "stop": "रुकें",
+    "sendReports": "डॉक्टर को रिपोर्ट भेजें",
+    "listening": "सुन रहा है...",
+    "tapToSpeak": "बोलने या टाइप करने के लिए टैप करें...",
+    "retryIn": "में पुनः प्रयास करें",
+    "pulseResting": "पल्स अभी आराम कर रहा है। कृपया बाद में पुनः प्रयास करें।",
+    "checking": "पल्स आपके स्वास्थ्य डेटा की जाँच कर रहा है...",
+    "failedSendReport": "रिपोर्ट भेजने में विफल"
+  },
+  "Passport": {
+    "healthPassport": "स्वास्थ्य पासपोर्ट",
+    "presentToClinician": "त्वरित रिकॉर्ड पहुँच के लिए इसे अपने चिकित्सक को प्रस्तुत करें।",
+    "patient": "रोगी",
+    "encrypted": "एन्क्रिप्टेड और HIPAA अनुपालक"
+  },
+  "Common": {
+    "novaHealthIntelligence": "नोवा स्वास्थ्य बुद्धिमत्ता",
+    "live": "लाइव",
+    "healthIntelligenceActive": "आपकी स्वास्थ्य बुद्धिमत्ता सक्रिय है।",
+    "capturesWatched": "तीन कैप्चर नोवा और आपकी देखभाल टीम द्वारा देखे जा रहे हैं।",
+    "uploadScan": "एक स्कैन अपलोड करें",
+    "uploadDescription": "आपके डिवाइस पर संपीड़ित, एन्क्रिप्टेड, फिर कतारबद्ध।",
+    "dragOrBrowse": "यहां एक स्कैन खींचें, या ब्राउज़ करने के लिए टैप करें",
+    "releaseToDrop": "ऑन-डिवाइस संपीड़ित करने के लिए रिलीज़ करें",
+    "novaVoiceTriage": "नोवा वॉयस ट्राइएज",
+    "alwaysListening": "हमेशा सुन रहा है।",
+    "tapToSpeakSymptoms": "अपने लक्षणों को बोलने के लिए टैप करें",
+    "offlineQueue": "ऑफ़लाइन कतार — बनी हुई"
+  },
+  "Profile": {
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "manageInfo": "अपनी व्यक्तिगत और संपर्क जानकारी प्रबंधित करें",
+    "fullName": "पूरा नाम",
+    "email": "ईमेल पता",
+    "phone": "फ़ोन नंबर",
+    "address": "पता",
+    "bloodGroup": "रक्त समूह",
+    "dateOfBirth": "जन्म तिथि",
+    "saveChanges": "परिवर्तन सहेजें",
+    "saving": "सहेज रहा है...",
+    "medicalLicense": "मेडिकल लाइसेंस",
+    "verified": "सत्यापित"
   }
 }

@@ -11,5 +11,66 @@
     "openCases": "খোলা কেছ",
     "dataSaved": "ডাটা সংৰক্ষিত",
     "lastSync": "শেষ ছিংক"
+  },
+  "Nav": {
+    "healthHub": "হেলথ হাব",
+    "scanner": "স্কেনাৰ",
+    "respiratory": "শ্বাস-প্ৰশ্বাস",
+    "assessments": "মূল্যায়ন",
+    "vault": "ভল্ট",
+    "editProfile": "প্ৰফাইল",
+    "signOut": "ছাইন আউট",
+    "patientPortal": "পৰ্টেল",
+    "synced": "চিংক",
+    "offline": "অফলাইন",
+    "queued": "শাৰীবদ্ধ",
+    "toggleNav": "টগল"
+  },
+  "Chat": {
+    "pulseHealthAgent": "এজেণ্ট",
+    "online": "অনলাইন",
+    "listen": "শুনক",
+    "stop": "বন্ধ",
+    "sendReports": "পঠাওক",
+    "listening": "শুনি আছে...",
+    "tapToSpeak": "টেপ...",
+    "retryIn": "পুনৰ",
+    "pulseResting": "জিৰণি",
+    "checking": "পৰীক্ষা...",
+    "failedSendReport": "বিফল"
+  },
+  "Passport": {
+    "healthPassport": "পাছপোৰ্ট",
+    "presentToClinician": "দেখুৱাওক",
+    "patient": "ৰোগী",
+    "encrypted": "এনক্ৰিপ্ট"
+  },
+  "Common": {
+    "novaHealthIntelligence": "নোভা",
+    "live": "লাইভ",
+    "healthIntelligenceActive": "সক্ৰিয়",
+    "capturesWatched": "চোৱা",
+    "uploadScan": "আপলোড",
+    "uploadDescription": "শাৰী",
+    "dragOrBrowse": "টানক",
+    "releaseToDrop": "এৰক",
+    "novaVoiceTriage": "ভইচ",
+    "alwaysListening": "শুনি আছে",
+    "tapToSpeakSymptoms": "টেপ",
+    "offlineQueue": "অফলাইন শাৰী"
+  },
+  "Profile": {
+    "editProfile": "প্ৰফাইল",
+    "manageInfo": "তথ্য",
+    "fullName": "নাম",
+    "email": "ইমেইল",
+    "phone": "ফোন",
+    "address": "ঠিকনা",
+    "bloodGroup": "তেজ",
+    "dateOfBirth": "জন্ম তাৰিখ",
+    "saveChanges": "ছেভ",
+    "saving": "ছেভ...",
+    "medicalLicense": "লাইচেন্স",
+    "verified": "পৰীক্ষিত"
   }
 }

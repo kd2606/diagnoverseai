@@ -11,5 +11,66 @@
     "openCases": "کھلے کیسز",
     "dataSaved": "ڈیٹا محفوظ",
     "lastSync": "آخری مطابقت پذیری"
+  },
+  "Nav": {
+    "healthHub": "ہیلتھ ہب",
+    "scanner": "سکینر",
+    "respiratory": "تنفسی",
+    "assessments": "تشخیص",
+    "vault": "والٹ",
+    "editProfile": "پروفائل",
+    "signOut": "سائن آؤٹ",
+    "patientPortal": "پیشنٹ پورٹل",
+    "synced": "سنک",
+    "offline": "آف لائن",
+    "queued": "قطار",
+    "toggleNav": "ٹوگل"
+  },
+  "Chat": {
+    "pulseHealthAgent": "ایجنٹ",
+    "online": "آن لائن",
+    "listen": "سنیں",
+    "stop": "روکیں",
+    "sendReports": "بھیجیں",
+    "listening": "سن رہا ہے...",
+    "tapToSpeak": "ٹیپ کریں...",
+    "retryIn": "دوبارہ",
+    "pulseResting": "آرام",
+    "checking": "چیکنگ...",
+    "failedSendReport": "ناکام"
+  },
+  "Passport": {
+    "healthPassport": "پاسپورٹ",
+    "presentToClinician": "دکھائیں",
+    "patient": "مریض",
+    "encrypted": "انکرپٹڈ"
+  },
+  "Common": {
+    "novaHealthIntelligence": "نووا",
+    "live": "لائیو",
+    "healthIntelligenceActive": "فعال",
+    "capturesWatched": "دیکھا",
+    "uploadScan": "اپ لوڈ",
+    "uploadDescription": "قطار",
+    "dragOrBrowse": "ڈریگ",
+    "releaseToDrop": "چھوڑیں",
+    "novaVoiceTriage": "آواز",
+    "alwaysListening": "سن رہا ہے",
+    "tapToSpeakSymptoms": "ٹیپ",
+    "offlineQueue": "آف لائن"
+  },
+  "Profile": {
+    "editProfile": "پروفائل",
+    "manageInfo": "معلومات",
+    "fullName": "نام",
+    "email": "ای میل",
+    "phone": "فون",
+    "address": "پتہ",
+    "bloodGroup": "خون",
+    "dateOfBirth": "تاریخ پیدائش",
+    "saveChanges": "محفوظ",
+    "saving": "محفوظ...",
+    "medicalLicense": "لائسنس",
+    "verified": "تصدیق شدہ"
   }
 }

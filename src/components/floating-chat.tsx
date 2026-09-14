@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -59,6 +60,7 @@ const KEYWORD_ROUTES = [
 ];
 
 export function FloatingChat() {
+  const t = useTranslations('Chat');
   const { user } = useUser();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -111,7 +113,7 @@ export function FloatingChat() {
       const systemMsgId = 'system-fetching';
       setMessages((prev) => [
         ...prev,
-        { id: systemMsgId, role: 'system', content: 'Pulse is checking your health data...', timestamp: new Date(), type: 'text' },
+        { id: systemMsgId, role: 'system', content: t('checking'), timestamp: new Date(), type: 'text' },
       ]);
 
       fallbackTimeout = setTimeout(() => {
@@ -409,7 +411,7 @@ export function FloatingChat() {
           {
             id: Date.now().toString(),
             role: 'model' as const,
-            content: 'Pulse is resting right now 😴 Please try again later.',
+            content: t('pulseResting'),
             timestamp: new Date(),
             type: 'text' as const,
           },
@@ -471,8 +473,8 @@ export function FloatingChat() {
                     </span>
                   </div>
                   <div className="leading-tight">
-                    <h3 className="text-[15px] font-semibold tracking-tight text-white/95">Pulse Health Agent</h3>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/80">Online</p>
+                    <h3 className="text-[15px] font-semibold tracking-tight text-white/95">{t('pulseHealthAgent')}</h3>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/80">{t('online')}</p>
                   </div>
                 </div>
                 <button
@@ -560,9 +562,9 @@ export function FloatingChat() {
                               className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-indigo-300/70 transition-colors hover:text-indigo-300"
                             >
                               {isSpeaking === idx.toString() ? (
-                                <><VolumeX className="h-3 w-3" /> Stop</>
+                                <><VolumeX className="h-3 w-3" /> {t('stop')}</>
                               ) : (
-                                <><Volume2 className="h-3 w-3" /> Listen</>
+                                <><Volume2 className="h-3 w-3" /> {t('listen')}</>
                               )}
                             </button>
                             {isTriageResult && (
@@ -577,12 +579,12 @@ export function FloatingChat() {
                                     });
                                     toast.success('Report sent to doctor');
                                   } catch (err) {
-                                    toast.error('Failed to send report');
+                                    toast.error(t('failedSendReport'));
                                   }
                                 }}
                                 className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-emerald-400/80 transition-colors hover:text-emerald-400"
                               >
-                                Send Reports to Doctor
+                                {t('sendReports')}
                               </button>
                             )}
                           </div>
@@ -663,8 +665,8 @@ export function FloatingChat() {
                     cooldownSeconds > 0
                       ? `⏳ Retry in ${cooldownSeconds}s...`
                       : isListening
-                      ? 'Listening...'
-                      : 'Tap to speak or type...'
+                      ? t('listening')
+                      : t('tapToSpeak')
                   }
                   className="flex-1 bg-transparent px-2 text-[14.5px] text-white placeholder:text-white/30 focus:outline-none disabled:opacity-50"
                   disabled={isLoading || isListening || cooldownSeconds > 0}

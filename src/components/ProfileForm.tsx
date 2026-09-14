@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from 'next-intl';
 import { User, Activity, Mail, Phone, MapPin, Save, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { updateProfile } from "@/actions/profile";
@@ -8,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 
 export function ProfileForm({ role, initialData }: { role: "patient" | "doctor", initialData: any }) {
+  const t = useTranslations('Profile');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -40,8 +42,8 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
           <User className="h-8 w-8 text-indigo-400" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-white tracking-tight">Edit Profile</h1>
-          <p className="text-sm text-white/50 mt-1">Manage your personal and contact information</p>
+          <h1 className="text-2xl font-semibold text-white tracking-tight">{t('editProfile')}</h1>
+          <p className="text-sm text-white/50 mt-1">{t('manageInfo')}</p>
         </div>
       </div>
 
@@ -49,7 +51,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Full Name */}
           <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/50">Full Name</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('fullName')}</label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <input
@@ -64,7 +66,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
 
           {/* Email */}
           <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/50">Email Address</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('emailAddress')}</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <input
@@ -78,7 +80,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
 
           {/* Phone */}
           <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/50">Phone Number</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('phoneNumber')}</label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <input
@@ -92,7 +94,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
 
           {/* Address */}
           <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/50">Address / Location</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('address')}</label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <input
@@ -108,7 +110,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
           {role === 'patient' && (
             <>
               <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-white/50">Date of Birth</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('dob')}</label>
                 <div className="relative">
                   <Activity className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                   <input
@@ -120,7 +122,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-medium uppercase tracking-widest text-white/50">Blood Group</label>
+                <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('bloodGroup')}</label>
                 <select
                   value={formData.bloodGroup}
                   onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
@@ -141,7 +143,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
 
           {role === 'doctor' && (
             <div className="col-span-1 md:col-span-2 space-y-2">
-              <label className="text-xs font-medium uppercase tracking-widest text-white/50">Medical License / ID</label>
+              <label className="text-xs font-medium uppercase tracking-widest text-white/50">{t('medicalLicense')}</label>
               <div className="relative">
                 <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                 <input
@@ -151,7 +153,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
                   className="w-full bg-white/[0.01] border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white/40 cursor-not-allowed"
                 />
               </div>
-              <p className="text-[11px] text-white/30">License IDs are verified externally and cannot be changed here.</p>
+              <p className="text-[11px] text-white/30">{t('verified')}</p>
             </div>
           )}
         </div>
@@ -162,7 +164,7 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
             disabled={loading}
             className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-2.5 rounded-xl font-medium text-sm transition-all shadow-[0_0_20px_-5px_rgba(99,102,241,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <span className="animate-pulse">Saving...</span> : <><Save className="h-4 w-4" /> Save Details</>}
+            {loading ? <span className="animate-pulse">{t('saving')}</span> : <><Save className="h-4 w-4" /> {t('saveChanges')}</>}
           </button>
         </div>
       </form>

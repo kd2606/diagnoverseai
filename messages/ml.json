@@ -11,5 +11,66 @@
     "openCases": "തുറന്ന കേസുകൾ",
     "dataSaved": "ഡാറ്റ സംരക്ഷിച്ചു",
     "lastSync": "അവസാന സിങ്ക്"
+  },
+  "Nav": {
+    "healthHub": "ഹെൽത്ത് ഹബ്",
+    "scanner": "സ്കാനർ",
+    "respiratory": "റെസ്പിറേറ്ററി",
+    "assessments": "അസസ്മെന്റുകൾ",
+    "vault": "വോൾട്ട്",
+    "editProfile": "പ്രൊഫൈൽ",
+    "signOut": "സൈൻ ഔട്ട്",
+    "patientPortal": "പോർട്ടൽ",
+    "synced": "സിങ്ക്",
+    "offline": "ഓഫ്‌ലൈൻ",
+    "queued": "ക്യൂ",
+    "toggleNav": "ടോഗിൾ"
+  },
+  "Chat": {
+    "pulseHealthAgent": "ഏജന്റ്",
+    "online": "ഓൺലൈൻ",
+    "listen": "കേൾക്കുക",
+    "stop": "നിർത്തുക",
+    "sendReports": "അയയ്ക്കുക",
+    "listening": "കേൾക്കുന്നു...",
+    "tapToSpeak": "ടാപ്പ്...",
+    "retryIn": "വീണ്ടും",
+    "pulseResting": "വിശ്രമം",
+    "checking": "പരിശോധിക്കുന്നു...",
+    "failedSendReport": "പരാജയപ്പെട്ടു"
+  },
+  "Passport": {
+    "healthPassport": "പാസ്‌പോർട്ട്",
+    "presentToClinician": "കാണിക്കുക",
+    "patient": "രോഗി",
+    "encrypted": "എൻക്രിപ്റ്റ്"
+  },
+  "Common": {
+    "novaHealthIntelligence": "നോവ",
+    "live": "ലൈവ്",
+    "healthIntelligenceActive": "സജീവം",
+    "capturesWatched": "കണ്ടു",
+    "uploadScan": "അപ്‌ലോഡ്",
+    "uploadDescription": "ക്യൂ",
+    "dragOrBrowse": "വലിക്കുക",
+    "releaseToDrop": "വിടുക",
+    "novaVoiceTriage": "വോയ്സ്",
+    "alwaysListening": "കേൾക്കുന്നു",
+    "tapToSpeakSymptoms": "ടാപ്പ്",
+    "offlineQueue": "ഓഫ്‌ലൈൻ ക്യൂ"
+  },
+  "Profile": {
+    "editProfile": "പ്രൊഫൈൽ",
+    "manageInfo": "വിവരം",
+    "fullName": "പേര്",
+    "email": "ഇമെയിൽ",
+    "phone": "ഫോൺ",
+    "address": "വിലാസം",
+    "bloodGroup": "രക്തം",
+    "dateOfBirth": "ജനനത്തീയതി",
+    "saveChanges": "സംരക്ഷിക്കുക",
+    "saving": "സംരക്ഷിക്കുന്നു...",
+    "medicalLicense": "ലൈസൻസ്",
+    "verified": "സ്ഥിരീകരിച്ചു"
   }
 }

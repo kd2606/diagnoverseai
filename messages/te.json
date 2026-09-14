@@ -11,5 +11,66 @@
     "openCases": "తెరిచిన కేసులు",
     "dataSaved": "డేటా సేవ్ చేయబడింది",
     "lastSync": "చివరి సింక్"
+  },
+  "Nav": {
+    "healthHub": "హెల్త్ హబ్",
+    "scanner": "స్కానర్",
+    "respiratory": "శ్వాసకోశ",
+    "assessments": "అంచనాలు",
+    "vault": "వాల్ట్",
+    "editProfile": "ప్రొఫైల్ సవరించండి",
+    "signOut": "సైన్ అవుట్",
+    "patientPortal": "పేషెంట్ పోర్టల్",
+    "synced": "సింక్ చేయబడింది",
+    "offline": "ఆఫ్‌లైన్",
+    "queued": "క్యూలో ఉంది",
+    "toggleNav": "నావిగేషన్ టోగుల్"
+  },
+  "Chat": {
+    "pulseHealthAgent": "పల్స్ హెల్త్ ఏజెంట్",
+    "online": "ఆన్‌లైన్",
+    "listen": "వినండి",
+    "stop": "ఆపు",
+    "sendReports": "డాక్టర్‌కు రిపోర్ట్‌లు పంపండి",
+    "listening": "వింటున్నది...",
+    "tapToSpeak": "మాట్లాడటానికి నొక్కండి...",
+    "retryIn": "మళ్లీ ప్రయత్నించండి",
+    "pulseResting": "పల్స్ విశ్రాంతి తీసుకుంటోంది.",
+    "checking": "తనిఖీ చేస్తోంది...",
+    "failedSendReport": "రిపోర్ట్ పంపడం విఫలమైంది"
+  },
+  "Passport": {
+    "healthPassport": "హెల్త్ పాస్‌పోర్ట్",
+    "presentToClinician": "క్లినిషియన్‌కు చూపించండి.",
+    "patient": "రోగి",
+    "encrypted": "ఎన్‌క్రిప్ట్ చేయబడింది"
+  },
+  "Common": {
+    "novaHealthIntelligence": "నోవా హెల్త్",
+    "live": "లైవ్",
+    "healthIntelligenceActive": "యాక్టివ్",
+    "capturesWatched": "చూస్తున్నారు.",
+    "uploadScan": "అప్‌లోడ్ చేయండి",
+    "uploadDescription": "క్యూలో ఉంది.",
+    "dragOrBrowse": "లాగండి",
+    "releaseToDrop": "వదలండి",
+    "novaVoiceTriage": "వాయిస్",
+    "alwaysListening": "వింటున్నది.",
+    "tapToSpeakSymptoms": "నొక్కండి",
+    "offlineQueue": "ఆఫ్‌లైన్ క్యూ"
+  },
+  "Profile": {
+    "editProfile": "ప్రొఫైల్",
+    "manageInfo": "సమాచారం",
+    "fullName": "పేరు",
+    "email": "ఇమెయిల్",
+    "phone": "ఫోన్",
+    "address": "చిరునామా",
+    "bloodGroup": "రక్తం",
+    "dateOfBirth": "పుట్టిన తేదీ",
+    "saveChanges": "సేవ్ చేయండి",
+    "saving": "సేవ్ చేస్తోంది...",
+    "medicalLicense": "లైసెన్స్",
+    "verified": "వెరిఫై చేయబడింది"
   }
 }

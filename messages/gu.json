@@ -11,5 +11,66 @@
     "openCases": "ખુલ્લા કેસો",
     "dataSaved": "ડેટા સાચવ્યો",
     "lastSync": "છેલ્લું સિંક"
+  },
+  "Nav": {
+    "healthHub": "હેલ્થ હબ",
+    "scanner": "સ્કેનર",
+    "respiratory": "શ્વસન",
+    "assessments": "મૂલ્યાંકન",
+    "vault": "વૉલ્ટ",
+    "editProfile": "પ્રોફાઇલ",
+    "signOut": "સાઇન આઉટ",
+    "patientPortal": "દર્દી પોર્ટલ",
+    "synced": "સિંક",
+    "offline": "ઑફલાઇન",
+    "queued": "કતારબદ્ધ",
+    "toggleNav": "ટૉગલ"
+  },
+  "Chat": {
+    "pulseHealthAgent": "એજન્ટ",
+    "online": "ઑનલાઇન",
+    "listen": "સાંભળો",
+    "stop": "થોભો",
+    "sendReports": "મોકલો",
+    "listening": "સાંભળી રહ્યું છે...",
+    "tapToSpeak": "ટેપ કરો...",
+    "retryIn": "ફરી પ્રયાસ કરો",
+    "pulseResting": "આરામ",
+    "checking": "ચકાસી રહ્યું છે...",
+    "failedSendReport": "નિષ્ફળ"
+  },
+  "Passport": {
+    "healthPassport": "પાસપોર્ટ",
+    "presentToClinician": "બતાવો",
+    "patient": "દર્દી",
+    "encrypted": "એન્ક્રિપ્ટેડ"
+  },
+  "Common": {
+    "novaHealthIntelligence": "નોવા",
+    "live": "લાઇવ",
+    "healthIntelligenceActive": "સક્રિય",
+    "capturesWatched": "જોવાઈ",
+    "uploadScan": "અપલોડ",
+    "uploadDescription": "કતારબદ્ધ",
+    "dragOrBrowse": "ખેંચો",
+    "releaseToDrop": "છોડો",
+    "novaVoiceTriage": "અવાજ",
+    "alwaysListening": "સાંભળી રહ્યું છે",
+    "tapToSpeakSymptoms": "ટેપ",
+    "offlineQueue": "ઑફલાઇન કતાર"
+  },
+  "Profile": {
+    "editProfile": "પ્રોફાઇલ",
+    "manageInfo": "માહિતી",
+    "fullName": "નામ",
+    "email": "ઇમેઇલ",
+    "phone": "ફોન",
+    "address": "સરનામું",
+    "bloodGroup": "રક્ત",
+    "dateOfBirth": "જન્મ તારીખ",
+    "saveChanges": "સાચવો",
+    "saving": "સાચવી રહ્યું છે...",
+    "medicalLicense": "લાયસન્સ",
+    "verified": "ચકાસાયેલ"
   }
 }

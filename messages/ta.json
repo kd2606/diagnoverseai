@@ -11,5 +11,66 @@
     "openCases": "திறந்த வழக்குகள்",
     "dataSaved": "தரவு சேமிக்கப்பட்டது",
     "lastSync": "கடைசி ஒத்திசைவு"
+  },
+  "Nav": {
+    "healthHub": "ஹெல்த் ஹப்",
+    "scanner": "ஸ்கேனர்",
+    "respiratory": "சுவாசம்",
+    "assessments": "மதிப்பீடுகள்",
+    "vault": "வால்ட்",
+    "editProfile": "சுயவிவரத்தைத் திருத்து",
+    "signOut": "வெளியேறு",
+    "patientPortal": "நோயாளி போர்டல்",
+    "synced": "ஒத்திசைக்கப்பட்டது",
+    "offline": "ஆஃப்லைன்",
+    "queued": "வரிசையில்",
+    "toggleNav": "மாற்று"
+  },
+  "Chat": {
+    "pulseHealthAgent": "பல்ஸ் ஏஜென்ட்",
+    "online": "ஆன்லைன்",
+    "listen": "கேட்கவும்",
+    "stop": "நிறுத்து",
+    "sendReports": "அனுப்பு",
+    "listening": "கேட்கிறது...",
+    "tapToSpeak": "தட்டவும்...",
+    "retryIn": "மீண்டும் முயற்சி செய்",
+    "pulseResting": "ஓய்வு.",
+    "checking": "சரிபார்க்கிறது...",
+    "failedSendReport": "தோல்வி"
+  },
+  "Passport": {
+    "healthPassport": "பாஸ்போர்ட்",
+    "presentToClinician": "காட்டுங்கள்.",
+    "patient": "நோயாளி",
+    "encrypted": "மறைகுறியாக்கப்பட்டது"
+  },
+  "Common": {
+    "novaHealthIntelligence": "நோவா",
+    "live": "லைவ்",
+    "healthIntelligenceActive": "செயலில்",
+    "capturesWatched": "பார்க்கப்படுகிறது.",
+    "uploadScan": "பதிவேற்றவும்",
+    "uploadDescription": "வரிசையில்.",
+    "dragOrBrowse": "இழுக்கவும்",
+    "releaseToDrop": "விடவும்",
+    "novaVoiceTriage": "குரல்",
+    "alwaysListening": "கேட்கிறது.",
+    "tapToSpeakSymptoms": "தட்டவும்",
+    "offlineQueue": "ஆஃப்லைன் வரிசை"
+  },
+  "Profile": {
+    "editProfile": "திருத்து",
+    "manageInfo": "நிர்வகி",
+    "fullName": "பெயர்",
+    "email": "மின்னஞ்சல்",
+    "phone": "போன்",
+    "address": "முகவரி",
+    "bloodGroup": "ரத்தம்",
+    "dateOfBirth": "பிறந்த தேதி",
+    "saveChanges": "சேமி",
+    "saving": "சேமிக்கிறது...",
+    "medicalLicense": "உரிமம்",
+    "verified": "சரிபார்க்கப்பட்டது"
   }
 }

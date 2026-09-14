@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,14 +15,15 @@ import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const LINKS = [
-  { key: 'hub',         href: '',              label: 'Health Hub',  Icon: Activity },
-  { key: 'scanner',     href: '/scanner',      label: 'Scanner',     Icon: ScanLine },
-  { key: 'respiratory', href: '/respiratory',  label: 'Respiratory', Icon: Stethoscope },
-  { key: 'assessments', href: '/assessments',  label: 'Assessments', Icon: ClipboardList },
-  { key: 'vault',       href: '/vault',        label: 'Vault',       Icon: FolderLock },
+  { key: 'hub',         href: '',              label: 'healthHub',  Icon: Activity },
+  { key: 'scanner',     href: '/scanner',      label: 'scanner',     Icon: ScanLine },
+  { key: 'respiratory', href: '/respiratory',  label: 'respiratory', Icon: Stethoscope },
+  { key: 'assessments', href: '/assessments',  label: 'assessments', Icon: ClipboardList },
+  { key: 'vault',       href: '/vault',        label: 'vault',       Icon: FolderLock },
 ] as const;
 
 export function PatientNav({ locale, userProfile }: { locale: string, userProfile?: { fullName: string, initials: string } }) {
+  const t = useTranslations('Nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -56,7 +58,7 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
               DiagnoVerse <span className="text-indigo-300">AI</span>
             </span>
             <span className="mt-[3px] block font-mono text-[9.5px] uppercase tracking-[0.26em] text-white/35">
-              Patient Portal
+              {t('patientPortal')}
             </span>
           </span>
         </Link>
@@ -82,7 +84,7 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
                   />
                 )}
                 <Icon className="h-[15px] w-[15px]" strokeWidth={1.75} />
-                {label}
+                {t(label as any)}
               </Link>
             );
           })}
@@ -99,7 +101,7 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
             )}
             title={
               degraded
-                ? `${stats.pending} queued · ${formatBytes(stats.pendingBytes)} parked in IndexedDB`
+                ? `${stats.pending} ${t('queued')} · ${formatBytes(stats.pendingBytes)} parked in IndexedDB`
                 : 'All captures synced to the clinical vault'
             }
           >
@@ -111,11 +113,11 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
               />
             </span>
             {!online ? (
-              <><WifiOff className="h-3 w-3" strokeWidth={2} /> Offline · {stats.pending} queued</>
+              <><WifiOff className="h-3 w-3" strokeWidth={2} /> {t('offline')} · {stats.pending} {t('queued')}</>
             ) : degraded ? (
-              <>Syncing · {stats.pending + stats.uploading}</>
+              <>{t('syncing')} · {stats.pending + stats.uploading}</>
             ) : (
-              <>Synced</>
+              <>{t('synced')}</>
             )}
           </div>
 
@@ -143,7 +145,7 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
                     }}
                     className="flex w-full items-center px-4 py-2.5 text-sm text-white/70 hover:bg-white/[0.05] hover:text-white transition-colors"
                   >
-                    Edit Profile
+                    {t('editProfile')}
                   </button>
                   <button
                     onClick={() => {
@@ -151,7 +153,7 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
                     }}
                     className="flex w-full items-center px-4 py-2.5 text-sm text-rose-400/80 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
                   >
-                    Sign Out
+                    {t('signOut')}
                   </button>
                 </div>
               </div>
@@ -192,7 +194,7 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
                   )}
                 >
                   <Icon className="h-4 w-4" strokeWidth={1.75} />
-                  {label}
+                  {t(label as any)}
                 </Link>
               ))}
             </div>

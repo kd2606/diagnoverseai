@@ -11,5 +11,66 @@
     "openCases": "ਖੁੱਲ੍ਹੇ ਕੇਸ",
     "dataSaved": "ਡਾਟਾ ਸੁਰੱਖਿਅਤ",
     "lastSync": "ਆਖਰੀ ਸਿੰਕ"
+  },
+  "Nav": {
+    "healthHub": "ਹੈਲਥ ਹੱਬ",
+    "scanner": "ਸਕੈਨਰ",
+    "respiratory": "ਸਾਹ",
+    "assessments": "ਮੁਲਾਂਕਣ",
+    "vault": "ਵਾਲਟ",
+    "editProfile": "ਪ੍ਰੋਫਾਈਲ",
+    "signOut": "ਸਾਈਨ ਆਉਟ",
+    "patientPortal": "ਪੋਰਟਲ",
+    "synced": "ਸਿੰਕ",
+    "offline": "ਔਫਲਾਈਨ",
+    "queued": "ਕਤਾਰ",
+    "toggleNav": "ਟੌਗਲ"
+  },
+  "Chat": {
+    "pulseHealthAgent": "ਏਜੰਟ",
+    "online": "ਔਨਲਾਈਨ",
+    "listen": "ਸੁਣੋ",
+    "stop": "ਰੋਕੋ",
+    "sendReports": "ਭੇਜੋ",
+    "listening": "ਸੁਣ ਰਿਹਾ ਹੈ...",
+    "tapToSpeak": "ਟੈਪ...",
+    "retryIn": "ਦੁਬਾਰਾ",
+    "pulseResting": "ਆਰਾਮ",
+    "checking": "ਜਾਂਚ...",
+    "failedSendReport": "ਅਸਫਲ"
+  },
+  "Passport": {
+    "healthPassport": "ਪਾਸਪੋਰਟ",
+    "presentToClinician": "ਦਿਖਾਓ",
+    "patient": "ਮਰੀਜ਼",
+    "encrypted": "ਇਨਕ੍ਰਿਪਟਡ"
+  },
+  "Common": {
+    "novaHealthIntelligence": "ਨੋਵਾ",
+    "live": "ਲਾਈਵ",
+    "healthIntelligenceActive": "ਸਰਗਰਮ",
+    "capturesWatched": "ਦੇਖਿਆ",
+    "uploadScan": "ਅੱਪਲੋਡ",
+    "uploadDescription": "ਕਤਾਰ",
+    "dragOrBrowse": "ਖਿੱਚੋ",
+    "releaseToDrop": "ਛੱਡੋ",
+    "novaVoiceTriage": "ਆਵਾਜ਼",
+    "alwaysListening": "ਸੁਣ ਰਿਹਾ ਹੈ",
+    "tapToSpeakSymptoms": "ਟੈਪ",
+    "offlineQueue": "ਔਫਲਾਈਨ ਕਤਾਰ"
+  },
+  "Profile": {
+    "editProfile": "ਪ੍ਰੋਫਾਈਲ",
+    "manageInfo": "ਜਾਣਕਾਰੀ",
+    "fullName": "ਨਾਮ",
+    "email": "ਈਮੇਲ",
+    "phone": "ਫੋਨ",
+    "address": "ਪਤਾ",
+    "bloodGroup": "ਖੂਨ",
+    "dateOfBirth": "ਜਨਮ ਮਿਤੀ",
+    "saveChanges": "ਸੰਭਾਲੋ",
+    "saving": "ਸੰਭਾਲ ਰਿਹਾ...",
+    "medicalLicense": "ਲਾਇਸੈਂਸ",
+    "verified": "ਤਸਦੀਕ"
   }
 }
