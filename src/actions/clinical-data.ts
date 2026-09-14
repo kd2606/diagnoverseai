@@ -21,7 +21,7 @@ export interface TriageQueueItem {
   age: number | null;
   sex: string | null;
   chiefComplaint: string;
-  aiDiagnosis: string | null;
+  aiAssessment: string | null;
   icd10Code: string | null;
   confidence: number | null;
   confidencePct: number;
@@ -46,7 +46,7 @@ export interface PatientPanelItem {
   totalCases: number;
   openCases: number;
   latestStatus: CaseStatus | null;
-  latestDiagnosis: string | null;
+  latestAssessment: string | null;
   latestConfidence: number | null;
   lastSeenAt: string | null;
   createdAt: string;
@@ -140,7 +140,7 @@ function mapQueueRow(row: any): TriageQueueItem {
     age: row.patient_age,
     sex: row.patient_sex,
     chiefComplaint: row.chief_complaint,
-    aiDiagnosis: row.ai_diagnosis,
+    aiAssessment: row.ai_assessment,
     icd10Code: row.icd10_code,
     confidence,
     confidencePct: confidence === null ? 0 : Math.round(confidence * 100),
@@ -268,7 +268,7 @@ export async function adjudicateCase(
     const { data: existing, error: readError } = await (supabase as any)
       .from('triage_cases')
       .select(
-        'id, status, clinician_id, triage_note, ai_diagnosis, icd10_code, confidence_score',
+        'id, status, clinician_id, triage_note, ai_assessment, icd10_code, confidence_score',
       )
       .eq('id', input.caseId)
       .maybeSingle();
@@ -315,7 +315,7 @@ export async function adjudicateCase(
 
     const summaryParts = [
       `Case ${input.caseId.slice(0, 8)} adjudicated ${previousStatus} → ${input.status}`,
-      `AI impression: ${existing.ai_diagnosis ?? 'none'}${
+      `AI impression: ${existing.ai_assessment ?? 'none'}${
         existing.icd10_code ? ` (${existing.icd10_code})` : ''
       } @ ${confidenceLabel} confidence`,
       actionType === 'override'
@@ -450,7 +450,7 @@ export async function getPatientPanel(): Promise<
         triage_cases (
           id,
           status,
-          ai_diagnosis,
+          ai_assessment,
           confidence_score,
           created_at
         )
@@ -473,7 +473,7 @@ export async function getPatientPanel(): Promise<
       triage_cases: Array<{
         id: string;
         status: CaseStatus;
-        ai_diagnosis: string | null;
+        ai_assessment: string | null;
         confidence_score: number | null;
         created_at: string;
       }> | null;
@@ -497,7 +497,7 @@ export async function getPatientPanel(): Promise<
           totalCases: cases.length,
           openCases: cases.filter((c) => c.status !== 'verified').length,
           latestStatus: latest?.status ?? null,
-          latestDiagnosis: latest?.ai_diagnosis ?? null,
+          latestAssessment: latest?.ai_assessment ?? null,
           latestConfidence:
             latest?.confidence_score == null ? null : Number(latest.confidence_score),
           lastSeenAt: latest?.created_at ?? null,
@@ -514,7 +514,7 @@ export async function getPatientPanel(): Promise<
 export async function createTriageCase(data: {
   patient_id: string;
   chief_complaint: string;
-  ai_diagnosis?: string;
+  ai_assessment?: string;
 }) {
   const supabase = await createClient();
   const { error } = await (supabase as any)
@@ -522,7 +522,7 @@ export async function createTriageCase(data: {
     .insert({
       patient_id: data.patient_id,
       chief_complaint: data.chief_complaint,
-      ai_diagnosis: data.ai_diagnosis || null,
+      ai_assessment: data.ai_assessment || null,
       status: 'pending'
     });
 

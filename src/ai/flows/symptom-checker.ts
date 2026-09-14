@@ -53,7 +53,7 @@ Clinical Metadata: ${clinicalMetadata}
 Reported Symptoms: ${input.symptoms}
 
 CRITICAL RULES:
-1. DO NOT use the words "diagnose", "diagnosis", "disease", or "patient". Use "assessment", "symptom cluster", and "user".
+1. DO NOT use the words "assess", "symptom assessment", "disease", or "patient". Use "assessment", "symptom cluster", and "user".
 2. Synthesize the text symptoms with the clinical metadata (duration, pain scale, fever) to accurately place the user into one of three triage tiers.
 
 Provide a JSON response with:

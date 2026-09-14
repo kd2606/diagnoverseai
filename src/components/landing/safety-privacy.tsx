@@ -20,7 +20,7 @@ export default function SafetyPrivacy() {
       <div>
         <h2 className={styles.safetyTitle}>Designed to assist care—not replace clinicians</h2>
         <p className={styles.safetyDesc} style={{ marginBottom: '2rem', color: '#4b5563' }}>
-          CareSanchaar provides risk-oriented guidance and workflow support. It does not independently diagnose, prescribe or replace qualified medical professionals. High-risk cases are escalated to appropriate emergency services or healthcare facilities.
+          CareSanchaar provides risk-oriented guidance and workflow support. It does not independently assess, prescribe or replace qualified medical professionals. High-risk cases are escalated to appropriate emergency services or healthcare facilities.
         </p>
         <div className={styles.safetyList}>
           <div className={styles.safetyItem}>

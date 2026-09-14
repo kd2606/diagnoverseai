@@ -37,7 +37,7 @@ export function toQueueCardModel(c: TriageQueueItem): TriageCase {
     age: c.age || 0,
     sex: (c.sex?.toUpperCase().startsWith('M') ? 'M' : c.sex?.toUpperCase().startsWith('F') ? 'F' : 'X'),
     modality: 'ECG', // Hardcoded fallback for now
-    aiDiagnosis: c.aiDiagnosis ?? 'Pending inference',
+    aiAssessment: c.aiAssessment ?? 'Pending inference',
     icd10: c.icd10Code ?? '—',
     confidence: c.confidence ?? 0,
     modelStatus: c.status === 'verified' ? 'approved' : c.status === 'escalated' ? 'escalated' : 'pending',

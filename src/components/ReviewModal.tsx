@@ -115,9 +115,9 @@ export default function ReviewModal({ insight }: { insight: any }) {
 
                   {/* Differential DX */}
                   <div>
-                    <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-3">Differential Diagnosis</h4>
+                    <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-3">Differential Assessment</h4>
                     <div className="flex flex-wrap gap-2">
-                      {aiData.differential_diagnosis?.map((dx: string, i: number) => (
+                      {aiData.differential_assessment?.map((dx: string, i: number) => (
                         <span key={i} className="px-4 py-1.5 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 rounded-full text-sm font-light">
                           {dx}
                         </span>

@@ -137,7 +137,7 @@ export function TriageTable({
           "sticky top-[68px] z-10 border-b border-white/[0.05] bg-[#070707]/80 px-5 py-2.5 backdrop-blur-2xl",
         )}
       >
-        {["Patient", "AI Diagnosis", "Confidence", "Status", "Received", ""].map((h) => (
+        {["Patient", "AI Symptom Assessment", "Confidence", "Status", "Received", ""].map((h) => (
           <span
             key={h || "chevron"}
             role="columnheader"
@@ -223,7 +223,7 @@ export function TriageTable({
                 </p>
               </div>
 
-              {/* Diagnosis */}
+              {/* Symptom Assessment */}
               <div role="cell" className="relative min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="shrink-0 rounded border border-white/[0.07] bg-white/[0.03] px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.1em] text-white/45">
@@ -235,7 +235,7 @@ export function TriageTable({
                       c.bypassed ? "text-white/40" : "text-white/85",
                     )}
                   >
-                    {c.aiDiagnosis}
+                    {c.aiAssessment}
                   </span>
                 </div>
 

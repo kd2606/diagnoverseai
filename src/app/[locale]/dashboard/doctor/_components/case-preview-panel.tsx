@@ -156,7 +156,7 @@ export function CasePreviewPanel({
           <div className="rounded-xl border border-white/[0.05] bg-white/[0.015] p-3.5">
             <div className="flex items-baseline justify-between gap-3">
               <p className={cn("text-[13.5px] font-medium tracking-tight", c.bypassed ? "text-white/45" : "text-white")}>
-                {c.aiDiagnosis}
+                {c.aiAssessment}
               </p>
               <span className={cn("font-mono text-[15px] font-semibold tabular-nums", c.bypassed ? "text-white/30 line-through decoration-rose-400/60" : "text-white")}>
                 {(c.confidence * 100).toFixed(1)}%

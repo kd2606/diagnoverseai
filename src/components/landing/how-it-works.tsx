@@ -25,7 +25,7 @@ export default function HowItWorks() {
         <div className={styles.stepCard}>
           <div className={styles.stepNumber}>2</div>
           <h3 className={styles.stepTitle}>Assess Risk</h3>
-          <p className={styles.stepDesc}>Protocol-guided AI assistance highlights urgency, red flags and the next recommended care level. It does not replace a doctor’s diagnosis.</p>
+          <p className={styles.stepDesc}>Protocol-guided AI assistance highlights urgency, red flags and the next recommended care level. It does not replace a doctor’s symptom assessment.</p>
         </div>
         <div className={styles.stepCard}>
           <div className={styles.stepNumber}>3</div>

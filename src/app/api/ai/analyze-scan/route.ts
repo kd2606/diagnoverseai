@@ -14,7 +14,7 @@ const AiOutputSchema = z.object({
   findings: z.array(z.string()).describe('List of radiological or pathological findings.'),
   confidence_score: z.number().min(0).max(1).describe('Confidence score between 0.0 and 1.0.'),
   clinical_summary: z.string().describe('A concise clinical summary of the analysis.'),
-  differential_diagnosis: z.array(z.string()).describe('List of possible differential diagnoses.')
+  differential_assessment: z.array(z.string()).describe('List of possible differential assesss.')
 });
 
 export async function POST(req: Request) {
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const { output } = await ai.generate({
       model: gemini15Flash,
       prompt: [
-        { text: 'Analyze this scan as an expert radiologist/pathologist. Provide detailed findings, a confidence score, a clinical summary, and differential diagnoses based strictly on the provided image.' },
+        { text: 'Analyze this scan as an expert radiologist/pathologist. Provide detailed findings, a confidence score, a clinical summary, and differential assesss based strictly on the provided image.' },
         { media: { url: image_url } }
       ],
       output: { 

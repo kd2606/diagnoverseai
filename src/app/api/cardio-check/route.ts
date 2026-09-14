@@ -64,7 +64,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         return NextResponse.json({
             triagePriority: "High Priority",
             wellnessScore: 10,
-            overallAssessment: "Your reported symptoms match critical emergency criteria. Stop all activities. This system cannot diagnose, but your symptoms indicate a severe potential risk that requires immediate emergency clinical evaluation.",
+            overallAssessment: "Your reported symptoms match critical emergency criteria. Stop all activities. This system cannot assess, but your symptoms indicate a severe potential risk that requires immediate emergency clinical evaluation.",
             precautions: [
                 "Stop what you are doing and sit or lie down immediately.",
                 "If you are alone, call out for help or contact emergency services immediately.",

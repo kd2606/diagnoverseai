@@ -50,7 +50,7 @@ Reported Symptoms: ${input.symptoms}
 
 CRITICAL RULES:
 1. deterministic red-flag rules must be respected. If temperature > 104F, or systolic > 180, or diastolic > 120, or systolic < 90, or diastolic < 60, or severe symptoms (e.g. bleeding, breathing difficulty) are present, the risk level MUST be RED.
-2. Output must not be a definitive diagnosis, but rather "Possible health concern categories".
+2. Output must not be a definitive assessment, but rather "Possible health concern categories".
 3. Provide a clear explanation for the risk level.
 4. Recommend the immediate next action.
 5. Identify any missing information that would be helpful.
@@ -59,7 +59,7 @@ Provide a JSON response with:
 1. "risk_level": "GREEN", "YELLOW", or "RED".
 2. "risk_score": A score/band like "High Risk", "Moderate Risk", "Low Risk".
 3. "explanation": A clear explanation of the risk assessment.
-4. "health_concerns": An array of possible health concern categories (NOT definitive diagnoses).
+4. "health_concerns": An array of possible health concern categories (NOT definitive assesss).
 5. "recommended_action": Actionable next steps for the health worker.
 6. "missing_info": Questions or checks the worker missed.
 7. "referral_urgency": "Immediate", "Within 24 hours", "Routine", or "None".`,

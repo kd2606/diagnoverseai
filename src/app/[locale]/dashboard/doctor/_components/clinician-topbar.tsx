@@ -22,7 +22,7 @@ export function ClinicianTopbar({ escalationCount }: { escalationCount: number }
         <Search className="pointer-events-none absolute left-3 h-4 w-4 text-white/25" strokeWidth={1.75} />
         <input
           type="search"
-          placeholder="Search MRN, case ID, or diagnosis…"
+          placeholder="Search MRN, case ID, or symptom assessment…"
           className="h-10 w-full rounded-xl border border-white/[0.05] bg-white/[0.02] pl-9 pr-16 text-[13px] text-white/85 placeholder:text-white/25 outline-none backdrop-blur-3xl transition-colors focus:border-indigo-400/35 focus:bg-white/[0.035]"
         />
         <kbd className="pointer-events-none absolute right-3 flex items-center gap-0.5 rounded-md border border-white/[0.07] px-1.5 py-0.5 font-mono text-[10px] text-white/30">

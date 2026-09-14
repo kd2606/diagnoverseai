@@ -12,7 +12,7 @@ export default function Footer() {
             CareSanchaar is an AI-assisted rural care coordination platform designed to improve access, referral completion and continuity across public-health services.
           </p>
           <p style={{ color: '#4b5563', lineHeight: 1.4, fontSize: '0.75rem' }}>
-            <strong>Disclaimer:</strong> CareSanchaar is a healthcare workflow and triage-support prototype. It does not replace professional medical diagnosis, treatment or emergency services. In an emergency, contact local emergency services or visit the nearest healthcare facility.
+            <strong>Disclaimer:</strong> CareSanchaar is a healthcare workflow and triage-support prototype. It does not replace professional medical assessment, treatment or emergency services. In an emergency, contact local emergency services or visit the nearest healthcare facility.
           </p>
         </div>
         <div>

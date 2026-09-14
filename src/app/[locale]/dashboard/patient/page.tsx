@@ -32,7 +32,7 @@ const SCANS: ScanRecord[] = [
     id: 'scn_02', modality: 'derm', title: 'Dermoscopy · left forearm lesion',
     fileName: 'derm_forearm_L.jpg', bytesIn: 6_291_456, bytesOut: 312_320,
     status: 'adjudication', confidence: 0.912,
-    finding: 'Asymmetric pigment network with irregular borders. Flagged for specialist review — not a diagnosis.',
+    finding: 'Asymmetric pigment network with irregular borders. Flagged for specialist review — not a symptom assessment.',
     clinician: { name: 'Dr. M. Kovač', specialty: 'Dermatology · Queued 12m', initials: 'MK' },
     capturedAt: new Date(Date.now() - 3.4 * HOURS).toISOString(),
   },

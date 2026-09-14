@@ -9,7 +9,7 @@ import { z } from 'zod';
 /* ------------------------------------------------------------------ */
 
 export interface ClinicalTriageReport {
-  aiDiagnosis: string;
+  aiAssessment: string;
   icd10: string;
   confidence: number; // 0.0 - 1.0
   triageNote: string;
@@ -69,7 +69,7 @@ const differentialSchema = z.object({
 });
 
 const triageReportSchema = z.object({
-  aiDiagnosis: z.string().min(1),
+  aiAssessment: z.string().min(1),
   icd10: z.string().min(1),
   confidence: z.number().min(0).max(1),
   triageNote: z.string().min(1),
@@ -85,21 +85,21 @@ const triageReportSchema = z.object({
 const RESPONSE_JSON_SCHEMA = {
   type: Type.OBJECT,
   properties: {
-    aiDiagnosis: {
+    aiAssessment: {
       type: Type.STRING,
       description:
-        'Single most likely provisional diagnosis, phrased provisionally (e.g. "Suspected acute coronary syndrome"). Never a definitive diagnosis.',
+        'Single most likely provisional clinical pattern, phrased provisionally (e.g. "Suspected acute coronary syndrome"). Never a definitive assessment.',
     },
     icd10: {
       type: Type.STRING,
-      description: 'ICD-10-CM code for the provisional diagnosis, e.g. "I20.0". Use "R69" if undetermined.',
+      description: 'ICD-10-CM code for the provisional clinical pattern, e.g. "I20.0". Use "R69" if undetermined.',
     },
     confidence: {
       type: Type.NUMBER,
       minimum: 0,
       maximum: 1,
       description:
-        'Calibrated confidence in the provisional diagnosis given ONLY what the transcript supports. Use below 0.3 for vague or sparse transcripts.',
+        'Calibrated confidence in the provisional clinical pattern given ONLY what the transcript supports. Use below 0.3 for vague or sparse transcripts.',
     },
     triageNote: {
       type: Type.STRING,
@@ -136,7 +136,7 @@ const RESPONSE_JSON_SCHEMA = {
     },
   },
   required: [
-    'aiDiagnosis',
+    'aiAssessment',
     'icd10',
     'confidence',
     'triageNote',
@@ -145,7 +145,7 @@ const RESPONSE_JSON_SCHEMA = {
     'recommendedSpecialty',
   ],
   propertyOrdering: [
-    'aiDiagnosis',
+    'aiAssessment',
     'icd10',
     'confidence',
     'triageNote',
@@ -159,7 +159,7 @@ const RESPONSE_JSON_SCHEMA = {
 /* 4. System instruction                                               */
 /* ------------------------------------------------------------------ */
 
-const SYSTEM_INSTRUCTION = `You are Nova, an AI clinical triage assistant. Analyze the patient's raw spoken transcript. Do NOT diagnose definitively. Generate a structured triage report including a primary provisional diagnosis, confidence score, ICD-10 code, 3 differential diagnoses (with probabilities and ICD-10s), a clean clinical summary note, and a list of reasoning points.
+const SYSTEM_INSTRUCTION = `You are Nova, an AI clinical triage assistant. Analyze the patient's raw spoken transcript. Do NOT assess definitively. Generate a structured triage report including a primary provisional clinical pattern, confidence score, ICD-10 code, 3 differential assesss (with probabilities and ICD-10s), a clean clinical summary note, and a list of reasoning points.
 
 OPERATING RULES
 1. You are decision-support for a licensed clinician, not a diagnostician. Every diagnostic label must be provisional in phrasing ("suspected", "consistent with", "possible").

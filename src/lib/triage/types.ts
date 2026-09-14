@@ -15,7 +15,7 @@ export interface TriageCase {
   age: number;
   sex: "M" | "F" | "X";
   modality: Modality;
-  aiDiagnosis: string;
+  aiAssessment: string;
   icd10: string;
   confidence: number;
   modelStatus: Decision;

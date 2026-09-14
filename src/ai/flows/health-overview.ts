@@ -40,7 +40,7 @@ Provide a JSON response with:
 2. "recommendations": array of health recommendation strings
 3. "otcMedicines": array of OTC medicine suggestions, each with "name", "purpose", and "searchQuery" (for Google search)
 
-Be informative but always state these are for educational purposes only, not medical diagnoses.`,
+Be informative but always state these are for educational purposes only, not medical assesss.`,
         output: { schema: HealthOverviewOutputSchema },
     });
 

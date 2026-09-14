@@ -21,6 +21,8 @@ import { db } from '@/firebase/clientApp';
 import { doc, getDoc, setDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { ConsentModal } from '@/components/patient/ConsentModal';
+
 import { createTriageCase } from '@/actions/clinical-data';
 
 export type ChatMessage = {
@@ -60,6 +62,16 @@ export function FloatingChat() {
   const { user } = useUser();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [hasConsent, setHasConsent] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const consent = localStorage.getItem('pulse_dpdp_consent');
+      if (consent === 'true') {
+        setHasConsent(true);
+      }
+    }
+  }, []);
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: 'model', content: WELCOME_MESSAGE, timestamp: new Date(), type: 'text' },
   ]);
@@ -437,6 +449,16 @@ export function FloatingChat() {
               'fixed inset-0 w-[100vw] h-[100dvh] sm:static sm:inset-auto sm:h-[580px] sm:w-[380px] sm:rounded-2xl sm:border sm:border-white/[0.08]'
             )}
           >
+            {!hasConsent && (
+              <ConsentModal onConsent={(storeLocally) => {
+                setHasConsent(true);
+                localStorage.setItem('pulse_dpdp_consent', 'true');
+                if (storeLocally) {
+                  localStorage.setItem('pulse_store_locally', 'true');
+                }
+              }} />
+            )}
+
             {/* Header */}
             <div className="relative shrink-0 p-4">
               <div className="flex items-center justify-between relative z-10">
@@ -551,7 +573,7 @@ export function FloatingChat() {
                                     await createTriageCase({
                                       patient_id: user?.uid || 'pat_8f3c19',
                                       chief_complaint: messages.filter(m => m.role === 'user').map(m => m.content).join(' '),
-                                      ai_diagnosis: msg.content
+                                      ai_assessment: msg.content
                                     });
                                     toast.success('Report sent to doctor');
                                   } catch (err) {

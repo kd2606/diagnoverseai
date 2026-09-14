@@ -47,7 +47,7 @@ Metadata:
 - Sleep (Last night): ${sleepHours}
 - Stress Level: ${stressLevel}
 
-Act as an analytical wellness synthesizer. Do NOT diagnose the user or use medical diagnostic terms (like insomnia, disease, patient, etc.). Output a structured health triage priority based strictly on the presented image and data.
+Act as an analytical wellness synthesizer. Do NOT assess the user or use medical diagnostic terms (like insomnia, disease, patient, etc.). Output a structured health triage priority based strictly on the presented image and data.
 
 Provide a JSON response with:
 1. "triagePriority": MUST be exactly "High Fatigue Priority", "Elevated Strain Profile", or "Routine Recovery Profile".

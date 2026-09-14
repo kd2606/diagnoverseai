@@ -39,7 +39,7 @@ export function downloadReportAsText(title: string, results: any) {
 
     text += `=======================================\n`;
     text += `DISCLAIMER: This is an AI wellness triage tool.\n`;
-    text += `Please consult a medical professional for accurate diagnosis.\n`;
+    text += `Please consult a medical professional for accurate symptom assessment.\n`;
 
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);

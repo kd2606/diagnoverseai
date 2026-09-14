@@ -351,7 +351,7 @@ export const HEART_DISEASE_CONFIG: TabularDatasetConfig = {
     'UCI Machine Learning Repository, Heart Disease Data Set (ID 45), Cleveland Clinic Foundation, collected 1988.',
   outcomeLabel: 'angiographically confirmed coronary artery disease',
   // Original encoding: 0 = no disease, 1-4 = increasing severity.
-  label: { column: 'num', aliases: ['target', 'class', 'diagnosis'], isPositive: (v) => Number(v) > 0 },
+  label: { column: 'num', aliases: ['target', 'class', 'symptom assessment'], isPositive: (v) => Number(v) > 0 },
   numeric: [
     { column: 'age', label: 'Age', unit: 'years', bins: [40, 50, 60, 70] },
     { column: 'trestbps', label: 'Resting systolic blood pressure', unit: 'mmHg', bins: [120, 140, 160] },
@@ -441,7 +441,7 @@ export const DIABETES_CONFIG: TabularDatasetConfig = {
   cohortName: 'Pima Indians Diabetes cohort',
   provenance:
     'National Institute of Diabetes and Digestive and Kidney Diseases, Pima Indians Diabetes Database. Cohort restricted to adult female patients of Pima heritage — generalisability to other populations is limited.',
-  outcomeLabel: 'a diabetes diagnosis',
+  outcomeLabel: 'a diabetes symptom assessment',
   label: { column: 'Outcome', aliases: ['class', 'target', 'Value', 'Code'], isPositive: (v) => v === '1' || v === 'yes' || v === 'positive' },
   numeric: [
     { column: 'Age', label: 'Age', unit: 'years', bins: [30, 40, 50, 60] },

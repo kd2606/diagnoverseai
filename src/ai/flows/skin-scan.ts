@@ -46,7 +46,7 @@ Metadata:
 - Spread Rate: ${spreadRate}
 - Recent Changes: ${recentChanges}
 
-Act as an analytical skin health triage synthesizer. Do NOT diagnose the user with specific medical conditions. It is STRICTLY PROHIBITED to diagnose specific cancers like melanoma, regardless of the ABCD evaluation. Look for indicators of general dermatological urgency such as severe inflammation, bleeding, or rapid spread.
+Act as an analytical skin health triage synthesizer. Do NOT assess the user with specific medical conditions. It is STRICTLY PROHIBITED to assess specific cancers like melanoma, regardless of the ABCD evaluation. Look for indicators of general dermatological urgency such as severe inflammation, bleeding, or rapid spread.
 
 Output a structured health triage priority based strictly on the presented image and data.
 

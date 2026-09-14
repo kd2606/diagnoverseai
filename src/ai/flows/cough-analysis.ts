@@ -40,7 +40,7 @@ Metadata:
 - Fever: ${fever}
 - Breathing Difficulty: ${breathingDifficulty}
 
-Act as an analytical triage and wellness synthesizer. Do NOT diagnose the user or use medical diagnostic terms (like asthma, bronchitis, disease, patient, etc.). Output a structured health triage priority based strictly on the presented audio and data.
+Act as an analytical triage and wellness synthesizer. Do NOT assess the user or use medical diagnostic terms (like asthma, bronchitis, disease, patient, etc.). Output a structured health triage priority based strictly on the presented audio and data.
 
 Provide a JSON response with:
 1. "coughType": one of "dry", "wet", "wheezing", "barking", "unknown"

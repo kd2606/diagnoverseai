@@ -37,7 +37,7 @@ Provide a JSON response with:
 4. "summary": a compassionate, supportive summary. Speak directly to them, acknowledging what their lifestyle data and voice indicators suggest about their current stress load. Do not use medical or diagnostic terminology.
 5. "recommendations": array of actionable wellness, emotional regulation, and grounding techniques.
 
-Important: Maintain an immensely empathetic, supportive, and human tone. Read between the lines of what their lifestyle data indicates relative to their physical vocal cues. Never claim to be a doctor or use words like 'diagnose', 'patient', 'treatment', or 'clinic'.`,
+Important: Maintain an immensely empathetic, supportive, and human tone. Read between the lines of what their lifestyle data indicates relative to their physical vocal cues. Never claim to be a doctor or use words like 'assess', 'patient', 'treatment', or 'clinic'.`,
             output: { schema: MentalHealthOutputSchema },
         });
 

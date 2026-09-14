@@ -171,7 +171,7 @@ const ASSESSMENTS: Assessment[] = [
         label: "Worth talking to someone",
         accent: "rose",
         advice:
-          "Your answers suggest you've been carrying a lot lately. This screening can't diagnose anything, but it's a good reason to speak with a doctor or mental health professional soon. If you're struggling to get through the day, please reach out to someone you trust or a local support line today.",
+          "Your answers suggest you've been carrying a lot lately. This screening can't assess anything, but it's a good reason to speak with a doctor or mental health professional soon. If you're struggling to get through the day, please reach out to someone you trust or a local support line today.",
       };
     },
   },
@@ -477,7 +477,7 @@ export default function AssessmentsPage() {
         title={done ? "Your Summary" : assessment.name}
         subtitle={
           done
-            ? "A plain-language read of your answers. Nothing here is a diagnosis."
+            ? "A plain-language read of your answers. Nothing here is a symptom assessment."
             : assessment.blurb
         }
         icon={assessment.icon}
