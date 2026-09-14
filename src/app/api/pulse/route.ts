@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
     try {
-        const { messages, userContext } = await req.json();
+        const { messages, userContext, locale } = await req.json();
         const url = new URL(req.url);
         const shouldStream = url.searchParams.get("stream") !== "false";
 
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
         // Call the dedicated Pulse Genkit flow with resilience wrapper
         const result = await callWithResilience(
-            () => chatWithPulse(previousHistory, lastUserContent, userContext),
+            () => chatWithPulse(previousHistory, lastUserContent, userContext, locale),
             { maxAttempts: 2, label: 'pulse-chat-flow', maxDelayMs: 2_000 }
         );
         const responseText = result.content;

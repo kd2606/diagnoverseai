@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -61,6 +62,7 @@ const KEYWORD_ROUTES = [
 
 export function FloatingChat() {
   const t = useTranslations('Chat');
+  const locale = useLocale();
   const { user } = useUser();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -247,7 +249,7 @@ export function FloatingChat() {
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, languageCode: 'hi-IN' }),
+        body: JSON.stringify({ text, languageCode: locale }),
       });
 
       if (!response.ok) throw new Error('TTS failed');

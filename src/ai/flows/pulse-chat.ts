@@ -10,6 +10,14 @@ export type PulseChatMessage = {
     content: string;
 };
 
+
+// --- Locale-to-language mapping for multilingual output ---
+const LOCALE_TO_LANG: Record<string, string> = {
+  en: 'English', hi: 'Hindi', bn: 'Bengali', te: 'Telugu',
+  mr: 'Marathi', ta: 'Tamil', ur: 'Urdu', gu: 'Gujarati',
+  kn: 'Kannada', or: 'Odia', ml: 'Malayalam', pa: 'Punjabi', as: 'Assamese',
+};
+
 // --- System prompt: the airtight triage contract ---
 const PULSE_TRIAGE_SYSTEM_PROMPT = `You are "Pulse," a medical TRIAGE ASSISTANT for the PulseCheck AI platform serving rural India.
 Your role is strictly limited. You MUST follow these rules without exception:
@@ -126,7 +134,8 @@ export async function pulseChatFlow(input: PulseChatInput): Promise<PulseChatOut
 export async function chatWithPulse(
     history: PulseChatMessage[],
     newMessage: string,
-    userContext?: any
+    userContext?: any,
+    locale?: string
 ): Promise<PulseChatMessage> {
     try {
         // Build dynamic prompt with user context (existing behavior preserved).
@@ -153,6 +162,13 @@ Use this context to give personalized responses.
 If user asks "how am I doing?" or "mera health kaisa hai?" — answer using this real data.`;
 
             dynamicPrompt += `\n\n${contextBlock}`;
+        }
+
+
+        // --- Inject strict language instruction based on UI locale ---
+        const targetLang = LOCALE_TO_LANG[locale || 'en'] || 'English';
+        if (targetLang !== 'English') {
+            dynamicPrompt += `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST generate your ENTIRE response strictly in ${targetLang}. Even if the patient's symptoms were translated to English in the context above, your output MUST be in ${targetLang}. Do NOT respond in English. Use the ${targetLang} script and vocabulary naturally.`;
         }
 
         // Normalize consecutive same-role messages (existing logic).
