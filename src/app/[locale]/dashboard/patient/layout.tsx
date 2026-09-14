@@ -1,5 +1,6 @@
 // src/app/[locale]/dashboard/patient/layout.tsx
 import type { ReactNode } from 'react';
+import { createClient } from "@/lib/supabase/server";
 import Link from 'next/link';
 import { AmbientBackground } from '@/components/ambient-background';
 import { PatientNav } from './_components/patient-nav';
@@ -13,7 +14,23 @@ type PatientLayoutProps = {
 export default async function PatientLayout({ children, params }: PatientLayoutProps) {
   const { locale } = await params;
 
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  let userProfile = { fullName: "John M.", initials: "JM" };
+  if (user) {
+    const { data } = await supabase.from('profiles').select('full_name').eq('id', user.id).single() as any;
+    if (data && data.full_name) {
+      const fullName = data.full_name;
+      const names = fullName.trim().split(' ');
+      const initials = names.length > 1 ? (names[0][0] + names[names.length - 1][0]).toUpperCase() : fullName.substring(0, 2).toUpperCase();
+      userProfile = { fullName, initials };
+    }
+  }
+
   return (
+
     <div className="relative min-h-screen bg-[#050505] text-white antialiased selection:bg-indigo-500/30">
       {/* Zero-trust shell: ambient field renders behind every patient surface. */}
       <div className="pointer-events-none fixed inset-0 z-0">
@@ -31,7 +48,7 @@ export default async function PatientLayout({ children, params }: PatientLayoutP
       />
 
       <div className="relative z-10 flex min-h-screen flex-col">
-        <PatientNav locale={locale} />
+        <PatientNav locale={locale} userProfile={userProfile} />
         <main className="mx-auto w-full max-w-[1440px] flex-1 px-5 pb-28 pt-8 sm:px-8 lg:px-12">
           {children}
         </main>

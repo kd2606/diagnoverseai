@@ -1,3 +1,5 @@
+import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { GreetingHeader } from './_components/greeting-header';
 import { NovaVoiceTriage } from './_components/nova-voice-triage';
@@ -67,15 +69,38 @@ const SCANS: ScanRecord[] = [
   },
 ];
 
-export default function PatientDashboardPage() {
+export default async function PatientDashboardPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Dashboard' });
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  let firstName = "John";
+  let fullName = "John Doe";
+  if (user) {
+    const { data } = await supabase.from('profiles').select('full_name').eq('id', user.id).single() as any;
+    if (data && data.full_name) {
+      fullName = data.full_name;
+      firstName = fullName.split(' ')[0];
+    }
+  }
+
+  // Update SIGNALS translations
+  const SIGNALS_TL = [
+    { id: 'triage', label: t('triageTier', { default: 'Triage tier' }),  value: 'Routine', delta: 'Stable 14d', trend: 'flat', tone: 'emerald' },
+    { id: 'open',   label: t('openCases', { default: 'Open cases' }),   value: '2',       delta: '1 awaiting MD', trend: 'up', tone: 'amber' },
+    { id: 'saved',  label: t('dataSaved', { default: 'Data saved' }),   value: '96.4', unit: '%', delta: '18.2 MB -> 0.7 MB', trend: 'down', tone: 'indigo' },
+    { id: 'sync',   label: t('lastSync', { default: 'Last sync' }),    value: '2', unit: 'min', delta: 'Edge node FRA-1', trend: 'flat', tone: 'emerald' },
+  ] as const;
+
   return (
     <div className="flex flex-col gap-12 sm:gap-14">
-      <GreetingHeader firstName="John" signals={SIGNALS} />
+      <GreetingHeader firstName={firstName} signals={SIGNALS_TL as any} subtitle={t("subtitle", { default: "Your health intelligence is active." })} greetingTemplate={t("greeting", { default: "Good {timeOfDay}, {name}." })} />
       
       {/* Patient Health Passport (QR) */}
       <PatientQRCard 
         patientId="pat_8f3c19" 
-        patientName="John Doe" 
+        patientName={fullName} 
         mrn="MRN-884120" 
       />
 

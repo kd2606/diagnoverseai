@@ -19,9 +19,13 @@ function salutation(hour: number): string {
 export function GreetingHeader({
   firstName,
   signals,
+  subtitle = "Your health intelligence is active.",
+  greetingTemplate = "Good {timeOfDay}, {name}."
 }: {
   firstName: string;
   signals: HealthSignal[];
+  subtitle?: string;
+  greetingTemplate?: string;
 }) {
   // Resolved after mount so the greeting reflects the patient's local clock
   // without risking a hydration mismatch.

@@ -5,6 +5,11 @@
     "patients": "ਮਰੀਜ਼ ਡੇਟਾਬੇਸ",
     "audit": "ਆਡਿਟ ਲਾਗ",
     "settings": "ਸੈਟਿੰਗਾਂ",
-    "greeting": "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਪਲਸ ਹਾਂ, ਤੁਹਾਡਾ ਸਿਹਤ ਏਜੰਟ।"
+    "greeting": "ਸ਼ੁਭ {timeOfDay}, {name}।",
+    "subtitle": "ਤੁਹਾਡੀ ਸਿਹਤ ਖੁਫੀਆ ਸਰਗਰਮ ਹੈ।",
+    "triageTier": "ਟ੍ਰਾਇਜ ਪੱਧਰ",
+    "openCases": "ਖੁੱਲ੍ਹੇ ਕੇਸ",
+    "dataSaved": "ਡਾਟਾ ਸੁਰੱਖਿਅਤ",
+    "lastSync": "ਆਖਰੀ ਸਿੰਕ"
   }
 }

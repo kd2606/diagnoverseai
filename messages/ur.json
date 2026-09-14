@@ -5,6 +5,11 @@
     "patients": "مریض ڈیٹا بیس",
     "audit": "آڈٹ لاگ",
     "settings": "ترتیبات",
-    "greeting": "ہیلو! میں پلس ہوں، آپ کا ہیلتھ ایجنٹ۔"
+    "greeting": "صبح/شام بخیر {timeOfDay}, {name}۔",
+    "subtitle": "آپ کی صحت کی ذہانت فعال ہے۔",
+    "triageTier": "ٹرائج کی سطح",
+    "openCases": "کھلے کیسز",
+    "dataSaved": "ڈیٹا محفوظ",
+    "lastSync": "آخری مطابقت پذیری"
   }
 }

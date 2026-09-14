@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { User, Activity, Mail, Phone, MapPin, Save, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
+import { updateProfile } from "@/actions/profile";
+import { useRouter } from "next/navigation";
+
 
 export function ProfileForm({ role, initialData }: { role: "patient" | "doctor", initialData: any }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: initialData?.full_name || "John M.",
     email: initialData?.email || "",
@@ -18,11 +22,15 @@ export function ProfileForm({ role, initialData }: { role: "patient" | "doctor",
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await updateProfile(formData);
       toast.success("Profile details updated successfully");
+      router.refresh(); // Refresh server components to get new name
+    } catch (err) {
+      toast.error("Failed to update profile");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (

@@ -21,7 +21,7 @@ const LINKS = [
   { key: 'vault',       href: '/vault',        label: 'Vault',       Icon: FolderLock },
 ] as const;
 
-export function PatientNav({ locale }: { locale: string }) {
+export function PatientNav({ locale, userProfile }: { locale: string, userProfile?: { fullName: string, initials: string } }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -131,10 +131,7 @@ export function PatientNav({ locale }: { locale: string }) {
               type="button"
               className="group flex items-center gap-2.5 rounded-full border border-white/[0.07] bg-white/[0.02] py-1 pl-1 pr-1 backdrop-blur-xl transition-colors hover:border-white/15 sm:pr-3.5"
             >
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-indigo-400/80 to-violet-500/70 text-[12px] font-semibold text-[#050505]">
-                JM
-              </span>
-              <span className="hidden text-[13px] font-medium text-white/70 sm:block">John M.</span>
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-indigo-400/80 to-violet-500/70 text-[12px] font-semibold text-[#050505]">{userProfile?.initials || "JM"}</span><span className="hidden text-[13px] font-medium text-white/70 sm:block">{userProfile?.fullName || "John M."}</span>
             </button>
             {profileOpen && (
               <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-xl border border-white/[0.08] bg-[#0a0a0a] shadow-lg shadow-black/50 ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden">
