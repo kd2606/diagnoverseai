@@ -38,6 +38,7 @@ interface PatientRecord {
   riskTier: RiskTier;
   riskScore: number;
   chiefComplaint: string;
+  aiAssessment: string;
   lastTriageAt: string;
   status: CareStatus;
   openActions: number;
@@ -81,6 +82,7 @@ export function PatientPanel({ patients }: { patients: any[] }) {
         riskTier: (p.latestConfidence ? (p.latestConfidence < 60 ? 'critical' : p.latestConfidence < 80 ? 'high' : 'moderate') : 'low') as RiskTier,
         riskScore: p.latestConfidence || 0,
         chiefComplaint: p.chiefComplaint || 'No complaint recorded',
+        aiAssessment: p.latestAssessment || 'Pending inference',
         lastTriageAt: p.lastSeenAt || p.createdAt || new Date().toISOString(),
         status: (p.latestStatus === 'verified' ? 'discharged' : p.latestStatus === 'escalated' ? 'active' : 'monitoring') as CareStatus,
         openActions: p.openCases || 0
@@ -289,7 +291,9 @@ export function PatientPanel({ patients }: { patients: any[] }) {
                           {patient.openActions > 0 && ` · ${patient.openActions} open actions`}
                         </p>
                         <p className="mt-1.5 truncate text-[12px] text-white/55">
-                          {patient.chiefComplaint}
+                          <span className="font-medium text-white/70">Complaint:</span> {patient.chiefComplaint}
+                          <span className="mx-2 text-white/20">|</span>
+                          <span className="font-medium text-white/70">AI:</span> {patient.aiAssessment}
                         </p>
                       </div>
                     </div>
