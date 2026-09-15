@@ -167,14 +167,14 @@ export default function OnboardingPage() {
                                     Initialize <span className="text-indigo-400">Clinical Identity</span>
                                 </h1>
                                 <p className="text-xl text-white/40 max-w-md mx-auto leading-relaxed">
-                                    Set up your advanced medical dashboard with AI-driven diagnostics.
+                                    Set up your advanced medical dashboard with AI-driven assessments.
                                 </p>
                             </div>
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                                 {[
                                     { text: "Encrypted Protocol", sub: "AES-256 Security" },
-                                    { text: "AI Diagnostic Engine", sub: "98% Accuracy" },
+                                    { text: "AI Assessment Engine", sub: "98% Accuracy" },
                                     { text: "Multi-Lingual", sub: "Hindi & English" }
                                 ].map((item, i) => (
                                     <div key={i} className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl backdrop-blur-md">
@@ -361,7 +361,7 @@ export default function OnboardingPage() {
                                 <FeatureButton 
                                     icon={Scan} 
                                     title="Dermal-View" 
-                                    desc="Skin diagnostics." 
+                                    desc="Skin assessments." 
                                     onClick={() => router.push(`/${locale}/skin-scan`)} 
                                 />
                                 <FeatureButton 

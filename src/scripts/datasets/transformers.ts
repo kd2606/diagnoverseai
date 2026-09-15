@@ -111,7 +111,7 @@ export function transformColumbiaDiseaseSymptom(rows: CsvRow[]): KnowledgeDoc[] 
           : '',
         'Provenance: Columbia University DBMI Disease-Symptom Knowledge Database,',
         'derived from hospital discharge summaries. Interpretation guard: this is',
-        'a documented symptom-disease co-occurrence list, not a diagnostic',
+        'a documented symptom-disease co-occurrence list, not a assessment',
         'criterion set. Presence of listed symptoms does not establish this',
         'disease, and absence does not exclude it.',
       ]
@@ -218,7 +218,7 @@ function renderFeatureDoc(
       ? `${suppressed} stratum/strata suppressed for having fewer than ${MIN_STRATUM_SIZE} patients.`
       : '',
     `Provenance: ${config.provenance}`,
-    `Interpretation guard: these are retrospective, unadjusted associations from a single historical research cohort. They are NOT diagnostic thresholds, NOT causal, NOT adjusted for confounding, and NOT transferable to an individual patient's probability of disease. Use only to note which measured parameters warrant Medical Officer attention.`,
+    `Interpretation guard: these are retrospective, unadjusted associations from a single historical research cohort. They are NOT assessment thresholds, NOT causal, NOT adjusted for confounding, and NOT transferable to an individual patient's probability of disease. Use only to note which measured parameters warrant Medical Officer attention.`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -427,7 +427,7 @@ export const CKD_CONFIG: TabularDatasetConfig = {
  *
  * IMPORTANT: UCI dataset ID 34 ("Diabetes", AIM '94) is 70 files of
  * time-stamped insulin-dose and glucose-measurement event codes for individual
- * patients. It has NO diagnostic outcome label, so no association document can
+ * patients. It has NO assessment outcome label, so no association document can
  * be derived from it and it does not belong in a retrieval corpus for triage.
  *
  * Point this config at a labelled diabetes CSV instead — the Pima Indians

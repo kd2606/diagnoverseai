@@ -52,7 +52,7 @@ export default function AboutPage() {
               Democratizing healthcare with edge AI.
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-white/60">
-              DiagnoVerse AI bridges the gap between advanced clinical diagnostics and remote patient care. By leveraging on-device processing, deterministic safety protocols, and a zero-trust architecture, we ensure that high-fidelity medical intelligence is accessible to everyone—regardless of their network connection.
+              DiagnoVerse AI bridges the gap between advanced clinical assessments and remote patient care. By leveraging on-device processing, deterministic safety protocols, and a zero-trust architecture, we ensure that high-fidelity medical intelligence is accessible to everyone—regardless of their network connection.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-white/[0.05] pt-6">
                <div className="flex items-center gap-2">

@@ -57,7 +57,7 @@ CRITICAL RULES:
 2. Synthesize the text symptoms with the clinical metadata (duration, pain scale, fever) to accurately place the user into one of three triage tiers.
 
 Provide a JSON response with:
-1. "symptomCluster": A general grouping of the reported symptoms (e.g., "Upper Respiratory Symptoms", "Gastric Discomfort", "Musculoskeletal Tension"). Do not give a single diagnostic medical condition.
+1. "symptomCluster": A general grouping of the reported symptoms (e.g., "Upper Respiratory Symptoms", "Gastric Discomfort", "Musculoskeletal Tension"). Do not give a single assessment medical condition.
 2. "clusterDescription": A clear, simple 2-3 sentence description of this cluster in plain language.
 3. "triagePriority": Classify as exactly "Routine Care Needed", "Elevated Triage Priority", or "High Triage Priority" based on the severity of the metadata and symptoms. A pain scale of 8+, chronic duration, or specific concerning text should elevate priority.
 4. "simpleExplanation": 1-2 lines explaining the result in simple language a non-medical person can understand.

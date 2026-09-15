@@ -13,7 +13,7 @@
  *
  * The output conforms to ABDM's:
  * - OPConsultation profile (Composition)
- * - DiagnosticReport profile
+ * - AssessmentReport profile
  *
  * Reference: https://nrces.in/ndhm/fhir/r4/StructureDefinition-OPConsultRecord.html
  */
@@ -26,7 +26,7 @@ import type { FHIR } from './fhir-types';
 const LOINC = 'http://loinc.org';
 const SNOMED = 'http://snomed.info/sct';
 const ABDM_PROFILE_OP_CONSULT = 'https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord';
-const ABDM_PROFILE_DIAGNOSTIC = 'https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab';
+const ABDM_PROFILE_ASSESSMENT = 'https://nrces.in/ndhm/fhir/r4/StructureDefinition/AssessmentReportLab';
 const ABDM_ID_SYSTEM_MR = 'urn:diagnoverse:mr';
 const ABDM_ID_SYSTEM_ABHA = 'https://healthid.ndhm.gov.in';
 
@@ -243,12 +243,12 @@ function _mapTriageObservation(
   };
 }
 
-// ─── AI Screenings → DiagnosticReports ───────
+// ─── AI Screenings → AssessmentReports ───────
 
 function _mapAIScreenings(
   triageCase: InternalTriageCase,
   patientRef: string
-): FHIR.DiagnosticReport[] {
+): FHIR.AssessmentReport[] {
   return triageCase.aiScreenings
     .filter((screening) => screening.conformalSet !== null && screening.conformalSet.length > 0)
     .map((screening) => {
@@ -268,10 +268,10 @@ function _mapAIScreenings(
         }));
 
       return {
-        resourceType: 'DiagnosticReport' as const,
+        resourceType: 'AssessmentReport' as const,
         id: _nextResourceId('diag-report'),
         meta: {
-          profile: [ABDM_PROFILE_DIAGNOSTIC],
+          profile: [ABDM_PROFILE_ASSESSMENT],
         },
         status: 'final' as const,
         category: [{
@@ -343,7 +343,7 @@ function _buildComposition(
   encounterRef: string,
   vitalRefs: string[],
   triageRef: string | null,
-  diagnosticRefs: string[],
+  assessmentRefs: string[],
   referralRef: string | null,
   triageCase: InternalTriageCase
 ): FHIR.Composition {
@@ -371,14 +371,14 @@ function _buildComposition(
     });
   }
 
-  // AI Diagnostic Reports section
-  if (diagnosticRefs.length > 0) {
+  // AI Assessment Reports section
+  if (assessmentRefs.length > 0) {
     sections.push({
       title: 'AI Screening Results',
       code: {
-        coding: [{ system: LOINC, code: '30954-2', display: 'Relevant diagnostic tests/laboratory data' }],
+        coding: [{ system: LOINC, code: '30954-2', display: 'Relevant assessment tests/laboratory data' }],
       },
-      entry: diagnosticRefs.map((ref) => ({ reference: ref })),
+      entry: assessmentRefs.map((ref) => ({ reference: ref })),
     });
   }
 
@@ -465,7 +465,7 @@ function _buildComposition(
  *
  * Output conforms to:
  * - ABDM OPConsultation profile (Composition)
- * - ABDM DiagnosticReport profile
+ * - ABDM AssessmentReport profile
  *
  * @param triageCase - The mutable internal system-of-record.
  * @returns An ABDM-conformant FHIR DocumentBundle.
@@ -503,12 +503,12 @@ export function projectToFHIRBundle(triageCase: InternalTriageCase): FHIR.Docume
     entries.push({ fullUrl: triageRef, resource: triageObs });
   }
 
-  // 5. AI Diagnostic Reports
-  const diagnosticReports = _mapAIScreenings(triageCase, patientRef);
-  const diagnosticRefs: string[] = [];
-  for (const report of diagnosticReports) {
+  // 5. AI Assessment Reports
+  const assessmentReports = _mapAIScreenings(triageCase, patientRef);
+  const assessmentRefs: string[] = [];
+  for (const report of assessmentReports) {
     const ref = _makeFullUrl(report.id!);
-    diagnosticRefs.push(ref);
+    assessmentRefs.push(ref);
     entries.push({ fullUrl: ref, resource: report });
   }
 
@@ -526,7 +526,7 @@ export function projectToFHIRBundle(triageCase: InternalTriageCase): FHIR.Docume
     encounterRef,
     vitalRefs,
     triageRef,
-    diagnosticRefs,
+    assessmentRefs,
     referralRef,
     triageCase
   );

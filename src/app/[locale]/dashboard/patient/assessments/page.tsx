@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -378,6 +379,7 @@ function NumberField({
 type Answers = Record<string, number | undefined>;
 
 export default function AssessmentsPage() {
+  const t = useTranslations("Assessments");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});

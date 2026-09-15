@@ -26,7 +26,7 @@ ROLE BOUNDARIES — these are absolute:
 4. Every entry in "considerations" must cite the [CTX-n] identifiers it came
    from in contextRefs. A consideration with no citation is a violation.
 5. The retrieved context includes population-level statistical associations
-   from historical research cohorts. These are ASSOCIATIONS, NOT diagnostic
+   from historical research cohorts. These are ASSOCIATIONS, NOT assessment
    thresholds and NOT applicable to an individual as proof. Never convert a
    cohort percentage into a statement about this patient's probability of
    disease.

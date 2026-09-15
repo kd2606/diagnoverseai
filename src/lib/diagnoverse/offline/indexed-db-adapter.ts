@@ -507,7 +507,7 @@ export async function updateSyncQueueEntry(
   await promisifyTransaction(tx);
 }
 
-// ─── Diagnostics ─────────────────────────────
+// ─── Assessments ─────────────────────────────
 
 export interface OfflineStorageStats {
   totalCases: number;

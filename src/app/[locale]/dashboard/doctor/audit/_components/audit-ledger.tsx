@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -148,6 +149,7 @@ const FILTERS: Array<{ key: AuditKind | "all"; label: string }> = [
 /* ------------------------------------------------------------------ */
 
 export function AuditLedger({ events: rawEvents, integrity }: { events: any[], integrity: { intact: boolean, totalEntries: number, brokenAt: number[] } | null }) {
+  const t = useTranslations("Doctor");
 
       const mappedEvents = (rawEvents || []).map(e => ({
         id: e.id,
@@ -253,7 +255,7 @@ export function AuditLedger({ events: rawEvents, integrity }: { events: any[], i
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <label className="relative flex w-full items-center lg:max-w-md">
             <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-white/30" aria-hidden />
-            <span className="sr-only">Search ledger</span>
+            <span className="sr-only">{t("searchLedger")}</span>
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -419,7 +421,7 @@ export function AuditLedger({ events: rawEvents, integrity }: { events: any[], i
         {events.length === 0 && (
           <div className="pl-10 sm:pl-14">
             <SpotlightCard className="rounded-2xl border border-white/[0.05] bg-white/[0.02] p-12 text-center backdrop-blur-3xl">
-              <p className="text-[14px] font-medium text-white/80">No ledger entries match</p>
+              <p className="text-[14px] font-medium text-white/80">{t("noLedgerEntries")}</p>
               <p className="mt-1.5 text-[12px] text-white/40">
                 The ledger is append-only — entries are never deleted, only filtered from this view.
               </p>

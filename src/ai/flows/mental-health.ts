@@ -34,7 +34,7 @@ Provide a JSON response with:
 1. "wellnessScore": a wellness score from 0-100 (100 being optimal wellness, inversely proportional to the distress score, poor sleep/diet, and voice biomarkers).
 2. "riskCategory": exactly one of: "Routine Support Needed", "Elevated Stress Profile", or "High Wellness Priority".
 3. "perceivedState": a brief, accurate description of their perceived emotional or energetic state.
-4. "summary": a compassionate, supportive summary. Speak directly to them, acknowledging what their lifestyle data and voice indicators suggest about their current stress load. Do not use medical or diagnostic terminology.
+4. "summary": a compassionate, supportive summary. Speak directly to them, acknowledging what their lifestyle data and voice indicators suggest about their current stress load. Do not use medical or assessment terminology.
 5. "recommendations": array of actionable wellness, emotional regulation, and grounding techniques.
 
 Important: Maintain an immensely empathetic, supportive, and human tone. Read between the lines of what their lifestyle data indicates relative to their physical vocal cues. Never claim to be a doctor or use words like 'assess', 'patient', 'treatment', or 'clinic'.`,
@@ -67,7 +67,7 @@ Important: Maintain an immensely empathetic, supportive, and human tone. Read be
 export async function generateMentalHealthQuestions(count: number = 5) {
     try {
         const { output } = await generateWithModelFallback({
-            prompt: `You are an analytical wellness synthesizer. Generate exactly ${count} unique questions to assess a user's stress, fatigue, and lifestyle balance. The questions should be written directly to the user (e.g., "How often do you feel..."). They should be answerable on a scale of Never/Rarely/Sometimes/Often/Constantly. Avoid medical or diagnostic terminology; focus on emotional regulation, sleep, diet, isolation, and workload.`,
+            prompt: `You are an analytical wellness synthesizer. Generate exactly ${count} unique questions to assess a user's stress, fatigue, and lifestyle balance. The questions should be written directly to the user (e.g., "How often do you feel..."). They should be answerable on a scale of Never/Rarely/Sometimes/Often/Constantly. Avoid medical or assessment terminology; focus on emotional regulation, sleep, diet, isolation, and workload.`,
             output: { schema: WellnessQuestionsSchema },
         });
 

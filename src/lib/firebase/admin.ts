@@ -210,7 +210,7 @@ export function getAdminAuth(): Auth | null {
   return cache.auth;
 }
 
-/** Non-sensitive diagnostic string for logs and health checks. */
+/** Non-sensitive assessment string for logs and health checks. */
 export function getAdminInitError(): string | null {
   return cache.error;
 }

@@ -12,8 +12,8 @@ export default function AboutPage() {
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-4">Our Vision</h2>
           <ul className="list-disc pl-6 space-y-2 text-slate-700">
-            <li>Democratize access to specialist-level diagnostics</li>
-            <li>Reduce diagnostic latency through instant multimodal analysis</li>
+            <li>Democratize access to specialist-level assessments</li>
+            <li>Reduce assessment latency through instant multimodal analysis</li>
             <li>Provide a seamless, unified platform for healthcare providers and patients</li>
           </ul>
         </div>

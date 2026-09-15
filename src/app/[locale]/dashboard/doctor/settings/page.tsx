@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useId, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -86,6 +87,8 @@ const AUTONOMY_OPTIONS: Array<{ value: Preferences["autonomy"]; label: string; d
 /* ------------------------------------------------------------------ */
 
 export default function ClinicianSettingsPage() {
+  const t = useTranslations("Doctor");
+
   const [prefs, setPrefs] = useState<Preferences>(DEFAULTS);
   const [saved, setSaved] = useState(false);
 
@@ -137,9 +140,9 @@ export default function ClinicianSettingsPage() {
           <ReadOnlyField label="Taxonomy" value={CLINICIAN.taxonomy} mono />
         </div>
         <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-white/[0.05] pt-5">
-          <Tag>Verified 2026-07-01</Tag>
-          <Tag>PECOS active</Tag>
-          <Tag>Re-attestation quarterly</Tag>
+          <Tag>{t("verifiedDate")}</Tag>
+          <Tag>{t("pecosActive")}</Tag>
+          <Tag>{t("reattestationQuarterly")}</Tag>
         </div>
       </Section>
 

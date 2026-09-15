@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Suspense } from 'react';
 import { TriageConsole } from "./_components/triage-console";
 import { getTriageQueue } from "@/actions/clinical-data";
@@ -9,10 +10,11 @@ export default async function DoctorCommandCenterPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  const t = await getTranslations("Doctor");
   const { locale } = await params;
   
   return (
-    <Suspense fallback={<div className="p-10 text-center animate-pulse">Loading triage queue...</div>}>
+    <Suspense fallback={<div className="p-10 text-center animate-pulse">{t("loadingTriageQueue")}</div>}>
       <TriageQueueLoader locale={locale} />
     </Suspense>
   );

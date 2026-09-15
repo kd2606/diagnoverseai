@@ -114,7 +114,7 @@ export const LOCAL_ONLY_FIELDS = [
 ] as const satisfies readonly (keyof SyncMeta)[];
 
 
-export type ServiceCategory = 'CLINICAL' | 'DIAGNOSTIC' | 'MEDICINE' | 'CAPACITY';
+export type ServiceCategory = 'CLINICAL' | 'ASSESSMENT' | 'MEDICINE' | 'CAPACITY';
 export type ServiceAvailability = 'AVAILABLE' | 'LIMITED' | 'UNAVAILABLE';
 
 export interface FacilityService {

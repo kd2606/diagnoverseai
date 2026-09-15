@@ -27,7 +27,7 @@ export interface CardioCheckInput {
 export async function analyzeCardioCheck(input: CardioCheckInput) {
     try {
         const { output } = await generateWithModelFallback({
-            prompt: `Act as an analytical wellness synthesizer. Analyze the user's provided biometrics and lifestyle metadata to determine cardio wellness triage. DO NOT use medical diagnostic terms (e.g., heart attack, myocardial infarction, diagnosing).
+            prompt: `Act as an analytical wellness synthesizer. Analyze the user's provided biometrics and lifestyle metadata to determine cardio wellness triage. DO NOT use medical assessment terms (e.g., heart attack, myocardial infarction, diagnosing).
 
 ### User Provided Data:
 - Age: ${input.age}
@@ -42,7 +42,7 @@ export async function analyzeCardioCheck(input: CardioCheckInput) {
 Provide a JSON response with:
 1. "triagePriority": exactly "Routine Priority", "Elevated Priority", or "High Priority".
 2. "wellnessScore": A wellness score from 0 to 100 based on the responses (higher is better).
-3. "overallAssessment": A compassionate non-diagnostic summary of the cardio strain/risk.
+3. "overallAssessment": A compassionate non-assessment summary of the cardio strain/risk.
 4. "precautions": Array of actionable lifestyle recovery steps (e.g., diet, rest, hydration).
 5. "recommendations": Array of broader cardiovascular health suggestions.
 6. "seekEmergency": Boolean true if the data implies severe acute risk.
@@ -68,7 +68,7 @@ Provide a JSON response with:
             ],
             recommendations: ["Maintain a healthy diet", "Consider scheduling a routine practitioner visit"],
             seekEmergency: false,
-            disclaimer: "This is an AI wellness synthesis and not a diagnostic tool."
+            disclaimer: "This is an AI wellness synthesis and not a assessment tool."
         };
     }
 }

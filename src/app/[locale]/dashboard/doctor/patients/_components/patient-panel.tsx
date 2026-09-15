@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
@@ -72,6 +73,7 @@ const SORTS: Array<{ key: SortKey; label: string }> = [
 /* ------------------------------------------------------------------ */
 
 export function PatientPanel({ patients }: { patients: any[] }) {
+  const t = useTranslations("Doctor");
 
       const mappedPatients = (patients || []).map(p => ({
         id: p.id,
@@ -188,7 +190,7 @@ export function PatientPanel({ patients }: { patients: any[] }) {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <label className="relative flex w-full items-center lg:max-w-md">
             <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-white/30" aria-hidden />
-            <span className="sr-only">Search patients</span>
+            <span className="sr-only">{t("searchPatients")}</span>
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -291,9 +293,9 @@ export function PatientPanel({ patients }: { patients: any[] }) {
                           {patient.openActions > 0 && ` · ${patient.openActions} open actions`}
                         </p>
                         <p className="mt-1.5 truncate text-[12px] text-white/55">
-                          <span className="font-medium text-white/70">Complaint:</span> {patient.chiefComplaint}
+                          <span className="font-medium text-white/70">{t("complaint")}</span> {patient.chiefComplaint}
                           <span className="mx-2 text-white/20">|</span>
-                          <span className="font-medium text-white/70">AI:</span> {patient.aiAssessment}
+                          <span className="font-medium text-white/70">{t("ai")}</span> {patient.aiAssessment}
                         </p>
                       </div>
                     </div>
@@ -351,7 +353,7 @@ export function PatientPanel({ patients }: { patients: any[] }) {
 
         {rows.length === 0 && (
           <SpotlightCard className="rounded-2xl border border-white/[0.05] bg-white/[0.02] p-12 text-center backdrop-blur-3xl">
-            <p className="text-[14px] font-medium text-white/80">No matching records</p>
+            <p className="text-[14px] font-medium text-white/80">{t("noMatchingRecords")}</p>
             <p className="mt-1.5 text-[12px] text-white/40">
               Adjust the risk filter or clear your search to widen the cohort.
             </p>

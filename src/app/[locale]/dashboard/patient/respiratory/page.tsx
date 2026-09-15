@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -36,7 +37,7 @@ type Triage = {
   advice: string;
 };
 
-/* ⇢ REPLACE with POST /api/diagnostics/cough */
+/* ⇢ REPLACE with POST /api/assessments/cough */
 async function runTriage(_clip: Blob): Promise<Triage> {
   await new Promise((r) => setTimeout(r, 2800));
   return {
@@ -61,6 +62,8 @@ const SEVERITY = {
 };
 
 export default function RespiratoryPage() {
+  const t = useTranslations("Respiratory");
+
   const [phase, setPhase] = useState<Phase>("idle");
   const [seconds, setSeconds] = useState(0);
   const [triage, setTriage] = useState<Triage | null>(null);
@@ -256,7 +259,7 @@ export default function RespiratoryPage() {
               >
                 {phase === "idle" && (
                   <>
-                    <p className="text-[15px] text-white/70">Tap the microphone, then cough twice.</p>
+                    <p className="text-[15px] text-white/70">{t("tapMicrophone")}</p>
                     <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/30">
                       takes about {MAX_SECONDS} seconds
                     </p>
@@ -264,7 +267,7 @@ export default function RespiratoryPage() {
                 )}
                 {recording && (
                   <>
-                    <Tag accent="rose" dot>recording</Tag>
+                    <Tag accent="rose" dot>{t("recording")}</Tag>
                     <p className="font-mono text-[11px] tracking-[0.2em] text-white/45">
                       00:0{Math.min(seconds, MAX_SECONDS)} / 00:0{MAX_SECONDS}
                     </p>
@@ -272,14 +275,14 @@ export default function RespiratoryPage() {
                 )}
                 {phase === "processing" && (
                   <>
-                    <Tag accent="emerald" dot>ai triage</Tag>
-                    <p className="text-[15px] text-white/70">Processing AI Triage…</p>
+                    <Tag accent="emerald" dot>{t("aiTriage")}</Tag>
+                    <p className="text-[15px] text-white/70">{t("processingAi")}</p>
                   </>
                 )}
                 {phase === "result" && (
                   <>
-                    <Tag accent="emerald">complete</Tag>
-                    <p className="text-[15px] text-white/70">Your clip has been analyzed.</p>
+                    <Tag accent="emerald">{t("complete")}</Tag>
+                    <p className="text-[15px] text-white/70">{t("analyzed")}</p>
                   </>
                 )}
               </motion.div>
@@ -369,7 +372,7 @@ export default function RespiratoryPage() {
                   ))}
                   <div className="col-span-2 flex items-center gap-2 rounded-2xl border border-white/[0.05] bg-white/[0.02] p-3.5">
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-300" strokeWidth={1.75} />
-                    <p className="text-[13px] text-white/55">Synced to your Clinical Vault.</p>
+                    <p className="text-[13px] text-white/55">{t("syncedVault")}</p>
                   </div>
                 </div>
               </div>

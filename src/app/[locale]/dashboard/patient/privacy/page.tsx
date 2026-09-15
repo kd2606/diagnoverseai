@@ -55,7 +55,7 @@ export default function PrivacyPage() {
               We believe that true privacy is mathematically guaranteed, not just promised in a legal document. DiagnoVerse AI is built on a zero-trust model where security and privacy are woven directly into the code. 
             </p>
             <p className="mt-4 text-[15px] leading-relaxed text-white/60">
-              When you use our AI diagnostics, processing happens primarily on the edge (your device). Any data sent to our secure cloud models is transient and strictly governed by Enterprise Data Protection terms—meaning your voice or images are never used to train generalized AI models.
+              When you use our AI assessments, processing happens primarily on the edge (your device). Any data sent to our secure cloud models is transient and strictly governed by Enterprise Data Protection terms—meaning your voice or images are never used to train generalized AI models.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-white/[0.05] pt-6">
                <div className="flex items-center gap-2">

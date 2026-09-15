@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,6 +36,7 @@ export function ClinicianSidebar({
   queueCount: number;
   escalationCount: number;
 }) {
+  const t = useTranslations("Doctor");
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const base = `/${locale}/dashboard/doctor`;
@@ -70,7 +72,7 @@ export function ClinicianSidebar({
               transition={{ duration: 0.18 }}
               className="min-w-0"
             >
-              <p className="truncate text-[13px] font-semibold tracking-tight text-white">DiagnoVerse AI</p>
+              <p className="truncate text-[13px] font-semibold tracking-tight text-white">{t("diagnoverseAi")}</p>
               <p className="truncate font-mono text-[9.5px] uppercase tracking-[0.22em] text-indigo-300/60">
                 Clinician Console
               </p>
@@ -84,7 +86,7 @@ export function ClinicianSidebar({
       {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5">
         {!collapsed && (
-          <p className="px-3 pb-2 font-mono text-[9.5px] uppercase tracking-[0.22em] text-white/25">Clinical</p>
+          <p className="px-3 pb-2 font-mono text-[9.5px] uppercase tracking-[0.22em] text-white/25">{t("clinical")}</p>
         )}
         {items.map((item) => {
           const active = item.href === base ? pathname === base : pathname.startsWith(item.href);
@@ -162,8 +164,8 @@ export function ClinicianSidebar({
           >
             <div className="flex items-center gap-2">
               <BrainCircuit className="h-3.5 w-3.5 text-indigo-300" strokeWidth={1.75} />
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">DV-Vision</p>
-              <span className="ml-auto font-mono text-[10px] text-white/30">v4.2.1</span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">{t("dvVision")}</p>
+              <span className="ml-auto font-mono text-[10px] text-white/30">{t("dvVisionVersion")}</span>
             </div>
             <div className="mt-2.5 h-[3px] overflow-hidden rounded-full bg-white/[0.06]">
               <motion.div

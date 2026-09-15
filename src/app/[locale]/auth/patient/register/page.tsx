@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 'use client';
 
 import { useState } from 'react';
@@ -9,6 +10,8 @@ import { motion } from 'framer-motion';
 import { AmbientBackground } from '@/components/AmbientBackground';
 
 export default function RegisterPage() {
+  const t = useTranslations("Auth");
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -125,7 +128,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[13px] font-medium text-white/60 ml-1">Email</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">{t("email")}</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Mail size={18} className="text-white/30" />
@@ -142,7 +145,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[13px] font-medium text-white/60 ml-1">Password</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">{t("password")}</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock size={18} className="text-white/30" />

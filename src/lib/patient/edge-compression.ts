@@ -23,7 +23,7 @@ function supportsWebP(): boolean {
 /**
  * Downscales + re-encodes a capture on-device before it ever touches the wire.
  * DICOM / PDF / non-raster payloads pass through untouched to preserve
- * diagnostic fidelity and metadata.
+ * assessment fidelity and metadata.
  */
 export async function compressForEdge(
   file: File,

@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -69,6 +70,7 @@ const KIND_ICON = { SCAN: ScanLine, AUDIO: Activity, FORM: FileHeart };
 /* ------------------------------------------------------------------ page */
 
 export default function ClinicalVaultPage() {
+  const t = useTranslations("Vault");
   const href = usePatientHref();
   const [tab, setTab] = useState<TabId>("records");
   const [query, setQuery] = useState("");
@@ -187,16 +189,16 @@ export default function ClinicalVaultPage() {
               <SpotlightCard>
                 <EmptyState
                   icon={FileHeart}
-                  title={query ? "No matching records" : "No health records yet"}
+                  title={query ? t("noMatchingRecords") : t("noHealthRecordsYet")}
                   body={
                     query
-                      ? "Try a different name, date or clinic."
-                      : "Your AI assessments will automatically sync here. Run a scan to create your first record."
+                      ? t("tryDifferentName")
+                      : t("aiAssessmentsSync")
                   }
                   action={
                     query
-                      ? { label: "Clear search", onClick: () => setQuery("") }
-                      : { label: "Run a Scan", href: href("/dashboard/patient/scanner") }
+                      ? { label: t("clearSearch"), onClick: () => setQuery("") }
+                      : { label: t("runScan"), href: href("/dashboard/patient/scanner") }
                   }
                 />
               </SpotlightCard>
@@ -255,9 +257,9 @@ export default function ClinicalVaultPage() {
                 <EmptyState
                   icon={BellRing}
                   accent="emerald"
-                  title="No reminders set"
-                  body="Set gentle nudges for medication, follow-up scans or appointments. We'll notify you — never more than once a day."
-                  action={{ label: "Create a Reminder" }}
+                  title={t("noRemindersSet")}
+                  body={t("setGentleNudges")}
+                  action={{ label: t("createReminder") }}
                 />
               </SpotlightCard>
             ) : (
@@ -333,10 +335,10 @@ export default function ClinicalVaultPage() {
                 <EmptyState
                   icon={Landmark}
                   accent="rose"
-                  title="No schemes matched yet"
-                  body="Once you complete a profile and one assessment, we'll check which public health schemes you may be eligible for and list them here."
+                  title={t("noSchemesMatched")}
+                  body={t("onceYouCompleteProfile")}
                   action={{
-                    label: "Complete an Assessment",
+                    label: t("completeAssessment"),
                     href: href("/dashboard/patient/assessments"),
                   }}
                 />

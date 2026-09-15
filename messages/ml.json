@@ -81,5 +81,56 @@
     "saving": "സംരക്ഷിക്കുന്നു...",
     "medicalLicense": "ലൈസൻസ്",
     "verified": "സ്ഥിരീകരിച്ചു"
+  },
+  "Respiratory": {
+    "tapMicrophone": "Tap the microphone, then cough twice.",
+    "recording": "recording",
+    "aiTriage": "ai triage",
+    "processingAi": "Processing AI Triage…",
+    "complete": "complete",
+    "analyzed": "Your clip has been analyzed.",
+    "syncedVault": "Synced to your Clinical Vault."
+  },
+  "Scanner": {
+    "live": "live",
+    "scanning": "scanning",
+    "complete": "complete"
+  },
+  "Doctor": {
+    "loadingTriageQueue": "Loading triage queue...",
+    "loadingAuditLedger": "Loading audit ledger...",
+    "searchLedger": "Search ledger",
+    "noLedgerEntries": "No ledger entries match",
+    "loadingPatientPanel": "Loading patient panel...",
+    "noPatientsFound": "No patients found",
+    "noPatientsAssigned": "There are currently no patients assigned to your panel.",
+    "unauthorizedAccess": "Unauthorized Access",
+    "rmpLoginRequired": "Registered Medical Practitioner (RMP) login required to view this health passport.",
+    "patientHealthPassport": "Patient Health Passport",
+    "verifiedRmpAccess": "Verified RMP Access Granted",
+    "secureSession": "Secure Session",
+    "searchPatients": "Search patients",
+    "complaint": "Complaint:",
+    "ai": "AI:",
+    "noMatchingRecords": "No matching records",
+    "verifiedDate": "Verified 2026-07-01",
+    "pecosActive": "PECOS active",
+    "reattestationQuarterly": "Re-attestation quarterly",
+    "activeCase": "Active case",
+    "modelReasoning": "Model reasoning",
+    "dvVisionModel": "DV-VISION-4.2.1",
+    "differentials": "Differentials",
+    "routeTo": "Route to",
+    "diagnoverseAi": "DiagnoVerse AI",
+    "clinical": "Clinical",
+    "dvVision": "DV-Vision",
+    "dvVisionVersion": "v4.2.1"
+  },
+  "Auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit"
   }
 }

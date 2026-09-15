@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 'use client';
 
 import { useState } from 'react';
@@ -9,6 +10,8 @@ import { motion } from 'framer-motion';
 import { AmbientBackground } from '@/components/AmbientBackground';
 
 export default function LoginPage() {
+  const t = useTranslations("Auth");
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -102,7 +105,7 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-1.5">
-              <label className="block text-[13px] font-medium text-white/60 ml-1">Email</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">{t("email")}</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Mail size={18} className="text-white/30" />
@@ -119,7 +122,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[13px] font-medium text-white/60 ml-1">Password</label>
+              <label className="block text-[13px] font-medium text-white/60 ml-1">{t("password")}</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock size={18} className="text-white/30" />
@@ -141,7 +144,7 @@ export default function LoginPage() {
               className="group w-full py-3.5 px-4 mt-6 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-400 hover:to-blue-400 text-white rounded-xl text-sm font-semibold tracking-wide shadow-[0_0_20px_rgba(79,70,229,0.25)] transition-all duration-300 disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="animate-spin" size={16} /> : null}
-              <span>Sign In</span>
+              <span>{t("login")}</span>
               {!loading && <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />}
             </button>
           </form>

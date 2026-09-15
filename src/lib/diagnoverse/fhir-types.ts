@@ -5,7 +5,7 @@
  *
  * We only define the resources needed for:
  * - OPConsultation profile (Composition)
- * - DiagnosticReport profile
+ * - AssessmentReport profile
  * - DocumentBundle (the wrapper)
  *
  * These types are intentionally minimal — we are NOT reimplementing
@@ -27,7 +27,7 @@ export namespace FHIR {
     | 'Organization'
     | 'Encounter'
     | 'Observation'
-    | 'DiagnosticReport'
+    | 'AssessmentReport'
     | 'ServiceRequest'
     | 'DocumentReference';
 
@@ -171,10 +171,10 @@ export namespace FHIR {
     encounter?: Reference;
   }
 
-  // ─── DiagnosticReport ──────────────────────
+  // ─── AssessmentReport ──────────────────────
 
-  export interface DiagnosticReport extends Resource {
-    resourceType: 'DiagnosticReport';
+  export interface AssessmentReport extends Resource {
+    resourceType: 'AssessmentReport';
     status: 'registered' | 'partial' | 'preliminary' | 'final' | 'amended' | 'corrected' | 'appended' | 'cancelled';
     category?: CodeableConcept[];
     code: CodeableConcept;

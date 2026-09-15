@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -19,6 +20,7 @@ import { ScanCanvas } from "./scan-canvas";
 const SPECIALTIES = ["Cardiology", "Neurology", "Emergency Medicine", "Critical Care", "Obstetrics"];
 
 export function CasePreviewPanel({
+
   triageCase: c,
   audit,
   onApprove,
@@ -29,6 +31,8 @@ export function CasePreviewPanel({
   onApprove: () => void;
   onEscalate: (specialty: string) => void;
 }) {
+  const t = useTranslations("Doctor");
+
   const [attested, setAttested] = useState(false);
   const [routing, setRouting] = useState(false);
   const settled = c.status !== "pending";
@@ -63,7 +67,7 @@ export function CasePreviewPanel({
         {/* Identity */}
         <div className="flex items-start justify-between gap-3 border-b border-white/[0.05] p-5">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Active case</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">{t("activeCase")}</p>
             <h2 className="mt-1 font-mono text-[17px] font-semibold tracking-tight text-white">{c.patientId}</h2>
             <p className="mt-1 font-mono text-[10.5px] text-white/35">
               {c.initials} · {c.age}
@@ -149,8 +153,8 @@ export function CasePreviewPanel({
         <div className="space-y-4 border-b border-white/[0.05] p-5">
           <div className="flex items-center gap-2">
             <BrainCircuit className="h-4 w-4 text-indigo-300" strokeWidth={1.75} />
-            <h3 className="text-[13px] font-semibold tracking-tight text-white">Model reasoning</h3>
-            <span className="ml-auto font-mono text-[10px] text-white/30">DV-VISION-4.2.1</span>
+            <h3 className="text-[13px] font-semibold tracking-tight text-white">{t("modelReasoning")}</h3>
+            <span className="ml-auto font-mono text-[10px] text-white/30">{t("dvVisionModel")}</span>
           </div>
 
           <div className="rounded-xl border border-white/[0.05] bg-white/[0.015] p-3.5">
@@ -182,7 +186,7 @@ export function CasePreviewPanel({
 
           {/* Differentials */}
           <div className="space-y-2 pt-1">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-white/25">Differentials</p>
+            <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-white/25">{t("differentials")}</p>
             {c.differentials.map((d, i) => (
               <div key={d.icd10} className="flex items-center gap-3">
                 <span className="w-40 shrink-0 truncate text-[12px] text-white/60">{d.label}</span>
@@ -313,7 +317,7 @@ export function CasePreviewPanel({
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <p className="pb-2 pt-1 font-mono text-[9.5px] uppercase tracking-[0.2em] text-white/25">Route to</p>
+                <p className="pb-2 pt-1 font-mono text-[9.5px] uppercase tracking-[0.2em] text-white/25">{t("routeTo")}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {SPECIALTIES.map((s) => (
                     <button

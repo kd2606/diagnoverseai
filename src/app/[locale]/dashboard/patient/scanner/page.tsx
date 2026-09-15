@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -80,7 +81,7 @@ async function compressToDataUrl(file: File, maxEdge = 1440, quality = 0.82) {
   return canvas.toDataURL("image/jpeg", quality);
 }
 
-/* ⇢ REPLACE with POST /api/diagnostics/scan */
+/* ⇢ REPLACE with POST /api/assessments/scan */
 async function runScan(mode: ModeId, _image: string): Promise<Result> {
   await new Promise((r) => setTimeout(r, 2600));
   const byMode: Record<ModeId, Result> = {
@@ -142,6 +143,8 @@ function Reticles() {
 /* ------------------------------------------------------------------ page */
 
 export default function UnifiedScannerPage() {
+  const t = useTranslations("Scanner");
+
   const [mode, setMode] = useState<ModeId>("face");
   const [phase, setPhase] = useState<Phase>("idle");
   const [shot, setShot] = useState<string | null>(null);
@@ -232,7 +235,7 @@ export default function UnifiedScannerPage() {
     <PageShell>
       <PageHeader
         eyebrow="Module 01 · Vision"
-        title="Diagnostic Scanner"
+        title="Visual Assessment"
         subtitle="One camera for face, eye and skin checks. Pick what you want to scan, then follow the on-screen guide."
         icon={ScanLine}
       />
@@ -365,9 +368,9 @@ export default function UnifiedScannerPage() {
 
             {/* status pip */}
             <div className="absolute left-5 top-5">
-              {phase === "live" && <Tag accent="rose" dot>live</Tag>}
-              {phase === "analyzing" && <Tag accent="indigo" dot>scanning</Tag>}
-              {phase === "result" && <Tag accent="emerald">complete</Tag>}
+              {phase === "live" && <Tag accent="rose" dot>{t("live")}</Tag>}
+              {phase === "analyzing" && <Tag accent="indigo" dot>{t("scanning")}</Tag>}
+              {phase === "result" && <Tag accent="emerald">{t("complete")}</Tag>}
             </div>
           </div>
 
