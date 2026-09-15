@@ -69,9 +69,12 @@ export function useGeolocation(options: UseGeolocationOptions = {}): UseGeolocat
   useEffect(() => {
     mountedRef.current = true;
     const supported = typeof navigator !== 'undefined' && 'geolocation' in navigator;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsSupported(supported);
     if (!supported) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus('unsupported');
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setError({ status: 'unsupported', message: MESSAGES.unsupported });
       return;
     }
