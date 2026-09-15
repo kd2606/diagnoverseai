@@ -10,7 +10,12 @@
     "triageTier": "ട്രയേജ് തലം",
     "openCases": "തുറന്ന കേസുകൾ",
     "dataSaved": "ഡാറ്റ സംരക്ഷിച്ചു",
-    "lastSync": "അവസാന സിങ്ക്"
+    "lastSync": "അവസാന സിങ്ക്",
+    "greeting_morning": "Good morning, {name}.",
+    "greeting_afternoon": "Good afternoon, {name}.",
+    "greeting_night": "Good evening, {name}.",
+    "hero_subtitle": "Your health intelligence is active.",
+    "hero_description": "Three captures are being watched by Nova and your care team. Speak your symptoms any time — no typing, no forms, works without signal."
   },
   "Nav": {
     "healthHub": "ഹെൽത്ത് ഹബ്",
@@ -57,7 +62,11 @@
     "novaVoiceTriage": "വോയ്സ്",
     "alwaysListening": "കേൾക്കുന്നു",
     "tapToSpeakSymptoms": "ടാപ്പ്",
-    "offlineQueue": "ഓഫ്‌ലൈൻ ക്യൂ"
+    "offlineQueue": "ഓഫ്‌ലൈൻ ക്യൂ",
+    "nova_title": "Always listening. Tap to speak your symptoms...",
+    "nova_description": "Try: 'I've had a tight chest...' Nova structures it into a clinical intake note...",
+    "upload_title": "Upload a scan",
+    "upload_description": "Compressed on your device, encrypted, then queued."
   },
   "Profile": {
     "editProfile": "പ്രൊഫൈൽ",

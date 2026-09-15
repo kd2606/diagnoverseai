@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useCallback, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -21,6 +22,7 @@ const ACCEPT = 'image/*,.dcm,application/dicom,application/pdf';
 type Stage = { id: string; name: string; bytesIn: number; bytesOut: number; phase: 'compressing' | 'done' };
 
 export function EdgeUploadZone({ patientId }: { patientId: string }) {
+  const t = useTranslations('Common');
   const [modality, setModality] = useState<ScanModality>('xray');
   const [dragging, setDragging] = useState(false);
   const [stages, setStages] = useState<Stage[]>([]);
@@ -100,10 +102,10 @@ export function EdgeUploadZone({ patientId }: { patientId: string }) {
             </span>
           </div>
           <h2 className="mt-3.5 text-[21px] font-semibold tracking-[-0.02em] text-white/95">
-            Upload a scan
+            {t('upload_title', { default: 'Upload a scan' })}
           </h2>
           <p className="mt-1.5 max-w-md text-[13.5px] leading-relaxed text-white/40">
-            Compressed on your device, encrypted, then queued. Works on 2G, works on no G.
+            {t('upload_description', { default: 'Compressed on your device, encrypted, then queued.' })}
           </p>
         </div>
 

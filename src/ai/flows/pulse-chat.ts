@@ -11,12 +11,7 @@ export type PulseChatMessage = {
 };
 
 
-// --- Locale-to-language mapping for multilingual output ---
-const LOCALE_TO_LANG: Record<string, string> = {
-  en: 'English', hi: 'Hindi', bn: 'Bengali', te: 'Telugu',
-  mr: 'Marathi', ta: 'Tamil', ur: 'Urdu', gu: 'Gujarati',
-  kn: 'Kannada', or: 'Odia', ml: 'Malayalam', pa: 'Punjabi', as: 'Assamese',
-};
+// LOCALE_TO_LANG mapping removed as it's directly passed to prompt now
 
 // --- System prompt: the airtight triage contract ---
 const PULSE_TRIAGE_SYSTEM_PROMPT = `You are "Pulse," a medical TRIAGE ASSISTANT for the PulseCheck AI platform serving rural India.
@@ -99,8 +94,10 @@ export type PulseChatInput = z.infer<typeof PulseChatInputSchema>;
 
 // --- New structured flow (available for new callers) ---
 export async function pulseChatFlow(input: PulseChatInput): Promise<PulseChatOutput> {
+    const systemPromptWithLocale = PULSE_TRIAGE_SYSTEM_PROMPT + `\n\nCRITICAL: You MUST process the input and generate your ENTIRE output strictly in the language corresponding to the locale code '${input.locale || 'en'}'. If the locale is 'bn', reply ONLY in Bengali script. If 'hi', reply ONLY in Hindi script. NEVER reply in English unless the locale is 'en'.`;
+
     const { output } = await generateWithModelFallback({
-        system: PULSE_TRIAGE_SYSTEM_PROMPT,
+        system: systemPromptWithLocale,
         messages: [
             ...input.conversationHistory.map((m) => ({
                 role: m.role === 'user' ? ('user' as const) : ('model' as const),
@@ -166,10 +163,7 @@ If user asks "how am I doing?" or "mera health kaisa hai?" — answer using this
 
 
         // --- Inject strict language instruction based on UI locale ---
-        const targetLang = LOCALE_TO_LANG[locale || 'en'] || 'English';
-        if (targetLang !== 'English') {
-            dynamicPrompt += `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST generate your ENTIRE response strictly in ${targetLang}. Even if the patient's symptoms were translated to English in the context above, your output MUST be in ${targetLang}. Do NOT respond in English. Use the ${targetLang} script and vocabulary naturally.`;
-        }
+        dynamicPrompt += `\n\nCRITICAL: You MUST process the input and generate your ENTIRE output strictly in the language corresponding to the locale code '${locale || 'en'}'. If the locale is 'bn', reply ONLY in Bengali script. If 'hi', reply ONLY in Hindi script. NEVER reply in English unless the locale is 'en'.`;
 
         // Normalize consecutive same-role messages (existing logic).
         const validHistory: PulseChatMessage[] = [];

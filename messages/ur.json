@@ -10,7 +10,12 @@
     "triageTier": "ٹرائج کی سطح",
     "openCases": "کھلے کیسز",
     "dataSaved": "ڈیٹا محفوظ",
-    "lastSync": "آخری مطابقت پذیری"
+    "lastSync": "آخری مطابقت پذیری",
+    "greeting_morning": "Good morning, {name}.",
+    "greeting_afternoon": "Good afternoon, {name}.",
+    "greeting_night": "Good evening, {name}.",
+    "hero_subtitle": "Your health intelligence is active.",
+    "hero_description": "Three captures are being watched by Nova and your care team. Speak your symptoms any time — no typing, no forms, works without signal."
   },
   "Nav": {
     "healthHub": "ہیلتھ ہب",
@@ -57,7 +62,11 @@
     "novaVoiceTriage": "آواز",
     "alwaysListening": "سن رہا ہے",
     "tapToSpeakSymptoms": "ٹیپ",
-    "offlineQueue": "آف لائن"
+    "offlineQueue": "آف لائن",
+    "nova_title": "Always listening. Tap to speak your symptoms...",
+    "nova_description": "Try: 'I've had a tight chest...' Nova structures it into a clinical intake note...",
+    "upload_title": "Upload a scan",
+    "upload_description": "Compressed on your device, encrypted, then queued."
   },
   "Profile": {
     "editProfile": "پروفائل",

@@ -6,31 +6,28 @@ import { ArrowUpRight, ArrowDownRight, Minus, Sparkles } from 'lucide-react';
 import { TONE } from '@/lib/patient/status';
 import type { HealthSignal } from '@/lib/patient/types';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 const TREND_ICON = { up: ArrowUpRight, down: ArrowDownRight, flat: Minus } as const;
-
-function salutation(hour: number): string {
-  if (hour < 5) return 'Good night';
-  if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
-  return 'Good evening';
-}
 
 export function GreetingHeader({
   firstName,
   signals,
-  subtitle = "Your health intelligence is active.",
-  greetingTemplate = "Good {timeOfDay}, {name}."
 }: {
   firstName: string;
   signals: HealthSignal[];
-  subtitle?: string;
-  greetingTemplate?: string;
 }) {
+  const t = useTranslations('Dashboard');
   // Resolved after mount so the greeting reflects the patient's local clock
   // without risking a hydration mismatch.
   const [greeting, setGreeting] = useState<string | null>(null);
-  useEffect(() => setGreeting(salutation(new Date().getHours())), []);
+  
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 5 || hour >= 18) setGreeting(t('greeting_night', { name: firstName }));
+    else if (hour < 12) setGreeting(t('greeting_morning', { name: firstName }));
+    else setGreeting(t('greeting_afternoon', { name: firstName }));
+  }, [firstName, t]);
 
   return (
     <section className="relative">
@@ -59,11 +56,11 @@ export function GreetingHeader({
                 greeting ? 'opacity-100' : 'opacity-0',
               )}
             >
-              {greeting ?? 'Hello'}, {firstName}.
+              {greeting ?? t('greeting_morning', { name: firstName })}
             </span>
             <br />
             <span className="relative inline-block bg-gradient-to-r from-indigo-200 via-indigo-300 to-sky-200 bg-clip-text text-transparent">
-              Your health intelligence is active.
+              {t('hero_subtitle')}
               <motion.span
                 aria-hidden
                 className="absolute -inset-x-6 -inset-y-4 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.22),transparent)] blur-2xl"
@@ -74,8 +71,7 @@ export function GreetingHeader({
           </h1>
 
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/45">
-            Three captures are being watched by Nova and your care team. Speak your symptoms
-            any time — no typing, no forms, works without signal.
+            {t('hero_description')}
           </p>
         </div>
 

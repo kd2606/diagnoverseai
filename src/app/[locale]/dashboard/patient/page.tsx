@@ -87,15 +87,15 @@ export default async function PatientDashboardPage({ params }: { params: Promise
 
   // Update SIGNALS translations
   const SIGNALS_TL = [
-    { id: 'triage', label: t('triageTier', { default: 'Triage tier' }),  value: 'Routine', delta: 'Stable 14d', trend: 'flat', tone: 'emerald' },
-    { id: 'open',   label: t('openCases', { default: 'Open cases' }),   value: '2',       delta: '1 awaiting MD', trend: 'up', tone: 'amber' },
+    { id: 'triage', label: t('triageTier', { default: 'Triage tier' }),  value: t('routine', { default: 'Routine' }), delta: t('stable14d', { default: 'Stable 14d' }), trend: 'flat', tone: 'emerald' },
+    { id: 'open',   label: t('openCases', { default: 'Open cases' }),   value: '2',       delta: t('awaitingMD', { default: '1 awaiting MD' }), trend: 'up', tone: 'amber' },
     { id: 'saved',  label: t('dataSaved', { default: 'Data saved' }),   value: '96.4', unit: '%', delta: '18.2 MB -> 0.7 MB', trend: 'down', tone: 'indigo' },
-    { id: 'sync',   label: t('lastSync', { default: 'Last sync' }),    value: '2', unit: 'min', delta: 'Edge node FRA-1', trend: 'flat', tone: 'emerald' },
+    { id: 'sync',   label: t('lastSync', { default: 'Last sync' }),    value: '2', unit: t('min', { default: 'min' }), delta: t('edgeNode', { default: 'Edge node FRA-1' }), trend: 'flat', tone: 'emerald' },
   ] as const;
 
   return (
     <div className="flex flex-col gap-12 sm:gap-14">
-      <GreetingHeader firstName={firstName} signals={SIGNALS_TL as any} subtitle={t("subtitle", { default: "Your health intelligence is active." })} greetingTemplate={t("greeting", { default: "Good {timeOfDay}, {name}." })} />
+      <GreetingHeader firstName={firstName} signals={SIGNALS_TL as any} />
       
       {/* Patient Health Passport (QR) */}
       <PatientQRCard 

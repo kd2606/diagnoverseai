@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useAnimationFrame } from 'framer-motion';
 import {
@@ -79,6 +80,7 @@ function AudioWave({
 }
 
 export function NovaVoiceTriage() {
+  const t = useTranslations('Common');
   const [lang, setLang] = useState<string>('en-US');
   const { state, transcript, interim, error, sttSupported, levelsRef, toggle, reset, isActive } =
     useVoiceTriage({ lang });
@@ -176,7 +178,7 @@ export function NovaVoiceTriage() {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-400/20 bg-indigo-500/[0.08] px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.2em] text-indigo-200/85">
-              <AudioLines className="h-3 w-3" strokeWidth={2} /> Nova Voice Triage
+              <AudioLines className="h-3 w-3" strokeWidth={2} /> {t('novaVoiceTriage', { default: 'Nova Voice Triage' })}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.02] px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.2em] text-white/35">
               <Accessibility className="h-3 w-3" strokeWidth={2} /> Zero-typing
@@ -192,7 +194,7 @@ export function NovaVoiceTriage() {
                 Listening… describe what you feel, in your own words.
               </span>
             ) : (
-              <>Always listening. <span className="text-white/45">Tap to speak your symptoms…</span></>
+              <>{t('nova_title')}</>
             )}
           </h2>
 
@@ -209,9 +211,7 @@ export function NovaVoiceTriage() {
                 </motion.p>
               ) : (
                 <motion.p key="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-xl text-[14.5px] leading-relaxed text-white/40">
-                  Try: <span className="text-white/60">“I've had a tight chest and trouble breathing since Tuesday.”</span>{' '}
-                  Nova structures it into a clinical intake note, routes urgency, and queues it for a
-                  human clinician — even with no connection.
+                  {t('nova_description')}
                 </motion.p>
               )}
             </AnimatePresence>
