@@ -1,4 +1,6 @@
-"use client";
+'use client';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase/client';
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -119,7 +121,9 @@ function ReattestPill({ dueAt }: { dueAt: string }) {
 /* ------------------------------------------------------------------ */
 
 export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIdentity }) {
+  
   const pathname = usePathname();
+  const router = useRouter();
   const params = useParams<{ locale: string }>();
   const locale = params?.locale ?? "en";
 
@@ -159,9 +163,11 @@ export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIde
   useEffect(() => {
     if (!menuOpen) return;
     const onPointerDown = (event: MouseEvent) => {
+  const router = useRouter();
       if (!menuRef.current?.contains(event.target as Node)) setMenuOpen(false);
     };
     const onKeyDown = (event: KeyboardEvent) => {
+  const router = useRouter();
       if (event.key === "Escape") setMenuOpen(false);
     };
     document.addEventListener("mousedown", onPointerDown);
@@ -349,7 +355,7 @@ export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIde
                     type="button"
                     role="menuitem"
                     className="mt-1 flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] text-rose-200/80 transition-colors hover:bg-rose-500/10 hover:text-rose-100"
-                  >
+                  onClick={async () => { await supabase.auth.signOut(); router.push('/'); router.refresh(); }}>
                     <LogOut className="h-3.5 w-3.5" aria-hidden />
                     End secure session
                   </button>

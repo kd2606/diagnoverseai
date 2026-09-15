@@ -1,4 +1,6 @@
-"use client";
+'use client';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase/client';
 import { useTranslations } from "next-intl";
 
 import Link from "next/link";
@@ -36,6 +38,7 @@ export function ClinicianSidebar({
   queueCount: number;
   escalationCount: number;
 }) {
+  const router = useRouter();
   const t = useTranslations("Doctor");
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -197,7 +200,7 @@ export function ClinicianSidebar({
             )}
           </AnimatePresence>
           {!collapsed && (
-            <button type="button" aria-label="Sign out" className="rounded-md p-1.5 text-white/30 transition-colors hover:bg-white/[0.05] hover:text-rose-300">
+            <button type="button" aria-label="Sign out" onClick={async () => { await supabase.auth.signOut(); router.push('/'); router.refresh(); }} className="rounded-md p-1.5 text-white/30 transition-colors hover:bg-white/[0.05] hover:text-rose-300">
               <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
             </button>
           )}

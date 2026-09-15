@@ -1,4 +1,5 @@
 'use client';
+import { supabase } from '@/lib/supabase/client';
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -23,6 +24,7 @@ const LINKS = [
 ] as const;
 
 export function PatientNav({ locale, userProfile }: { locale: string, userProfile?: { fullName: string, initials: string } }) {
+  
   const t = useTranslations('Nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -148,13 +150,16 @@ export function PatientNav({ locale, userProfile }: { locale: string, userProfil
                     {t('editProfile')}
                   </button>
                   <button
-                    onClick={() => {
-                      setProfileOpen(false);
-                    }}
-                    className="flex w-full items-center px-4 py-2.5 text-sm text-rose-400/80 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
-                  >
-                    {t('signOut')}
-                  </button>
+                      onClick={async () => {
+                        setProfileOpen(false);
+                        await supabase.auth.signOut();
+                        router.push('/');
+                        router.refresh();
+                      }}
+                      className="flex w-full items-center px-4 py-2.5 text-sm text-rose-400/80 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
+                    >
+                      {t('signOut')}
+                    </button>
                 </div>
               </div>
             )}
