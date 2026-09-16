@@ -2,17 +2,28 @@ import type { ReactNode } from "react";
 
 import ClinicianTopNav, { type ClinicianIdentity } from "./_components/clinician-topnav";
 
+import { createClient } from '@/lib/supabase/server';
+
 /**
- * Replace with your session/tRPC/DB read, e.g.
- *   const clinician = await getClinicianSession();
  * Resolved on the server so the countdown prop is stable across hydration.
  */
 async function getClinician(): Promise<ClinicianIdentity> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  let name = "Dr. Arvind Mathur";
+  if (user) {
+    const { data: profile } = await (supabase as any).from('profiles').select('full_name').eq('id', user.id).single();
+    if (profile?.full_name) {
+      name = profile.full_name;
+      if (!name.startsWith('Dr. ')) name = `Dr. ${name}`;
+    }
+  }
+
   return {
-    name: "Dr. Amara Osei",
+    name,
     credential: "MD, FACEP",
     specialty: "Emergency Medicine · Attending",
-    npi: "1861792304",
+    npi: "DMC-2026-8912",
     attestationDueAt: new Date(Date.now() + 38 * 60 * 60 * 1000).toISOString(),
     pendingTriage: 7,
   };

@@ -436,77 +436,48 @@ export async function getPatientPanel(): Promise<
   if (!guard.ok) return fail(guard.error, guard.code);
 
   try {
-    const { data, error } = await (guard.identity.supabase as any)
-      .from('patients')
-      .select(
-        `
-        id,
-        mrn,
-        age,
-        sex,
-        chief_complaint,
+    const { data: prescriptions, error } = await (guard.identity.supabase as any)
+      .from('prescriptions')
+      .select(`
+        patient_id,
         created_at,
-        profiles:profile_id ( full_name ),
-        triage_cases (
-          id,
-          status,
-          ai_assessment,
-          confidence_score,
-          created_at
-        )
-      `,
-      )
+        diagnosis,
+        patient:profiles!patient_id(full_name)
+      `)
+      .eq('doctor_id', guard.identity.profileId)
       .order('created_at', { ascending: false });
 
     if (error) {
       return fail(safeError('Unable to load patient panel', error), error.code);
     }
 
-    type PanelRow = {
-      id: string;
-      mrn: string;
-      age: number | null;
-      sex: string | null;
-      chief_complaint: string | null;
-      created_at: string;
-      profiles: { full_name: string } | { full_name: string }[] | null;
-      triage_cases: Array<{
-        id: string;
-        status: CaseStatus;
-        ai_assessment: string | null;
-        confidence_score: number | null;
-        created_at: string;
-      }> | null;
-    };
+    const patientMap = new Map<string, PatientPanelItem>();
+    
+    for (const p of (prescriptions || [])) {
+      if (!patientMap.has(p.patient_id)) {
+        const profile = Array.isArray(p.patient) ? p.patient[0] : p.patient;
+        patientMap.set(p.patient_id, {
+          id: p.patient_id,
+          mrn: `MRN-${p.patient_id.substring(0, 8).toUpperCase()}`,
+          fullName: profile?.full_name ?? 'Unknown Patient',
+          age: null,
+          sex: null,
+          chiefComplaint: p.diagnosis || 'Consultation',
+          totalCases: 1,
+          openCases: 0,
+          latestStatus: 'verified',
+          latestAssessment: p.diagnosis || null,
+          latestConfidence: 100,
+          lastSeenAt: p.created_at,
+          createdAt: p.created_at,
+        });
+      } else {
+        const existing = patientMap.get(p.patient_id)!;
+        existing.totalCases += 1;
+      }
+    }
 
-    const panel: PatientPanelItem[] = ((data ?? []) as unknown as PanelRow[]).map(
-      (row) => {
-        const cases = [...(row.triage_cases ?? [])].sort(
-          (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at),
-        );
-        const latest = cases[0] ?? null;
-        const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
-
-        return {
-          id: row.id,
-          mrn: row.mrn,
-          fullName: profile?.full_name ?? null,
-          age: row.age,
-          sex: row.sex,
-          chiefComplaint: row.chief_complaint,
-          totalCases: cases.length,
-          openCases: cases.filter((c) => c.status !== 'verified').length,
-          latestStatus: latest?.status ?? null,
-          latestAssessment: latest?.ai_assessment ?? null,
-          latestConfidence:
-            latest?.confidence_score == null ? null : Number(latest.confidence_score),
-          lastSeenAt: latest?.created_at ?? null,
-          createdAt: row.created_at,
-        };
-      },
-    );
-
-    return ok(panel);
+    return ok(Array.from(patientMap.values()));
   } catch (err) {
     return fail(safeError('Unable to load patient panel', err));
   }
