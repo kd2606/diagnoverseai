@@ -200,7 +200,7 @@ export function ClinicianSidebar({
             )}
           </AnimatePresence>
           {!collapsed && (
-            <button type="button" aria-label="Sign out" onClick={async () => { await supabase.auth.signOut(); router.push('/'); router.refresh(); }} className="rounded-md p-1.5 text-white/30 transition-colors hover:bg-white/[0.05] hover:text-rose-300">
+            <button type="button" aria-label="Sign out" onClick={async () => { await supabase.auth.signOut(); router.refresh(); router.push(`/${locale}`); }} className="rounded-md p-1.5 text-white/30 transition-colors hover:bg-white/[0.05] hover:text-rose-300">
               <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
             </button>
           )}

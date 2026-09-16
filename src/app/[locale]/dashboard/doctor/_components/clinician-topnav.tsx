@@ -353,7 +353,7 @@ export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIde
                     type="button"
                     role="menuitem"
                     className="mt-1 flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[12px] text-rose-200/80 transition-colors hover:bg-rose-500/10 hover:text-rose-100"
-                  onClick={async () => { await supabase.auth.signOut(); router.push('/'); router.refresh(); }}>
+                  onClick={async () => { await supabase.auth.signOut(); router.refresh(); router.push(`/${locale}`); }}>
                     <LogOut className="h-3.5 w-3.5" aria-hidden />
                     End secure session
                   </button>
