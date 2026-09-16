@@ -4,7 +4,9 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-export default async function PatientHealthPassportPage({ params }: { params: { id: string } }) {
+export default async function PatientHealthPassportPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const patientId = resolvedParams.id;
   const supabase = await createClient();
   
   // Strict RMP Authentication
@@ -42,17 +44,32 @@ export default async function PatientHealthPassportPage({ params }: { params: { 
   }
 
   // Fetch patient profile
-  const { data: patientProfile } = await (supabase as any)
+  const { data: patientProfile, error: profileError } = await (supabase as any)
     .from('profiles')
     .select('full_name, email')
-    .eq('id', params.id)
+    .eq('id', patientId)
     .single();
+    
+  if (profileError || !patientProfile) {
+    return (
+      <div className="flex h-[80vh] w-full flex-col items-center justify-center p-6 text-center">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.03] border border-white/[0.08]">
+          <User className="h-8 w-8 text-white/20" />
+        </div>
+        <h1 className="mb-2 text-xl font-semibold text-white">Patient Not Found</h1>
+        <p className="text-white/60 max-w-md">We couldn't locate the clinical records for the requested patient ID. They may have been removed or you might lack access.</p>
+        <Link href="/dashboard/doctor/patients" className="mt-6 flex items-center justify-center rounded-xl bg-white/[0.08] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/[0.12]">
+          Return to Patient Database
+        </Link>
+      </div>
+    );
+  }
 
   // Fetch prescriptions
   const { data: prescriptions } = await (supabase as any)
     .from('prescriptions')
     .select('*, prescription_items(*)')
-    .eq('patient_id', params.id)
+    .eq('patient_id', patientId)
     .order('created_at', { ascending: false });
 
   const patientName = patientProfile?.full_name || 'Unknown Patient';
@@ -71,7 +88,7 @@ export default async function PatientHealthPassportPage({ params }: { params: { 
               <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-white/50">
                 <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" /> {patientEmail}</span>
                 <span className="hidden sm:inline">•</span>
-                <span className="font-mono text-xs bg-white/5 px-2 py-0.5 rounded-md">ID: {params.id.split('-')[0].toUpperCase()}</span>
+                <span className="font-mono text-xs bg-white/5 px-2 py-0.5 rounded-md">ID: {patientId.split('-')[0].toUpperCase()}</span>
               </div>
             </div>
           </div>
