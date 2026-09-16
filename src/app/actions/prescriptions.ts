@@ -47,7 +47,7 @@ export async function createPrescription(input: unknown): Promise<ActionResult<{
     .single<DoctorProfile>();
 
   if (profileError || !profile) return { ok: false, error: 'We could not verify your clinician profile.' };
-  if (profile.role !== 'doctor') return { ok: false, error: 'Only a registered doctor can issue a prescription.' };
+  if (profile.role !== 'clinician') return { ok: false, error: 'Only a registered doctor can issue a prescription.' };
   if (!profile.nmc_registration_no) {
     return { ok: false, error: 'Add your medical council registration number before issuing prescriptions.' };
   }
