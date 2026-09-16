@@ -83,14 +83,15 @@ async function compressToDataUrl(file: File, maxEdge = 1440, quality = 0.82) {
 
 import { processVisionScan } from '@/actions/nova-vision';
 import type { VisionResult } from '@/actions/nova-vision';
+import { markForAdjudication } from '@/actions/adjudication';
 
 async function runScan(mode: ModeId, _image: string): Promise<VisionResult> {
-  return await processVisionScan(_image);
+  return await processVisionScan(mode, _image);
 }
 
 const CLINICAL_ADVICE: Record<string, Record<number, string>> = {
   LESION_MOLE: {
-    1: "Monitor the lesion for any changes in size, shape, or color. Use sun protection.",
+    1: "Keep the area clean. Avoid scratching. Monitor the lesion for any changes in size, shape, or color. Use sun protection.",
     2: "Keep an eye on the lesion. Schedule a routine check-up with a dermatologist.",
     3: "Priority clinical review required. Do not apply home remedies."
   },
@@ -98,6 +99,16 @@ const CLINICAL_ADVICE: Record<string, Record<number, string>> = {
     1: "Keep the area clean and dry. Avoid scratching.",
     2: "Apply a cold compress. Avoid known irritants. Monitor for spreading.",
     3: "Severe inflammation detected. Seek urgent medical evaluation. Do not apply unknown creams."
+  },
+  FACE: {
+    1: "Facial symmetry appears normal. Maintain standard hygiene.",
+    2: "Mild irregularities observed. Monitor for any sudden changes.",
+    3: "Significant asymmetry or swelling detected. Seek urgent clinical review."
+  },
+  EYE: {
+    1: "Eyes appear clear. Maintain good screen habits.",
+    2: "Mild redness or irritation. Rest your eyes and avoid irritants.",
+    3: "Severe redness or irregular pupil response. Seek immediate ophthalmic care."
   },
   TRAUMA_WOUND: {
     1: "Clean the wound with mild soap and water. Keep it covered with a sterile bandage.",
@@ -485,14 +496,31 @@ export default function UnifiedScannerPage() {
                         ? CLINICAL_ADVICE[result.category][result.severityLevel]
                         : "Follow standard care protocols or seek medical advice if unsure."}
                     </p>
-                    <a
-                      href="https://www.google.com/maps/search/Clinics+near+me"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-5 inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-                    >
-                      Locate Care
-                    </a>
+                    <div className="mt-5 flex gap-3">
+                      <button
+                        onClick={async () => {
+                          try {
+                            // "pat_8f3c19" is the dummy patientId used in the edge upload zone
+                            await markForAdjudication('pat_8f3c19', result.headline, JSON.stringify(result.findings));
+                            alert('Sent to Clinician Command Center.');
+                          } catch (err) {
+                            console.error(err);
+                            alert('Failed to send to Clinician.');
+                          }
+                        }}
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-rose-500/10 px-5 py-2.5 text-sm font-medium text-rose-400 transition-all hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500/50"
+                      >
+                        Send to Clinician Command Center
+                      </button>
+                      <a
+                        href="https://www.google.com/maps/search/Clinics+near+me"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                      >
+                        Locate Care
+                      </a>
+                    </div>
                   </div>
 
                   <div className="mt-5 flex items-center gap-2 rounded-2xl border border-white/[0.05] bg-white/[0.02] p-3.5">

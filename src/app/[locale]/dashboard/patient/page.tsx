@@ -24,51 +24,7 @@ const SIGNALS: HealthSignal[] = [
   { id: 'sync',   label: 'Last sync',    value: '2', unit: 'min', delta: 'Edge node FRA-1', trend: 'flat', tone: 'emerald' },
 ];
 
-const SCANS: ScanRecord[] = [
-  {
-    id: 'scn_01', modality: 'xray', title: 'Chest radiograph · PA view',
-    fileName: 'chest_pa_2026.heic', bytesIn: 8_594_432, bytesOut: 421_888,
-    status: 'uploading', progress: 0.64, chunk: { index: 11, total: 17 },
-    capturedAt: new Date(Date.now() - 0.15 * HOURS).toISOString(),
-  },
-  {
-    id: 'scn_02', modality: 'derm', title: 'Dermoscopy · left forearm lesion',
-    fileName: 'derm_forearm_L.jpg', bytesIn: 6_291_456, bytesOut: 312_320,
-    status: 'adjudication', confidence: 0.912,
-    finding: 'Asymmetric pigment network with irregular borders. Flagged for specialist review — not a symptom assessment.',
-    clinician: { name: 'Dr. M. Kovač', specialty: 'Dermatology · Queued 12m', initials: 'MK' },
-    capturedAt: new Date(Date.now() - 3.4 * HOURS).toISOString(),
-  },
-  {
-    id: 'scn_03', modality: 'retina', title: 'Fundus photograph · right eye',
-    fileName: 'fundus_OD.png', bytesIn: 4_194_304, bytesOut: 268_288,
-    status: 'verified', confidence: 0.974,
-    finding: 'No referable diabetic retinopathy. Repeat screening in 12 months.',
-    clinician: { name: 'Dr. Kovač', specialty: 'Ophthalmology · Signed', initials: 'MK' },
-    capturedAt: new Date(Date.now() - 26 * HOURS).toISOString(),
-  },
-  {
-    id: 'scn_04', modality: 'ecg', title: 'Single-lead ECG · 30s strip',
-    fileName: 'ecg_strip_0312.pdf', bytesIn: 1_048_576, bytesOut: 1_048_576,
-    status: 'queued',
-    capturedAt: new Date(Date.now() - 0.6 * HOURS).toISOString(),
-  },
-  {
-    id: 'scn_05', modality: 'ct', title: 'CT thorax · axial series',
-    fileName: 'ct_thorax_ax.dcm', bytesIn: 42_991_616, bytesOut: 3_984_588,
-    status: 'analyzing', confidence: 0.418,
-    finding: 'Nova is reconstructing 214 slices. Provisional output only.',
-    capturedAt: new Date(Date.now() - 0.05 * HOURS).toISOString(),
-  },
-  {
-    id: 'scn_06', modality: 'mri', title: 'MRI knee · sagittal T2',
-    fileName: 'mri_knee_sag.dcm', bytesIn: 27_262_976, bytesOut: 2_411_724,
-    status: 'verified', confidence: 0.938,
-    finding: 'Grade II medial meniscus signal change. Conservative management advised.',
-    clinician: { name: 'Dr. Kovač', specialty: 'Musculoskeletal · Signed', initials: 'MK' },
-    capturedAt: new Date(Date.now() - 74 * HOURS).toISOString(),
-  },
-];
+
 
 export default async function PatientDashboardPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -78,18 +34,44 @@ export default async function PatientDashboardPage({ params }: { params: Promise
   
   let firstName = "John";
   let fullName = "John Doe";
+  let patientId = "pat_8f3c19";
+
   if (user) {
-    const { data } = await supabase.from('profiles').select('full_name').eq('id', user.id).single() as any;
-    if (data && data.full_name) {
-      fullName = data.full_name;
-      firstName = fullName.split(' ')[0];
+    const { data } = await supabase.from('profiles').select('id, full_name').eq('id', user.id).single() as any;
+    if (data) {
+      if (data.full_name) {
+        fullName = data.full_name;
+        firstName = fullName.split(' ')[0];
+      }
+      patientId = data.id;
     }
   }
+
+  // Fetch actual cases instead of mock SCANS
+  const { data: casesData } = await supabase
+    .from('triage_cases')
+    .select('*, clinician:profiles!clinician_id(full_name)')
+    .eq('patient_id', patientId)
+    .order('created_at', { ascending: false });
+
+  const SCANS: ScanRecord[] = (casesData || []).map((c: any) => ({
+    id: c.id,
+    modality: 'derm', // default to derm since it's vision mostly
+    title: c.chief_complaint || 'Visual Assessment',
+    fileName: `scan_${c.id.substring(0, 5)}.jpg`,
+    bytesIn: 2_000_000,
+    bytesOut: 500_000,
+    status: c.status === 'pending' ? 'adjudication' : c.status,
+    confidence: c.confidence_score ? c.confidence_score : 0.85,
+    finding: c.ai_assessment || 'Pending AI assessment',
+    clinician: c.clinician ? { name: c.clinician.full_name, specialty: 'Clinician', initials: c.clinician.full_name.substring(0, 2).toUpperCase() } : undefined,
+    capturedAt: c.created_at,
+  }));
 
   // Update SIGNALS translations
   const SIGNALS_TL = [
     { id: 'triage', label: t('triageTier', { default: 'Triage tier' }),  value: t('routine', { default: 'Routine' }), delta: t('stable14d', { default: 'Stable 14d' }), trend: 'flat', tone: 'emerald' },
-    { id: 'open',   label: t('openCases', { default: 'Open cases' }),   value: '2',       delta: t('awaitingMD', { default: '1 awaiting MD' }), trend: 'up', tone: 'amber' },
+    { id: 'open',   label: t('openCases', { default: 'Open cases' }),   value: SCANS.filter(s => s.status !== 'verified').length.toString(), delta: t('awaitingMD', { default: 'Awaiting MD' }), trend: 'up', tone: 'amber' },
     { id: 'saved',  label: t('dataSaved', { default: 'Data saved' }),   value: '96.4', unit: '%', delta: '18.2 MB -> 0.7 MB', trend: 'down', tone: 'indigo' },
     { id: 'sync',   label: t('lastSync', { default: 'Last sync' }),    value: '2', unit: t('min', { default: 'min' }), delta: t('edgeNode', { default: 'Edge node FRA-1' }), trend: 'flat', tone: 'emerald' },
   ] as const;
@@ -100,14 +82,14 @@ export default async function PatientDashboardPage({ params }: { params: Promise
       
       {/* Patient Health Passport (QR) */}
       <PatientQRCard 
-        patientId="pat_8f3c19" 
+        patientId={patientId} 
         patientName={fullName} 
         mrn="MRN-884120" 
       />
 
       <NovaVoiceTriage />
       <ManualSymptomInput />
-      <EdgeUploadZone patientId="pat_8f3c19" />
+      <EdgeUploadZone patientId={patientId} />
       <AnalysisResultsGrid scans={SCANS} />
     </div>
   );

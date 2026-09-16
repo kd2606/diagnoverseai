@@ -10,14 +10,15 @@ function getClient(): GoogleGenAI {
   return new GoogleGenAI({ apiKey });
 }
 
-export type ScanCategory = 'LESION_MOLE' | 'RASH_INFLAMMATION' | 'TRAUMA_WOUND' | 'UNKNOWN';
+export type ScanCategory = 'LESION_MOLE' | 'RASH_INFLAMMATION' | 'FACE' | 'EYE' | 'UNKNOWN';
+export type ScanMode = 'face' | 'eye' | 'skin';
 
-const classifierSchema = {
+const skinClassifierSchema = {
   type: Type.OBJECT,
   properties: {
     category: {
       type: Type.STRING,
-      enum: ['LESION_MOLE', 'RASH_INFLAMMATION', 'TRAUMA_WOUND', 'UNKNOWN']
+      enum: ['LESION_MOLE', 'RASH_INFLAMMATION', 'UNKNOWN']
     }
   },
   required: ['category']
@@ -55,20 +56,36 @@ const rashSchema = {
   required: ['icd10Category', 'severityLevel', 'headline', 'erythemaIntensity', 'erythemaNote', 'scalingFlaking', 'scalingNote', 'surfaceArea', 'surfaceAreaNote']
 };
 
-const traumaSchema = {
+const faceSchema = {
   type: Type.OBJECT,
   properties: {
     icd10Category: { type: Type.STRING },
     severityLevel: { type: Type.INTEGER, description: '1, 2, or 3' },
     headline: { type: Type.STRING, description: 'Clinical summary headline' },
-    bleeding: { type: Type.NUMBER, description: 'Score 0 to 1' },
-    bleedingNote: { type: Type.STRING },
-    depthEstimate: { type: Type.NUMBER, description: 'Score 0 to 1' },
-    depthNote: { type: Type.STRING },
-    infectionSigns: { type: Type.NUMBER, description: 'Score 0 to 1' },
-    infectionNote: { type: Type.STRING }
+    symmetryIndex: { type: Type.NUMBER, description: 'Score 0 to 1' },
+    symmetryNote: { type: Type.STRING },
+    pallorMarkers: { type: Type.NUMBER, description: 'Score 0 to 1' },
+    pallorNote: { type: Type.STRING },
+    periorbitalSwelling: { type: Type.NUMBER, description: 'Score 0 to 1' },
+    periorbitalNote: { type: Type.STRING }
   },
-  required: ['icd10Category', 'severityLevel', 'headline', 'bleeding', 'bleedingNote', 'depthEstimate', 'depthNote', 'infectionSigns', 'infectionNote']
+  required: ['icd10Category', 'severityLevel', 'headline', 'symmetryIndex', 'symmetryNote', 'pallorMarkers', 'pallorNote', 'periorbitalSwelling', 'periorbitalNote']
+};
+
+const eyeSchema = {
+  type: Type.OBJECT,
+  properties: {
+    icd10Category: { type: Type.STRING },
+    severityLevel: { type: Type.INTEGER, description: '1, 2, or 3' },
+    headline: { type: Type.STRING, description: 'Clinical summary headline' },
+    conjunctivalRedness: { type: Type.NUMBER, description: 'Score 0 to 1' },
+    conjunctivalNote: { type: Type.STRING },
+    scleralYellowing: { type: Type.NUMBER, description: 'Score 0 to 1' },
+    scleralNote: { type: Type.STRING },
+    pupilResponse: { type: Type.NUMBER, description: 'Score 0 to 1' },
+    pupilNote: { type: Type.STRING }
+  },
+  required: ['icd10Category', 'severityLevel', 'headline', 'conjunctivalRedness', 'conjunctivalNote', 'scleralYellowing', 'scleralNote', 'pupilResponse', 'pupilNote']
 };
 
 export type Finding = { label: string; confidence: number; note: string };
@@ -83,38 +100,36 @@ export type VisionResult = {
   category: ScanCategory;
 };
 
-export async function processVisionScan(base64DataUrl: string): Promise<VisionResult> {
+export async function processVisionScan(mode: ScanMode, base64DataUrl: string): Promise<VisionResult> {
   const ai = getClient();
   
-  // Extract base64 from data URL
   const match = base64DataUrl.match(/^data:(image\/[a-zA-Z]+);base64,(.+)$/);
   if (!match) throw new Error("Invalid image format");
-  const mimeType = match[1];
-  const base64Data = match[2];
+  const inlineData = { mimeType: match[1], data: match[2] };
 
-  const inlineData = { mimeType, data: base64Data };
+  let activeCategory: ScanCategory = 'UNKNOWN';
 
-  // STEP 1: Classify
-  const classifyRes = await ai.models.generateContent({
-    model: MODEL_ID,
-    contents: [{
-      role: 'user',
-      parts: [
-        { text: "Classify this clinical image into one of the following categories: LESION_MOLE, RASH_INFLAMMATION, TRAUMA_WOUND, or UNKNOWN if none clearly fit." },
-        { inlineData }
-      ]
-    }],
-    config: {
-      responseMimeType: 'application/json',
-      responseJsonSchema: classifierSchema,
-    }
-  });
-
-  const parsedClass = JSON.parse(classifyRes.text || '{}');
-  const category = (parsedClass.category || 'UNKNOWN') as ScanCategory;
-  
-  // Fallback to trauma if unknown but we still want to analyze
-  const activeCategory = category === 'UNKNOWN' ? 'TRAUMA_WOUND' : category;
+  // STEP 1: Route Sub-classification for SKIN
+  if (mode === 'skin') {
+    const classifyRes = await ai.models.generateContent({
+      model: MODEL_ID,
+      contents: [{
+        role: 'user',
+        parts: [
+          { text: "Classify this skin image into LESION_MOLE, RASH_INFLAMMATION, or UNKNOWN." },
+          { inlineData }
+        ]
+      }],
+      config: { responseMimeType: 'application/json', responseJsonSchema: skinClassifierSchema }
+    });
+    const parsedClass = JSON.parse(classifyRes.text || '{}');
+    activeCategory = (parsedClass.category || 'LESION_MOLE') as ScanCategory;
+    if (activeCategory === 'UNKNOWN') activeCategory = 'LESION_MOLE';
+  } else if (mode === 'face') {
+    activeCategory = 'FACE';
+  } else if (mode === 'eye') {
+    activeCategory = 'EYE';
+  }
 
   // STEP 2: Inference
   let schema: any;
@@ -126,34 +141,27 @@ export async function processVisionScan(base64DataUrl: string): Promise<VisionRe
   } else if (activeCategory === 'RASH_INFLAMMATION') {
     schema = rashSchema;
     systemPrompt = "You are a clinical AI. Analyze this rash/inflammation. Output an ICD-10 Category and a severity level from 1 (mild/clear) to 3 (severe/needs review).";
-  } else {
-    schema = traumaSchema;
-    systemPrompt = "You are a clinical AI. Analyze this trauma/wound. Output an ICD-10 Category and a severity level from 1 (superficial/clear) to 3 (deep/infected/needs review).";
+  } else if (activeCategory === 'FACE') {
+    schema = faceSchema;
+    systemPrompt = "You are a clinical AI. Analyze this face for asymmetry, pallor, and periorbital swelling. Output an ICD-10 Category and a severity level from 1 (normal/clear) to 3 (abnormal/needs review).";
+  } else if (activeCategory === 'EYE') {
+    schema = eyeSchema;
+    systemPrompt = "You are a clinical AI. Analyze this eye for conjunctival redness, scleral yellowing, and pupil appearance. Output an ICD-10 Category and a severity level from 1 (normal/clear) to 3 (abnormal/needs review).";
   }
 
   const assessRes = await ai.models.generateContent({
     model: MODEL_ID,
     contents: [{
       role: 'user',
-      parts: [
-        { text: systemPrompt },
-        { inlineData }
-      ]
+      parts: [{ text: systemPrompt }, { inlineData }]
     }],
-    config: {
-      responseMimeType: 'application/json',
-      responseJsonSchema: schema,
-    }
+    config: { responseMimeType: 'application/json', responseJsonSchema: schema }
   });
 
   const data = JSON.parse(assessRes.text || '{}');
-  const severityMap: Record<number, Severity> = {
-    1: 'clear',
-    2: 'watch',
-    3: 'review'
-  };
   
   const severityLevel = data.severityLevel && [1, 2, 3].includes(data.severityLevel) ? data.severityLevel : 3;
+  const severityMap: Record<number, Severity> = { 1: 'clear', 2: 'watch', 3: 'review' };
   const severity = severityMap[severityLevel] || 'review';
 
   let findings: Finding[] = [];
@@ -170,11 +178,17 @@ export async function processVisionScan(base64DataUrl: string): Promise<VisionRe
       { label: "Scaling / Flaking", confidence: data.scalingFlaking || 0, note: data.scalingNote || "" },
       { label: "Surface area", confidence: data.surfaceArea || 0, note: data.surfaceAreaNote || "" },
     ];
-  } else {
+  } else if (activeCategory === 'FACE') {
     findings = [
-      { label: "Bleeding", confidence: data.bleeding || 0, note: data.bleedingNote || "" },
-      { label: "Depth estimate", confidence: data.depthEstimate || 0, note: data.depthNote || "" },
-      { label: "Infection signs", confidence: data.infectionSigns || 0, note: data.infectionNote || "" },
+      { label: "Symmetry index", confidence: data.symmetryIndex || 0, note: data.symmetryNote || "" },
+      { label: "Pallor markers", confidence: data.pallorMarkers || 0, note: data.pallorNote || "" },
+      { label: "Periorbital swelling", confidence: data.periorbitalSwelling || 0, note: data.periorbitalNote || "" },
+    ];
+  } else if (activeCategory === 'EYE') {
+    findings = [
+      { label: "Conjunctival redness", confidence: data.conjunctivalRedness || 0, note: data.conjunctivalNote || "" },
+      { label: "Scleral yellowing", confidence: data.scleralYellowing || 0, note: data.scleralNote || "" },
+      { label: "Pupil response", confidence: data.pupilResponse || 0, note: data.pupilNote || "" },
     ];
   }
 
