@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
-import { ShieldAlert, FileText, User, Mail, Calendar, Activity, Pill, Plus } from 'lucide-react';
+import { ShieldAlert, FileText, User, Mail, Calendar, Activity, Pill } from 'lucide-react';
 import Link from 'next/link';
+import IssueErxModal from './_components/issue-erx-modal';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,13 +94,7 @@ export default async function PatientHealthPassportPage({ params }: { params: Pr
             </div>
           </div>
           
-          <button 
-            className="flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-500/20 transition-all hover:bg-indigo-400 hover:shadow-indigo-500/40"
-            aria-label="Issue New e-Prescription (eRx)"
-          >
-            <Plus className="h-4 w-4" />
-            Issue New e-Prescription (eRx)
-          </button>
+          <IssueErxModal patientId={patientId} />
         </div>
       </div>
       
