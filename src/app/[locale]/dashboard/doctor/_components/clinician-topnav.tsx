@@ -163,11 +163,9 @@ export default function ClinicianTopNav({ clinician }: { clinician: ClinicianIde
   useEffect(() => {
     if (!menuOpen) return;
     const onPointerDown = (event: MouseEvent) => {
-  const router = useRouter();
       if (!menuRef.current?.contains(event.target as Node)) setMenuOpen(false);
     };
     const onKeyDown = (event: KeyboardEvent) => {
-  const router = useRouter();
       if (event.key === "Escape") setMenuOpen(false);
     };
     document.addEventListener("mousedown", onPointerDown);
