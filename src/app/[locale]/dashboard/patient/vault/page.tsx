@@ -1,7 +1,7 @@
 "use client";
 import { useTranslations } from "next-intl";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Activity,
@@ -75,10 +75,40 @@ export default function ClinicalVaultPage() {
   const [tab, setTab] = useState<TabId>("records");
   const [query, setQuery] = useState("");
 
-  /* ⇢ REPLACE these three with your fetched collections. */
-  const [records] = useState<RecordItem[]>([]);
+  const [records, setRecords] = useState<RecordItem[]>([]);
   const [reminders, setReminders] = useState<ReminderItem[]>([]);
   const [schemes] = useState<SchemeItem[]>([]);
+
+  useEffect(() => {
+    async function loadVault() {
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      let patientId = user.id;
+      const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single() as any;
+      if (profile) patientId = profile.id;
+
+      const { data } = await supabase
+        .from('triage_cases')
+        .select('*')
+        .eq('patient_id', patientId)
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        setRecords(data.map((c: any) => ({
+          id: c.id,
+          title: c.chief_complaint || 'Triage Case',
+          source: c.status === 'verified' ? 'Clinician Verified' : 'AI Assessment',
+          date: new Date(c.created_at).toLocaleDateString(),
+          kind: 'SCAN',
+          accent: 'indigo'
+        })));
+      }
+    }
+    loadVault();
+  }, []);
 
   const filteredRecords = useMemo(
     () =>

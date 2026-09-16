@@ -91,7 +91,10 @@ const eyeSchema = {
 export type Finding = { label: string; confidence: number; note: string };
 export type Severity = "clear" | "watch" | "review";
 
+import { createClient } from '@/lib/supabase/server';
+
 export type VisionResult = {
+  id: string; // The saved case ID
   headline: string;
   severity: Severity;
   findings: Finding[];
@@ -102,7 +105,20 @@ export type VisionResult = {
 
 export async function processVisionScan(mode: ScanMode, base64DataUrl: string): Promise<VisionResult> {
   const ai = getClient();
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error("Unauthorized. Please log in.");
+  }
   
+  // Try to get patient_id
+  let patientId = user.id;
+  const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single() as any;
+  if (profile) {
+    patientId = profile.id;
+  }
+
   const match = base64DataUrl.match(/^data:(image\/[a-zA-Z]+);base64,(.+)$/);
   if (!match) throw new Error("Invalid image format");
   const inlineData = { mimeType: match[1], data: match[2] };
@@ -147,6 +163,9 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
   } else if (activeCategory === 'EYE') {
     schema = eyeSchema;
     systemPrompt = "You are a clinical AI. Analyze this eye for conjunctival redness, scleral yellowing, and pupil appearance. Output an ICD-10 Category and a severity level from 1 (normal/clear) to 3 (abnormal/needs review).";
+  } else {
+    schema = lesionSchema;
+    systemPrompt = "You are a clinical AI. Output an ICD-10 Category and a severity level from 1 to 3.";
   }
 
   const assessRes = await ai.models.generateContent({
@@ -192,8 +211,32 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
     ];
   }
 
+  const headline = data.headline || "Assessment complete";
+
+  // STEP 3: Save to Vault (triage_cases)
+  let savedId = "";
+  try {
+    const { data: savedCase, error: insertError } = await (supabase as any).from('triage_cases').insert({
+      patient_id: patientId,
+      chief_complaint: `Visual scan: ${mode}`,
+      ai_assessment: JSON.stringify({ headline, findings }),
+      icd10_code: data.icd10Category || null,
+      confidence_score: 0.9,
+      status: 'pending'
+    }).select('id').single();
+
+    if (insertError) {
+      throw insertError;
+    }
+    savedId = savedCase.id;
+  } catch (dbErr) {
+    console.error("Failed to save scan to database:", dbErr);
+    throw new Error("Failed to securely save record to vault.");
+  }
+
   return {
-    headline: data.headline || "Assessment complete",
+    id: savedId,
+    headline,
     severity,
     findings,
     icd10Category: data.icd10Category || "Unknown",

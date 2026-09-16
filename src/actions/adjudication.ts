@@ -2,16 +2,12 @@
 
 import { createClient } from '@/lib/supabase/server';
 
-export async function markForAdjudication(patientId: string, chiefComplaint: string, aiAssessment: string) {
+export async function markForAdjudication(scanId: string) {
   const supabase = await createClient();
   const { error } = await (supabase as any)
     .from('triage_cases')
-    .insert({
-      patient_id: patientId,
-      chief_complaint: chiefComplaint,
-      ai_assessment: aiAssessment,
-      status: 'pending' // pending is equivalent to awaiting_adjudication in this DB
-    });
+    .update({ status: 'escalated' }) // 'escalated' is the closest to awaiting_adjudication in this schema
+    .eq('id', scanId);
 
   if (error) {
     throw new Error(error.message);

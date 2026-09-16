@@ -84,38 +84,11 @@ async function compressToDataUrl(file: File, maxEdge = 1440, quality = 0.82) {
 import { processVisionScan } from '@/actions/nova-vision';
 import type { VisionResult } from '@/actions/nova-vision';
 import { markForAdjudication } from '@/actions/adjudication';
+import { CLINICAL_MATRIX, type ScanType } from '@/utils/clinicalMatrix';
 
 async function runScan(mode: ModeId, _image: string): Promise<VisionResult> {
   return await processVisionScan(mode, _image);
 }
-
-const CLINICAL_ADVICE: Record<string, Record<number, string>> = {
-  LESION_MOLE: {
-    1: "Keep the area clean. Avoid scratching. Monitor the lesion for any changes in size, shape, or color. Use sun protection.",
-    2: "Keep an eye on the lesion. Schedule a routine check-up with a dermatologist.",
-    3: "Priority clinical review required. Do not apply home remedies."
-  },
-  RASH_INFLAMMATION: {
-    1: "Keep the area clean and dry. Avoid scratching.",
-    2: "Apply a cold compress. Avoid known irritants. Monitor for spreading.",
-    3: "Severe inflammation detected. Seek urgent medical evaluation. Do not apply unknown creams."
-  },
-  FACE: {
-    1: "Facial symmetry appears normal. Maintain standard hygiene.",
-    2: "Mild irregularities observed. Monitor for any sudden changes.",
-    3: "Significant asymmetry or swelling detected. Seek urgent clinical review."
-  },
-  EYE: {
-    1: "Eyes appear clear. Maintain good screen habits.",
-    2: "Mild redness or irritation. Rest your eyes and avoid irritants.",
-    3: "Severe redness or irregular pupil response. Seek immediate ophthalmic care."
-  },
-  TRAUMA_WOUND: {
-    1: "Clean the wound with mild soap and water. Keep it covered with a sterile bandage.",
-    2: "Monitor for signs of infection (redness, warmth). Change dressings daily.",
-    3: "Deep or infected wound suspected. Seek immediate clinical care. Do not probe the wound."
-  }
-};
 
 const SEVERITY = {
   clear: { accent: "emerald" as const, label: "LOOKS CLEAR" },
@@ -492,16 +465,16 @@ export default function UnifiedScannerPage() {
                       Clinical Next Steps
                     </h3>
                     <p className="mt-3 text-[14px] leading-relaxed text-indigo-100/90">
-                      {result.category !== 'UNKNOWN' && CLINICAL_ADVICE[result.category]?.[result.severityLevel]
-                        ? CLINICAL_ADVICE[result.category][result.severityLevel]
-                        : "Follow standard care protocols or seek medical advice if unsure."}
+                      <strong>Precautions:</strong> {CLINICAL_MATRIX[result.category as ScanType]?.[result.severityLevel]?.precautions || "Maintain standard hygiene."}
+                      <br />
+                      <strong>Next Steps:</strong> {CLINICAL_MATRIX[result.category as ScanType]?.[result.severityLevel]?.nextSteps || "Follow standard care protocols or seek medical advice if unsure."}
                     </p>
                     <div className="mt-5 flex gap-3">
                       <button
                         onClick={async () => {
+                          if (!result.id) return;
                           try {
-                            // "pat_8f3c19" is the dummy patientId used in the edge upload zone
-                            await markForAdjudication('pat_8f3c19', result.headline, JSON.stringify(result.findings));
+                            await markForAdjudication(result.id);
                             alert('Sent to Clinician Command Center.');
                           } catch (err) {
                             console.error(err);
