@@ -15,7 +15,7 @@
     "greeting_afternoon": "Good afternoon, {name}.",
     "greeting_night": "Good evening, {name}.",
     "hero_subtitle": "Your health intelligence is active.",
-    "hero_description": "Three captures are being watched by Nova and your care team. Speak your symptoms any time \u2014 no typing, no forms, works without signal."
+    "hero_description": "Three captures are being watched by Nova and your care team. Speak your symptoms any time — no typing, no forms, works without signal."
   },
   "Nav": {
     "healthHub": "Health Hub",
@@ -54,7 +54,7 @@
     "novaHealthIntelligence": "Nova Health Intelligence",
     "live": "Live",
     "healthIntelligenceActive": "Your health intelligence is active.",
-    "capturesWatched": "Three captures are being watched by Nova and your care team. Speak your symptoms any time \u2014 no typing, no forms, works without signal.",
+    "capturesWatched": "Three captures are being watched by Nova and your care team. Speak your symptoms any time — no typing, no forms, works without signal.",
     "uploadScan": "Upload a scan",
     "uploadDescription": "Compressed on your device, encrypted, then queued. Works on 2G, works on no G.",
     "dragOrBrowse": "Drag a scan here, or tap to browse",
@@ -62,7 +62,7 @@
     "novaVoiceTriage": "Nova Voice Triage",
     "alwaysListening": "Always listening.",
     "tapToSpeakSymptoms": "Tap to speak your symptoms",
-    "offlineQueue": "Offline queue \u2014 persisted",
+    "offlineQueue": "Offline queue — persisted",
     "nova_title": "Always listening. Tap to speak your symptoms...",
     "nova_description": "Try: 'I've had a tight chest...' Nova structures it into a clinical intake note...",
     "upload_title": "Upload a scan",
@@ -80,13 +80,16 @@
     "saveChanges": "Save Changes",
     "saving": "Saving...",
     "medicalLicense": "Medical License (RMP ID)",
-    "verified": "Verified"
+    "verified": "Verified",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "dob": "Date of Birth"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",
     "recording": "recording",
     "aiTriage": "ai triage",
-    "processingAi": "Processing AI Triage\u2026",
+    "processingAi": "Processing AI Triage…",
     "complete": "complete",
     "analyzed": "Your clip has been analyzed.",
     "syncedVault": "Synced to your Clinical Vault."
@@ -134,7 +137,7 @@
     "submit": "Submit"
   },
   "Auto": {
-    "k_0aacfa0a": "(\"records\");\n  const [query, setQuery] = useState(\"\");\n\n  /* \u21e2 REPLACE these three with your fetched collections. */\n  const [records] = useState",
+    "k_0aacfa0a": "(\"records\");\n  const [query, setQuery] = useState(\"\");\n\n  /* ⇢ REPLACE these three with your fetched collections. */\n  const [records] = useState",
     "k_3fbb802f": "([]);\n  const [reminders, setReminders] = useState",
     "k_585070c7": "([]);\n  const [schemes] = useState",
     "k_128701d2": "([]);\n\n  const filteredRecords = useMemo(\n    () =>\n      records.filter((r) =>\n        (r.title + r.source).toLowerCase().includes(query.trim().toLowerCase())\n      ),\n    [records, query]\n  );\n\n  const counts: Record",
@@ -172,7 +175,7 @@
     "clearSearch": "Clear search",
     "runScan": "Run a Scan",
     "noRemindersSet": "No reminders set",
-    "setGentleNudges": "Set gentle nudges for medication, follow-up scans or appointments. We'll notify you \u2014 never more than once a day.",
+    "setGentleNudges": "Set gentle nudges for medication, follow-up scans or appointments. We'll notify you — never more than once a day.",
     "createReminder": "Create a Reminder",
     "addReminder": "Add Reminder",
     "noSchemesMatched": "No schemes matched yet",

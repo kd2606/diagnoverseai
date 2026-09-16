@@ -80,7 +80,10 @@
     "saveChanges": "जतन करा",
     "saving": "जतन करत आहे...",
     "medicalLicense": "परवाना",
-    "verified": "सत्यापित"
+    "verified": "सत्यापित",
+    "emailAddress": "ईमेल",
+    "phoneNumber": "फोन",
+    "dob": "जन्म तारीख"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

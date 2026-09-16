@@ -80,7 +80,10 @@
     "saveChanges": "ਸੰਭਾਲੋ",
     "saving": "ਸੰਭਾਲ ਰਿਹਾ...",
     "medicalLicense": "ਲਾਇਸੈਂਸ",
-    "verified": "ਤਸਦੀਕ"
+    "verified": "ਤਸਦੀਕ",
+    "emailAddress": "ਈਮੇਲ",
+    "phoneNumber": "ਫੋਨ",
+    "dob": "ਜਨਮ ਮਿਤੀ"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

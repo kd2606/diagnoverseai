@@ -80,7 +80,10 @@
     "saveChanges": "ସେଭ୍",
     "saving": "ସେଭ୍...",
     "medicalLicense": "ଲାଇସେନ୍ସ",
-    "verified": "ଯାଞ୍ଚ"
+    "verified": "ଯାଞ୍ଚ",
+    "emailAddress": "ଇମେଲ୍",
+    "phoneNumber": "ଫୋନ୍",
+    "dob": "ଜନ୍ମ ତାରିଖ"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

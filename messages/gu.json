@@ -80,7 +80,10 @@
     "saveChanges": "સાચવો",
     "saving": "સાચવી રહ્યું છે...",
     "medicalLicense": "લાયસન્સ",
-    "verified": "ચકાસાયેલ"
+    "verified": "ચકાસાયેલ",
+    "emailAddress": "ઇમેઇલ",
+    "phoneNumber": "ફોન",
+    "dob": "જન્મ તારીખ"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

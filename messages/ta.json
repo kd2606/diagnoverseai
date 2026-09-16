@@ -80,7 +80,10 @@
     "saveChanges": "சேமி",
     "saving": "சேமிக்கிறது...",
     "medicalLicense": "உரிமம்",
-    "verified": "சரிபார்க்கப்பட்டது"
+    "verified": "சரிபார்க்கப்பட்டது",
+    "emailAddress": "மின்னஞ்சல்",
+    "phoneNumber": "போன்",
+    "dob": "பிறந்த தேதி"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

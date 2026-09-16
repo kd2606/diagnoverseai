@@ -80,7 +80,10 @@
     "saveChanges": "ಉಳಿಸಿ",
     "saving": "ಉಳಿಸುತ್ತಿದೆ...",
     "medicalLicense": "ಪರವಾನಗಿ",
-    "verified": "ಪರಿಶೀಲಿಸಲಾಗಿದೆ"
+    "verified": "ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+    "emailAddress": "ಇಮೇಲ್",
+    "phoneNumber": "ಫೋನ್",
+    "dob": "ಹುಟ್ಟಿದ ದಿನ"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

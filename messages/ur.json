@@ -80,7 +80,10 @@
     "saveChanges": "محفوظ",
     "saving": "محفوظ...",
     "medicalLicense": "لائسنس",
-    "verified": "تصدیق شدہ"
+    "verified": "تصدیق شدہ",
+    "emailAddress": "ای میل",
+    "phoneNumber": "فون",
+    "dob": "تاریخ پیدائش"
   },
   "Respiratory": {
     "tapMicrophone": "Tap the microphone, then cough twice.",

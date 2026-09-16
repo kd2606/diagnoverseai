@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { GreetingHeader } from './_components/greeting-header';
 import { NovaVoiceTriage } from './_components/nova-voice-triage';
+import { ManualSymptomInput } from './_components/manual-symptom-input';
 import { EdgeUploadZone } from './_components/edge-upload-zone';
 import { AnalysisResultsGrid } from './_components/analysis-results-grid';
 import { PatientQRCard } from '@/components/patient/PatientQRCard';
@@ -105,6 +106,7 @@ export default async function PatientDashboardPage({ params }: { params: Promise
       />
 
       <NovaVoiceTriage />
+      <ManualSymptomInput />
       <EdgeUploadZone patientId="pat_8f3c19" />
       <AnalysisResultsGrid scans={SCANS} />
     </div>
