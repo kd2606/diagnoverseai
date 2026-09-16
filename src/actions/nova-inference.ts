@@ -208,8 +208,8 @@ function getClient(): GoogleGenAI {
 export async function generateClinicalTriage(transcript: string): Promise<TriageResult> {
   const cleaned = typeof transcript === 'string' ? transcript.trim() : '';
 
-  if (cleaned.length < 12) {
-    return { ok: false, error: 'EMPTY_TRANSCRIPT', message: 'Transcript is empty or too short to triage.' };
+  if (cleaned.length < 25) {
+    return { ok: false, error: 'EMPTY_TRANSCRIPT', message: 'Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
   }
   if (cleaned.length > MAX_TRANSCRIPT_CHARS) {
     return {
@@ -277,7 +277,7 @@ export async function generateClinicalTriage(transcript: string): Promise<Triage
       return {
         ok: false,
         error: 'SCHEMA_VIOLATION',
-        message: 'Triage output failed validation and was discarded.',
+        message: 'Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).',
       };
     }
 
@@ -285,6 +285,7 @@ export async function generateClinicalTriage(transcript: string): Promise<Triage
 
     return { ok: true, data, meta: { model: MODEL_ID, latencyMs: Date.now() - startedAt } };
   } catch (err) {
+    console.error("[TRIAGE_FATAL_ERROR]", err);
     return toErrorResult(err);
   }
 }
@@ -330,5 +331,5 @@ function toErrorResult(err: unknown): TriageResult {
     return { ok: false, error: 'UPSTREAM_UNAVAILABLE', message: 'The inference service is unavailable.' };
   }
   console.error('[nova-inference] unexpected error', err instanceof Error ? err.name : 'unknown');
-  return { ok: false, error: 'UNKNOWN', message: 'Triage generation failed.' };
+  return { ok: false, error: 'UNKNOWN', message: 'Triage generation failed. Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
 }
