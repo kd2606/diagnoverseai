@@ -31,6 +31,14 @@ export function useVoiceTriage(opts: { lang?: string; onFinal?: (t: string) => v
   const rafRef = useRef<number | null>(null);
   const recognitionRef = useRef<any>(null);
 
+  /** Network-error auto-retry state */
+  const MAX_NETWORK_RETRIES = 3;
+  const RETRY_DELAY_MS = 1500;
+  const networkRetryCountRef = useRef(0);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Buffer to preserve the interim (partial) transcript across reconnects */
+  const pendingInterimRef = useRef('');
+
   useEffect(() => {
     setSttSupported(
       typeof window !== 'undefined' &&
@@ -39,6 +47,11 @@ export function useVoiceTriage(opts: { lang?: string; onFinal?: (t: string) => v
   }, []);
 
   const teardown = useCallback(() => {
+    if (retryTimerRef.current !== null) {
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+    networkRetryCountRef.current = 0;
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     rafRef.current = null;
     recognitionRef.current?.stop?.();
@@ -103,31 +116,90 @@ export function useVoiceTriage(opts: { lang?: string; onFinal?: (t: string) => v
 
       const Ctor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
       if (Ctor) {
-        const recognition = new Ctor();
-        recognition.lang = lang;
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.onresult = (event: any) => {
-          let finalChunk = '';
-          let interimChunk = '';
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const res = event.results[i];
-            if (res.isFinal) finalChunk += res[0].transcript;
-            else interimChunk += res[0].transcript;
-          }
-          if (finalChunk) {
-            setTranscript((prev) => {
-              const next = `${prev} ${finalChunk}`.replace(/\s+/g, ' ').trim();
-              onFinal?.(next);
-              return next;
-            });
-          }
-          setInterim(interimChunk);
+        const initRecognition = () => {
+          const recognition = new Ctor();
+          recognition.lang = lang;
+          recognition.continuous = true;
+          recognition.interimResults = true;
+
+          recognition.onresult = (event: any) => {
+            // Any successful result means the connection is healthy — reset retry counter.
+            networkRetryCountRef.current = 0;
+
+            let finalChunk = '';
+            let interimChunk = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+              const res = event.results[i];
+              if (res.isFinal) finalChunk += res[0].transcript;
+              else interimChunk += res[0].transcript;
+            }
+            if (finalChunk) {
+              // If we had saved interim text from before a reconnect, prepend it.
+              const saved = pendingInterimRef.current;
+              pendingInterimRef.current = '';
+              setTranscript((prev) => {
+                const combined = saved
+                  ? `${prev} ${saved} ${finalChunk}`
+                  : `${prev} ${finalChunk}`;
+                const next = combined.replace(/\s+/g, ' ').trim();
+                onFinal?.(next);
+                return next;
+              });
+            }
+            setInterim(interimChunk);
+            // Keep the latest interim buffered in case we need to survive a reconnect.
+            if (interimChunk) pendingInterimRef.current = interimChunk;
+          };
+
+          recognition.onerror = (e: any) => {
+            if (e.error === 'no-speech' || e.error === 'aborted') return;
+
+            if (e.error === 'network') {
+              const attempt = networkRetryCountRef.current + 1;
+              if (attempt <= MAX_NETWORK_RETRIES) {
+                networkRetryCountRef.current = attempt;
+                // Silently retry after a delay — don't surface the error yet.
+                retryTimerRef.current = setTimeout(() => {
+                  retryTimerRef.current = null;
+                  try {
+                    const fresh = initRecognition();
+                    recognitionRef.current = fresh;
+                    fresh.start();
+                  } catch {
+                    // If even constructing a new instance fails, give up.
+                    networkRetryCountRef.current = MAX_NETWORK_RETRIES;
+                    setError('network');
+                    setState('error');
+                  }
+                }, RETRY_DELAY_MS);
+                return;
+              }
+              // All retries exhausted — surface the error and reset cleanly.
+              pendingInterimRef.current = '';
+              setError('network');
+              setState('error');
+              return;
+            }
+
+            // Non-network errors: fail immediately.
+            setError(e.error ?? 'recognition-failed');
+            setState('error');
+          };
+
+          // Guard against the recognition silently ending after a network hiccup.
+          // The browser fires `onend` after `onerror`, so if a retry is already
+          // scheduled we must NOT touch state — the retry timer will handle it.
+          recognition.onend = () => {
+            if (retryTimerRef.current !== null) return; // retry pending
+            // If we're still supposed to be listening but recognition stopped
+            // on its own (e.g. browser timeout), don't leave the UI stuck.
+            setState((prev) => (prev === 'listening' ? 'idle' : prev));
+          };
+
+          return recognition;
         };
-        recognition.onerror = (e: any) => {
-          if (e.error === 'no-speech' || e.error === 'aborted') return;
-          setError(e.error ?? 'recognition-failed');
-        };
+
+        const recognition = initRecognition();
         recognition.start();
         recognitionRef.current = recognition;
       }
