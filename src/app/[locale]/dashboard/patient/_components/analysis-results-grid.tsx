@@ -125,12 +125,14 @@ function ScanCard({ scan, index }: { scan: ScanRecord; index: number }) {
           <h3 className="text-[15px] font-medium leading-snug tracking-[-0.01em] text-white/90">
             {scan.title}
           </h3>
-          <p className="mt-1 truncate font-mono text-[10.5px] text-white/30">
-            {scan.fileName} · {formatBytes(scan.bytesIn)}{' '}
-            <span className="text-white/20">→</span>{' '}
-            <span className="text-emerald-300/70">{formatBytes(scan.bytesOut)}</span>{' '}
-            <span className="text-white/25">({compressionRatio(scan.bytesIn, scan.bytesOut)})</span>
-          </p>
+          {scan.fileName && scan.bytesIn !== undefined && scan.bytesOut !== undefined && (
+            <p className="mt-1 truncate font-mono text-[10.5px] text-white/30">
+              {scan.fileName} · {formatBytes(scan.bytesIn)}{' '}
+              <span className="text-white/20">→</span>{' '}
+              <span className="text-emerald-300/70">{formatBytes(scan.bytesOut)}</span>{' '}
+              <span className="text-white/25">({compressionRatio(scan.bytesIn, scan.bytesOut)})</span>
+            </p>
+          )}
 
           {/* Transfer progress */}
           {scan.status === 'uploading' && typeof scan.progress === 'number' && (

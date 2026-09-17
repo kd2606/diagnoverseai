@@ -208,7 +208,7 @@ function getClient(): GoogleGenAI {
 export async function generateClinicalTriage(transcript: string): Promise<TriageResult> {
   const cleaned = typeof transcript === 'string' ? transcript.trim() : '';
 
-  if (cleaned.length < 25) {
+  if (cleaned.length < 12) {
     return { ok: false, error: 'EMPTY_TRANSCRIPT', message: 'Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
   }
   if (cleaned.length > MAX_TRANSCRIPT_CHARS) {

@@ -2,6 +2,7 @@
 import {
   Activity, Brain, CloudUpload, Cpu, Eye, HeartPulse, Hourglass,
   Layers, ScanLine, ShieldCheck, Sparkles, TriangleAlert, WifiOff,
+  Mic, FileText, User,
   type LucideIcon,
 } from 'lucide-react';
 import type { ScanModality, UploadStatus } from './types';
@@ -77,4 +78,7 @@ export const MODALITY_META: Record<ScanModality, { label: string; Icon: LucideIc
   mri:    { label: 'MRI Sequence', Icon: Activity,   mesh: 'from-violet-500/25 via-fuchsia-500/10 to-transparent' },
   retina: { label: 'Fundus',       Icon: Eye,        mesh: 'from-emerald-500/25 via-teal-500/10 to-transparent' },
   ecg:    { label: 'ECG Trace',    Icon: HeartPulse, mesh: 'from-rose-500/25 via-orange-500/10 to-transparent' },
+  voice:  { label: 'Voice Triage', Icon: Mic,        mesh: 'from-indigo-500/25 via-sky-500/10 to-transparent' },
+  text:   { label: 'Text Intake',  Icon: FileText,   mesh: 'from-emerald-500/25 via-teal-500/10 to-transparent' },
+  face:   { label: 'Facial Scan',  Icon: User,       mesh: 'from-amber-500/25 via-orange-500/10 to-transparent' },
 };

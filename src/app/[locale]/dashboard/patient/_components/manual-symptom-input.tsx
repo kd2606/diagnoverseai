@@ -1,23 +1,26 @@
 'use client';
 
-import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useTransition, useMemo } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle,
-  CheckCircle2,
   Keyboard,
   Loader2,
   RotateCcw,
   SendHorizontal,
   Stethoscope,
+  CheckCircle2,
 } from 'lucide-react';
-import { generateClinicalTriage } from '@/actions/nova-inference';
-import type { ClinicalTriageReport, TriageResult } from '@/actions/nova-inference';
+import { submitVoiceTriage as submitSymptomTriage } from '@/actions/nova-voice-triage-action';
+import type { VoiceTriageResult as TriageResult } from '@/actions/nova-voice-triage-action';
+import type { ClinicalTriageReport } from '@/actions/nova-inference';
+import { markForAdjudication } from '@/actions/adjudication';
+import { confidenceToSeverity, getVoiceTriageGuidance } from '@/utils/clinicalMatrix';
 import { cn } from '@/lib/utils';
 
 /* ------------------------------------------------------------------ */
-/* Confidence → color mapping (matches analysis-results-grid palette)  */
+/* Confidence → accent color                                           */
 /* ------------------------------------------------------------------ */
 
 function confidenceAccent(c: number) {
@@ -30,11 +33,10 @@ const ACCENT_STYLES = {
   emerald: { border: 'border-emerald-400/20', bg: 'bg-emerald-500/[0.08]', text: 'text-emerald-200', bar: 'bg-emerald-400' },
   amber:   { border: 'border-amber-400/20',   bg: 'bg-amber-500/[0.08]',   text: 'text-amber-200',   bar: 'bg-amber-400' },
   rose:    { border: 'border-rose-400/20',     bg: 'bg-rose-500/[0.08]',     text: 'text-rose-200',     bar: 'bg-rose-400' },
-  indigo:  { border: 'border-indigo-400/20',   bg: 'bg-indigo-500/[0.08]',   text: 'text-indigo-200',   bar: 'bg-indigo-400' },
 } as const;
 
 /* ------------------------------------------------------------------ */
-/* Result display (inline, compact)                                    */
+/* Triage result card                                                  */
 /* ------------------------------------------------------------------ */
 
 function TriageResultCard({ data }: { data: ClinicalTriageReport }) {
@@ -114,14 +116,6 @@ function TriageResultCard({ data }: { data: ClinicalTriageReport }) {
           ))}
         </ul>
       </div>
-
-      {/* Disclaimer */}
-      <div className="flex items-center gap-2 rounded-2xl border border-white/[0.05] bg-white/[0.02] p-3.5">
-        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-300" strokeWidth={1.75} />
-        <p className="text-[12px] text-white/45">
-          This is AI-generated decision support — not a diagnosis. A licensed clinician must review before any action is taken.
-        </p>
-      </div>
     </motion.div>
   );
 }
@@ -130,18 +124,20 @@ function TriageResultCard({ data }: { data: ClinicalTriageReport }) {
 /* Main component                                                      */
 /* ------------------------------------------------------------------ */
 
-export function ManualSymptomInput() {
+export function ManualSymptomInput({ patientId }: { patientId: string }) {
   const t = useTranslations('Common');
   const [text, setText] = useState('');
   const [result, setResult] = useState<TriageResult | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [escalated, setEscalated] = useState(false);
+  const [escalating, setEscalating] = useState(false);
 
   const canSubmit = text.trim().length >= 12 && !isPending;
 
   const handleSubmit = () => {
     if (!canSubmit) return;
     startTransition(async () => {
-      const res = await generateClinicalTriage(text.trim());
+      const res = await submitSymptomTriage(patientId, text.trim());
       setResult(res);
     });
   };
@@ -149,7 +145,29 @@ export function ManualSymptomInput() {
   const handleReset = () => {
     setText('');
     setResult(null);
+    setEscalated(false);
   };
+
+  const handleEscalate = async (caseId: string) => {
+    setEscalating(true);
+    try {
+      await markForAdjudication(caseId);
+      setEscalated(true);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to send to Clinician.');
+    } finally {
+      setEscalating(false);
+    }
+  };
+
+  // Derive clinical guidance from the AI result
+  const guidance = useMemo(() => {
+    if (!result?.ok) return null;
+    const { data } = result;
+    const severity = confidenceToSeverity(data.confidence, data.recommendedSpecialty);
+    return getVoiceTriageGuidance(data.recommendedSpecialty, severity);
+  }, [result]);
 
   return (
     <motion.section
@@ -193,7 +211,7 @@ export function ManualSymptomInput() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Or type your symptoms manually here..."
-            disabled={isPending}
+            disabled={isPending || (result?.ok === true)}
             rows={4}
             className={cn(
               'w-full resize-none rounded-2xl border bg-white/[0.03] px-5 py-4 text-[15px] leading-relaxed text-white/90 placeholder:text-white/25',
@@ -220,27 +238,29 @@ export function ManualSymptomInput() {
 
         {/* Actions */}
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={!canSubmit}
-            className={cn(
-              'inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200',
-              canSubmit
-                ? 'bg-indigo-500 text-white hover:bg-indigo-400 shadow-[0_0_30px_-8px_rgba(99,102,241,0.7)]'
-                : 'bg-white/[0.04] text-white/30 cursor-not-allowed',
-            )}
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Analysing…
-              </>
-            ) : (
-              <>
-                <SendHorizontal className="h-4 w-4" strokeWidth={1.75} /> Submit Symptoms
-              </>
-            )}
-          </button>
+          {(!result?.ok) && (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+              className={cn(
+                'inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200',
+                canSubmit
+                  ? 'bg-indigo-500 text-white hover:bg-indigo-400 shadow-[0_0_30px_-8px_rgba(99,102,241,0.7)]'
+                  : 'bg-white/[0.04] text-white/30 cursor-not-allowed',
+              )}
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Analysing…
+                </>
+              ) : (
+                <>
+                  <SendHorizontal className="h-4 w-4" strokeWidth={1.75} /> Submit Symptoms
+                </>
+              )}
+            </button>
+          )}
 
           {(result || text) && !isPending && (
             <button
@@ -248,7 +268,7 @@ export function ManualSymptomInput() {
               onClick={handleReset}
               className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-white/30 transition-colors hover:text-white/60"
             >
-              <RotateCcw className="h-3 w-3" strokeWidth={2} /> Clear
+              <RotateCcw className="h-3 w-3" strokeWidth={2} /> Start Over
             </button>
           )}
         </div>
@@ -264,7 +284,60 @@ export function ManualSymptomInput() {
               className="mt-8 overflow-hidden"
             >
               {result.ok ? (
-                <TriageResultCard data={result.data} />
+                <>
+                  <TriageResultCard data={result.data} />
+                  
+                  {/* Clinical Next Steps */}
+                  {guidance && (
+                    <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-indigo-500/10 p-5">
+                      <h3 className="font-mono text-[11px] uppercase tracking-widest text-indigo-300">
+                        Clinical Next Steps
+                      </h3>
+                      <p className="mt-3 text-[14px] leading-relaxed text-indigo-100/90">
+                        <strong>Precautions:</strong> {guidance.precautions}
+                        <br />
+                        <strong>Next Steps:</strong> {guidance.nextSteps}
+                      </p>
+
+                      <div className="mt-5 flex gap-3">
+                        {escalated ? (
+                          <div className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-500/10 px-5 py-2.5 text-sm font-medium text-emerald-400">
+                            <CheckCircle2 className="h-4 w-4" strokeWidth={1.75} />
+                            Sent to Clinician Command Center
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleEscalate(result.caseId)}
+                            disabled={escalating}
+                            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-rose-500/10 px-5 py-2.5 text-sm font-medium text-rose-400 transition-all hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500/50 disabled:opacity-50"
+                          >
+                            {escalating ? (
+                              <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
+                            ) : (
+                              'Send to Clinician Command Center'
+                            )}
+                          </button>
+                        )}
+                        <a
+                          href="https://www.google.com/maps/search/Clinics+near+me"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        >
+                          Locate Care
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Disclaimer */}
+                  <div className="mt-5 flex items-center gap-2 rounded-2xl border border-white/[0.05] bg-white/[0.02] p-3.5">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-300" strokeWidth={1.75} />
+                    <p className="text-[12px] text-white/45">
+                      This is AI-generated decision support — not a diagnosis. A licensed clinician must review before any action is taken. Saved to your Clinical Vault automatically.
+                    </p>
+                  </div>
+                </>
               ) : (
                 <div className="flex items-start gap-3 rounded-2xl border border-rose-400/20 bg-rose-500/[0.06] p-5">
                   <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" strokeWidth={1.75} />

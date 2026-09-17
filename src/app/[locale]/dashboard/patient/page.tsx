@@ -54,26 +54,40 @@ export default async function PatientDashboardPage({ params }: { params: Promise
     .eq('patient_id', patientId)
     .order('created_at', { ascending: false });
 
-  const SCANS: ScanRecord[] = (casesData || []).map((c: any) => ({
-    id: c.id,
-    modality: 'derm', // default to derm since it's vision mostly
-    title: c.chief_complaint || 'Visual Assessment',
-    fileName: `scan_${c.id.substring(0, 5)}.jpg`,
-    bytesIn: 2_000_000,
-    bytesOut: 500_000,
-    status: c.status === 'pending' ? 'adjudication' : c.status,
-    confidence: c.confidence_score ? c.confidence_score : 0.85,
-    finding: c.ai_assessment || 'Pending AI assessment',
-    clinician: c.clinician ? { name: c.clinician.full_name, specialty: 'Clinician', initials: c.clinician.full_name.substring(0, 2).toUpperCase() } : undefined,
-    capturedAt: c.created_at,
-  }));
+  const SCANS: ScanRecord[] = (casesData || []).map((c: any) => {
+    let modality: import('@/lib/patient/types').ScanModality = 'text';
+    let isVision = false;
+    
+    if (c.chief_complaint?.startsWith('Visual scan:')) {
+      isVision = true;
+      if (c.chief_complaint.includes('face')) modality = 'face';
+      else if (c.chief_complaint.includes('eye')) modality = 'retina';
+      else modality = 'derm'; // skin
+    }
 
-  // Update SIGNALS translations
+    return {
+      id: c.id,
+      modality,
+      title: isVision ? c.chief_complaint : 'Symptom Triage',
+      status: c.status === 'pending' ? 'adjudication' : c.status,
+      confidence: c.confidence_score ? c.confidence_score : undefined,
+      finding: c.ai_assessment || 'Pending AI assessment',
+      clinician: c.clinician ? { name: c.clinician.full_name, specialty: 'Clinician', initials: c.clinician.full_name.substring(0, 2).toUpperCase() } : undefined,
+      capturedAt: c.created_at,
+    };
+  });
+
+  const openCasesCount = SCANS.filter(s => s.status !== 'verified').length;
+
   const SIGNALS_TL = [
-    { id: 'triage', label: t('triageTier', { default: 'Triage tier' }),  value: t('routine', { default: 'Routine' }), delta: t('stable14d', { default: 'Stable 14d' }), trend: 'flat', tone: 'emerald' },
-    { id: 'open',   label: t('openCases', { default: 'Open cases' }),   value: SCANS.filter(s => s.status !== 'verified').length.toString(), delta: t('awaitingMD', { default: 'Awaiting MD' }), trend: 'up', tone: 'amber' },
-    { id: 'saved',  label: t('dataSaved', { default: 'Data saved' }),   value: '96.4', unit: '%', delta: '18.2 MB -> 0.7 MB', trend: 'down', tone: 'indigo' },
-    { id: 'sync',   label: t('lastSync', { default: 'Last sync' }),    value: '2', unit: t('min', { default: 'min' }), delta: t('edgeNode', { default: 'Edge node FRA-1' }), trend: 'flat', tone: 'emerald' },
+    { 
+      id: 'open',   
+      label: t('openCases', { default: 'Open cases' }),   
+      value: openCasesCount.toString(), 
+      delta: t('awaitingMD', { default: 'Awaiting MD' }), 
+      trend: 'flat', 
+      tone: openCasesCount > 0 ? 'amber' : 'emerald' 
+    },
   ] as const;
 
   return (
@@ -88,7 +102,7 @@ export default async function PatientDashboardPage({ params }: { params: Promise
       />
 
       <NovaVoiceTriage patientId={patientId} />
-      <ManualSymptomInput />
+      <ManualSymptomInput patientId={patientId} />
       <EdgeUploadZone patientId={patientId} />
       <AnalysisResultsGrid scans={SCANS} />
     </div>

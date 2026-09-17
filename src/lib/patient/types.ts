@@ -1,6 +1,6 @@
 // src/lib/patient/types.ts
 
-export type ScanModality = 'xray' | 'derm' | 'ct' | 'mri' | 'retina' | 'ecg';
+export type ScanModality = 'xray' | 'derm' | 'ct' | 'mri' | 'retina' | 'ecg' | 'voice' | 'text' | 'face';
 
 export type UploadStatus =
   | 'compressing'   // running through the edge codec
@@ -15,11 +15,11 @@ export type ScanRecord = {
   id: string;
   modality: ScanModality;
   title: string;
-  fileName: string;
+  fileName?: string;
   /** Original capture size in bytes (pre-compression). */
-  bytesIn: number;
+  bytesIn?: number;
   /** Post-edge-compression payload size in bytes. */
-  bytesOut: number;
+  bytesOut?: number;
   status: UploadStatus;
   /** 0..1 — transfer or inference progress. */
   progress?: number;
