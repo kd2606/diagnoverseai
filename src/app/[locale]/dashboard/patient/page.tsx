@@ -87,7 +87,7 @@ export default async function PatientDashboardPage({ params }: { params: Promise
         mrn="MRN-884120" 
       />
 
-      <NovaVoiceTriage />
+      <NovaVoiceTriage patientId={patientId} />
       <ManualSymptomInput />
       <EdgeUploadZone patientId={patientId} />
       <AnalysisResultsGrid scans={SCANS} />
