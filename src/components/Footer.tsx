@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Activity, ShieldCheck } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
@@ -30,6 +31,9 @@ const COLUMNS = [
 ];
 
 export function Footer() {
+  const params = useParams();
+  const locale = params?.locale as string || 'en';
+
   return (
     <footer className="relative overflow-hidden border-t border-white/[0.05]">
       {/* Ambient floor glow */}
@@ -47,7 +51,7 @@ export function Footer() {
           {/* Brand block */}
           <Reveal className="md:col-span-5">
             <div>
-              <Link href="/" className="flex items-center gap-2.5">
+              <Link href={`/${locale}`} className="flex items-center gap-2.5">
                 <span className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-gradient-to-br from-indigo-500/25 to-blue-600/10">
                   <Activity className="h-[18px] w-[18px] text-indigo-300" strokeWidth={2.2} />
                 </span>
@@ -83,7 +87,7 @@ export function Footer() {
                     {col.links.map((link) => (
                       <li key={link.label}>
                         <Link
-                          href={link.href}
+                          href={link.href.startsWith('#') ? link.href : `/${locale}${link.href}`}
                           className="group inline-flex items-center text-[14px] tracking-tight text-white/55 transition-colors duration-300 hover:text-white"
                         >
                           <span className="relative">
