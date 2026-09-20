@@ -138,7 +138,8 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
       }],
       config: { responseMimeType: 'application/json', responseJsonSchema: skinClassifierSchema }
     });
-    const parsedClass = JSON.parse(classifyRes.text || '{}');
+    const cleanClassText = classifyRes.text ? classifyRes.text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim() : '{}';
+    const parsedClass = JSON.parse(cleanClassText);
     activeCategory = (parsedClass.category || 'LESION_MOLE') as ScanCategory;
     if (activeCategory === 'UNKNOWN') activeCategory = 'LESION_MOLE';
   } else if (mode === 'face') {
@@ -177,7 +178,8 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
     config: { responseMimeType: 'application/json', responseJsonSchema: schema }
   });
 
-  const data = JSON.parse(assessRes.text || '{}');
+  const cleanAssessText = assessRes.text ? assessRes.text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim() : '{}';
+  const data = JSON.parse(cleanAssessText);
   
   const severityLevel = data.severityLevel && [1, 2, 3].includes(data.severityLevel) ? data.severityLevel : 3;
   const severityMap: Record<number, Severity> = { 1: 'clear', 2: 'watch', 3: 'review' };
