@@ -577,7 +577,7 @@ export function FloatingChat() {
                                     await createTriageCase({
                                       patient_id: user?.uid || 'pat_8f3c19',
                                       chief_complaint: messages.filter(m => m.role === 'user').map(m => m.content).join(' '),
-                                      ai_assessment: msg.content
+                                      ai_diagnosis: msg.content
                                     });
                                     toast.success('Report sent to doctor');
                                   } catch (err) {

@@ -221,7 +221,7 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
     const { data: savedCase, error: insertError } = await (supabase as any).from('triage_cases').insert({
       patient_id: patientId,
       chief_complaint: `Visual scan: ${mode}`,
-      ai_assessment: JSON.stringify({ headline, findings }),
+      ai_diagnosis: JSON.stringify({ headline, findings }),
       icd10_code: data.icd10Category || null,
       confidence_score: 0.9,
       status: 'pending'

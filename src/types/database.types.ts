@@ -84,7 +84,7 @@ export type Database = {
           patient_id: string;
           clinician_id: string | null;
           chief_complaint: string;
-          ai_assessment: string | null;
+          ai_diagnosis: string | null;
           icd10_code: string | null;
           confidence_score: number | null;
           status: CaseStatus;
@@ -99,7 +99,7 @@ export type Database = {
           patient_id: string;
           clinician_id?: string | null;
           chief_complaint: string;
-          ai_assessment?: string | null;
+          ai_diagnosis?: string | null;
           icd10_code?: string | null;
           confidence_score?: number | null;
           status?: CaseStatus;

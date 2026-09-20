@@ -50,7 +50,7 @@ export async function submitVoiceTriage(
       .insert({
         patient_id: patientId,
         chief_complaint: transcript.slice(0, 500),
-        ai_assessment: data?.aiAssessment,
+        ai_diagnosis: data?.aiAssessment,
         icd10_code: data?.icd10,
         confidence_score: data?.confidence,
         triage_note: data?.triageNote,

@@ -71,7 +71,7 @@ export default async function PatientDashboardPage({ params }: { params: Promise
       title: isVision ? c.chief_complaint : 'Symptom Triage',
       status: c.status === 'pending' ? 'adjudication' : c.status,
       confidence: c.confidence_score ? c.confidence_score : undefined,
-      finding: c.ai_assessment || 'Pending AI assessment',
+      finding: c.ai_diagnosis || 'Pending AI assessment',
       clinician: c.clinician ? { name: c.clinician.full_name, specialty: 'Clinician', initials: c.clinician.full_name.substring(0, 2).toUpperCase() } : undefined,
       capturedAt: c.created_at,
     };

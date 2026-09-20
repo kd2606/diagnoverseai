@@ -140,7 +140,7 @@ function mapQueueRow(row: any): TriageQueueItem {
     age: row.patient_age,
     sex: row.patient_sex,
     chiefComplaint: row.chief_complaint,
-    aiAssessment: row.ai_assessment,
+    aiAssessment: row.ai_diagnosis,
     icd10Code: row.icd10_code,
     confidence,
     confidencePct: confidence === null ? 0 : Math.round(confidence * 100),
@@ -268,7 +268,7 @@ export async function adjudicateCase(
     const { data: existing, error: readError } = await (supabase as any)
       .from('triage_cases')
       .select(
-        'id, status, clinician_id, triage_note, ai_assessment, icd10_code, confidence_score',
+        'id, status, clinician_id, triage_note, ai_diagnosis, icd10_code, confidence_score',
       )
       .eq('id', input.caseId)
       .maybeSingle();
@@ -315,7 +315,7 @@ export async function adjudicateCase(
 
     const summaryParts = [
       `Case ${input.caseId.slice(0, 8)} adjudicated ${previousStatus} → ${input.status}`,
-      `AI impression: ${existing.ai_assessment ?? 'none'}${
+      `AI impression: ${existing.ai_diagnosis ?? 'none'}${
         existing.icd10_code ? ` (${existing.icd10_code})` : ''
       } @ ${confidenceLabel} confidence`,
       actionType === 'override'
@@ -485,7 +485,7 @@ export async function getPatientPanel(): Promise<
 export async function createTriageCase(data: {
   patient_id: string;
   chief_complaint: string;
-  ai_assessment?: string;
+  ai_diagnosis?: string;
 }) {
   const supabase = await createClient();
   const { error } = await (supabase as any)
@@ -493,7 +493,7 @@ export async function createTriageCase(data: {
     .insert({
       patient_id: data.patient_id,
       chief_complaint: data.chief_complaint,
-      ai_assessment: data.ai_assessment || null,
+      ai_diagnosis: data.ai_diagnosis || null,
       status: 'pending'
     });
 
