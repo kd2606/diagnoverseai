@@ -218,6 +218,17 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
   // STEP 3: Save to Vault (triage_cases)
   let savedId = "";
   try {
+    // Lazily ensure a parent 'patients' record exists to satisfy foreign key constraints.
+    // Uses the authenticated client securely scoped to the current user.
+    await (supabase as any).from('patients').upsert({
+      id: patientId, // patientId is safely pulled from user.id
+      profile_id: patientId,
+      mrn: `MRN-${patientId.substring(0, 8)}`,
+      age: 30,
+      sex: 'unknown',
+      chief_complaint: 'Self-triage auto-provisioned'
+    }, { onConflict: 'id' });
+
     const { data: savedCase, error: insertError } = await (supabase as any).from('triage_cases').insert({
       patient_id: patientId,
       chief_complaint: `Visual scan: ${mode}`,

@@ -53,6 +53,17 @@ export async function submitVoiceTriage(
 
   /* ---------- Step 2: Vault Insert ---------- */
   try {
+    // Lazily ensure a parent 'patients' record exists to satisfy foreign key constraints.
+    // We use the authenticated client to respect RLS and strictly bind to the user's session ID.
+    await (supabase as any).from('patients').upsert({
+      id: authoritativePatientId,
+      profile_id: authoritativePatientId,
+      mrn: `MRN-${authoritativePatientId.substring(0, 8)}`,
+      age: 30,
+      sex: 'unknown',
+      chief_complaint: 'Self-triage auto-provisioned'
+    }, { onConflict: 'id' });
+
     const { data: savedCase, error: insertError } = await (supabase as any)
       .from('triage_cases')
       .insert({
