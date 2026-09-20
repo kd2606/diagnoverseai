@@ -54,7 +54,7 @@ export async function submitVoiceTriage(
 
   /* ---------- Step 2: Vault Insert ---------- */
   try {
-    const { data: savedCase, error: insertError } = await supabase
+    const { data: savedCase, error: insertError } = await (supabase as any)
       .from('triage_cases')
       .insert({
         patient_id: authoritativePatientId,
