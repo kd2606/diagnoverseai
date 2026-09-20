@@ -234,13 +234,13 @@ export function NovaVoiceTriage({ patientId }: { patientId: string }) {
 
   // Derive clinical guidance from the AI result
   const guidance = useMemo(() => {
-    if (!triageResult?.ok) return null;
+    if (!triageResult?.success) return null;
     const { data } = triageResult;
     const severity = confidenceToSeverity(data.confidence, data.recommendedSpecialty);
     return getVoiceTriageGuidance(data.recommendedSpecialty, severity);
   }, [triageResult]);
 
-  const showResults = triageResult?.ok && !isPending;
+  const showResults = triageResult?.success && !isPending;
 
   return (
     <motion.section
@@ -376,13 +376,15 @@ export function NovaVoiceTriage({ patientId }: { patientId: string }) {
                 <motion.p key="error" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="font-mono text-[12px] text-rose-300/85">
                   Microphone unavailable · {error}. You can still upload a scan or type in Clinical Records.
                 </motion.p>
-              ) : triageResult && !triageResult.ok && !isPending ? (
+              ) : triageResult && !triageResult.success && !isPending ? (
                 <motion.div key="ai-error" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   className="flex items-start gap-3 rounded-2xl border border-rose-400/20 bg-rose-500/[0.06] p-5"
                 >
                   <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" strokeWidth={1.75} />
                   <div>
-                    <p className="text-[14px] font-medium text-rose-200">{triageResult.error}</p>
+                    <p className="text-[14px] font-medium text-rose-200">
+                      {triageResult.error === 'INCOMPLETE_INPUT' ? 'Incomplete Details' : triageResult.error}
+                    </p>
                     <p className="mt-1 text-[13px] text-white/50">{triageResult.message}</p>
                   </div>
                 </motion.div>
@@ -401,7 +403,7 @@ export function NovaVoiceTriage({ patientId }: { patientId: string }) {
 
           {/* ---- AI Results ---- */}
           <AnimatePresence>
-            {showResults && triageResult.ok && (
+            {showResults && triageResult.success && (
               <motion.div
                 key="results"
                 initial={{ opacity: 0, height: 0 }}
@@ -409,7 +411,7 @@ export function NovaVoiceTriage({ patientId }: { patientId: string }) {
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-6 overflow-hidden"
               >
-                <TriageResultCard data={triageResult.data} />
+                <TriageResultCard data={triageResult.data!} />
 
                 {/* Clinical Next Steps — hardcoded safe text from matrix */}
                 {guidance && (
@@ -432,7 +434,7 @@ export function NovaVoiceTriage({ patientId }: { patientId: string }) {
                         </div>
                       ) : (
                         <button
-                          onClick={() => handleEscalate(triageResult.caseId)}
+                          onClick={() => handleEscalate(triageResult.caseId!)}
                           disabled={escalating}
                           className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-rose-500/10 px-5 py-2.5 text-sm font-medium text-rose-400 transition-all hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500/50 disabled:opacity-50"
                         >
@@ -512,3 +514,4 @@ export function NovaVoiceTriage({ patientId }: { patientId: string }) {
     </motion.section>
   );
 }
+

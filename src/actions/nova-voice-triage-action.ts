@@ -1,7 +1,7 @@
 'use server';
 
 import { generateClinicalTriage } from '@/actions/nova-inference';
-import type { ClinicalTriageReport, TriageErrorCode } from '@/actions/nova-inference';
+import type { ClinicalTriageReport } from '@/actions/nova-inference';
 import { createClient } from '@/lib/supabase/server';
 
 /* ------------------------------------------------------------------ */
@@ -10,12 +10,12 @@ import { createClient } from '@/lib/supabase/server';
 
 export type VoiceTriageResult =
   | {
-      ok: true;
+      success: true;
       caseId: string;
       data: ClinicalTriageReport;
       meta: { model: string; latencyMs: number };
     }
-  | { ok: false; error: TriageErrorCode | 'DB_WRITE_FAILED'; message: string };
+  | { success: false; error: string; message: string };
 
 /* ------------------------------------------------------------------ */
 /* Server Action                                                       */
@@ -35,8 +35,8 @@ export async function submitVoiceTriage(
   /* ---------- Step 1: AI Inference ---------- */
   const aiResult = await generateClinicalTriage(transcript);
 
-  if (!aiResult.ok) {
-    return aiResult;
+  if (!aiResult.success) {
+    return aiResult as any;
   }
 
   const { data, meta } = aiResult;
@@ -50,12 +50,12 @@ export async function submitVoiceTriage(
       .insert({
         patient_id: patientId,
         chief_complaint: transcript.slice(0, 500),
-        ai_assessment: data.aiAssessment,
-        icd10_code: data.icd10,
-        confidence_score: data.confidence,
-        triage_note: data.triageNote,
-        reasoning: JSON.stringify(data.reasoning),
-        differentials: JSON.stringify(data.differentials),
+        ai_assessment: data?.aiAssessment,
+        icd10_code: data?.icd10,
+        confidence_score: data?.confidence,
+        triage_note: data?.triageNote,
+        reasoning: JSON.stringify(data?.reasoning),
+        differentials: JSON.stringify(data?.differentials),
         status: 'pending',
       })
       .select('id')
@@ -67,17 +67,17 @@ export async function submitVoiceTriage(
         hint: insertError.hint,
       });
       return {
-        ok: false,
+        success: false,
         error: 'DB_WRITE_FAILED',
         message: 'Failed to save triage record to the clinical vault. Please try again.',
       };
     }
 
-    return { ok: true, caseId: savedCase.id, data, meta };
+    return { success: true, caseId: savedCase.id, data: data as ClinicalTriageReport, meta: meta! };
   } catch (err) {
     console.error('[voice-triage] unexpected DB error', err);
     return {
-      ok: false,
+      success: false,
       error: 'DB_WRITE_FAILED',
       message: 'Failed to save triage record to the clinical vault. Please try again.',
     };

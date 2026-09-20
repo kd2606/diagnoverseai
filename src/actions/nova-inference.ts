@@ -9,6 +9,12 @@ import { z } from 'zod';
 /* ------------------------------------------------------------------ */
 
 export interface ClinicalTriageReport {
+  primary_symptom: string;
+  duration?: string | null;
+  onset?: string | null;
+  aggravating_factors?: string | null;
+  severityLevel?: string | null;
+
   aiAssessment: string;
   icd10: string;
   confidence: number; // 0.0 - 1.0
@@ -18,18 +24,13 @@ export interface ClinicalTriageReport {
   recommendedSpecialty: string;
 }
 
-export type TriageResult =
-  | { ok: true; data: ClinicalTriageReport; meta: { model: string; latencyMs: number } }
-  | { ok: false; error: TriageErrorCode; message: string };
-
-export type TriageErrorCode =
-  | 'EMPTY_TRANSCRIPT'
-  | 'TRANSCRIPT_TOO_LONG'
-  | 'BLOCKED_BY_SAFETY'
-  | 'SCHEMA_VIOLATION'
-  | 'UPSTREAM_UNAVAILABLE'
-  | 'RATE_LIMITED'
-  | 'UNKNOWN';
+export type TriageResult = {
+  success: boolean;
+  data?: ClinicalTriageReport;
+  error?: string;
+  message?: string;
+  meta?: { model: string; latencyMs: number };
+};
 
 const MAX_TRANSCRIPT_CHARS = 24_000;
 
@@ -69,14 +70,20 @@ const differentialSchema = z.object({
 });
 
 const triageReportSchema = z.object({
-  aiAssessment: z.string().min(1),
-  icd10: z.string().min(1),
-  confidence: z.number().min(0).max(1),
-  triageNote: z.string().min(1),
-  reasoning: z.array(z.string().min(1)).min(2).max(3),
-  differentials: z.array(differentialSchema).length(3),
-  recommendedSpecialty: z.enum(SPECIALTIES),
-}) satisfies z.ZodType<ClinicalTriageReport>;
+  primary_symptom: z.string().min(1),
+  duration: z.string().nullable().optional().default("Not specified"),
+  onset: z.string().nullable().optional().default("Not specified"),
+  aggravating_factors: z.string().nullable().optional().default("Not specified"),
+  severityLevel: z.string().nullable().optional().default("Not specified"),
+
+  aiAssessment: z.string().default("Undetermined Assessment"),
+  icd10: z.string().default("R69"),
+  confidence: z.number().default(0),
+  triageNote: z.string().default("Insufficient information to provide a complete triage note."),
+  reasoning: z.array(z.string().min(1)).default(["Insufficient information provided."]),
+  differentials: z.array(differentialSchema).default([]),
+  recommendedSpecialty: z.enum(SPECIALTIES).default("Insufficient Information"),
+});
 
 /* ------------------------------------------------------------------ */
 /* 3. JSON Schema handed to Gemini                                     */
@@ -85,6 +92,26 @@ const triageReportSchema = z.object({
 const RESPONSE_JSON_SCHEMA = {
   type: Type.OBJECT,
   properties: {
+    primary_symptom: {
+      type: Type.STRING,
+      description: 'The main symptom or reason for the encounter.',
+    },
+    duration: {
+      type: Type.STRING,
+      description: 'Duration of the symptom.',
+    },
+    onset: {
+      type: Type.STRING,
+      description: 'Onset context of the symptom.',
+    },
+    aggravating_factors: {
+      type: Type.STRING,
+      description: 'Aggravating factors.',
+    },
+    severityLevel: {
+      type: Type.STRING,
+      description: 'Reported severity level.',
+    },
     aiAssessment: {
       type: Type.STRING,
       description:
@@ -135,16 +162,13 @@ const RESPONSE_JSON_SCHEMA = {
       description: 'Where this patient should be routed. Use "Insufficient Information" if the transcript is inadequate.',
     },
   },
-  required: [
-    'aiAssessment',
-    'icd10',
-    'confidence',
-    'triageNote',
-    'reasoning',
-    'differentials',
-    'recommendedSpecialty',
-  ],
+  required: ['primary_symptom'],
   propertyOrdering: [
+    'primary_symptom',
+    'duration',
+    'onset',
+    'aggravating_factors',
+    'severityLevel',
     'aiAssessment',
     'icd10',
     'confidence',
@@ -201,27 +225,32 @@ function getClient(): GoogleGenAI {
   return cachedClient;
 }
 
+function stripMarkdown(text: string): string {
+  if (!text) return text;
+  return text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim();
+}
+
 /* ------------------------------------------------------------------ */
 /* 6. The Server Action                                                */
 /* ------------------------------------------------------------------ */
 
 export async function generateClinicalTriage(transcript: string): Promise<TriageResult> {
-  const cleaned = typeof transcript === 'string' ? transcript.trim() : '';
-
-  if (cleaned.length < 12) {
-    return { ok: false, error: 'EMPTY_TRANSCRIPT', message: 'Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
-  }
-  if (cleaned.length > MAX_TRANSCRIPT_CHARS) {
-    return {
-      ok: false,
-      error: 'TRANSCRIPT_TOO_LONG',
-      message: `Transcript exceeds ${MAX_TRANSCRIPT_CHARS} characters. Segment the encounter before submitting.`,
-    };
-  }
-
-  const startedAt = Date.now();
-
   try {
+    const cleaned = typeof transcript === 'string' ? transcript.trim() : '';
+
+    if (cleaned.length < 12) {
+      return { success: false, error: 'INCOMPLETE_INPUT', message: 'Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
+    }
+    if (cleaned.length > MAX_TRANSCRIPT_CHARS) {
+      return {
+        success: false,
+        error: 'TRANSCRIPT_TOO_LONG',
+        message: `Transcript exceeds ${MAX_TRANSCRIPT_CHARS} characters. Segment the encounter before submitting.`,
+      };
+    }
+
+    const startedAt = Date.now();
+
     const ai = getClient();
 
     const response = await withRetry(() =>
@@ -252,19 +281,20 @@ export async function generateClinicalTriage(transcript: string): Promise<Triage
     if (!response.text) {
       if (finishReason && finishReason !== 'STOP') {
         return {
-          ok: false,
+          success: false,
           error: 'BLOCKED_BY_SAFETY',
           message: `Generation did not complete (finishReason: ${finishReason}).`,
         };
       }
-      return { ok: false, error: 'SCHEMA_VIOLATION', message: 'Model returned an empty response.' };
+      return { success: false, error: 'SCHEMA_VIOLATION', message: 'Model returned an empty response.' };
     }
 
     let parsed: unknown;
     try {
-      parsed = JSON.parse(response.text);
+      const cleanJson = stripMarkdown(response.text);
+      parsed = JSON.parse(cleanJson);
     } catch {
-      return { ok: false, error: 'SCHEMA_VIOLATION', message: 'Model response was not parseable JSON.' };
+      return { success: false, error: 'SCHEMA_VIOLATION', message: 'Model response was not parseable JSON.' };
     }
 
     const validated = triageReportSchema.safeParse(parsed);
@@ -275,15 +305,15 @@ export async function generateClinicalTriage(transcript: string): Promise<Triage
         issues: validated.error.issues.map((i) => ({ path: i.path.join('.'), code: i.code })),
       });
       return {
-        ok: false,
-        error: 'SCHEMA_VIOLATION',
-        message: 'Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).',
+        success: false,
+        error: 'INCOMPLETE_INPUT',
+        message: 'Please describe your symptoms in a bit more detail.',
       };
     }
 
     const data = normalize(validated.data);
 
-    return { ok: true, data, meta: { model: MODEL_ID, latencyMs: Date.now() - startedAt } };
+    return { success: true, data, meta: { model: MODEL_ID, latencyMs: Date.now() - startedAt } };
   } catch (err) {
     console.error("[TRIAGE_FATAL_ERROR]", err);
     return toErrorResult(err);
@@ -326,10 +356,11 @@ function toErrorResult(err: unknown): TriageResult {
   if (err instanceof ApiError) {
     console.error('[nova-inference] upstream error', { name: err.name, status: err.status });
     if (err.status === 429) {
-      return { ok: false, error: 'RATE_LIMITED', message: 'Inference quota exceeded. Retry shortly.' };
+      return { success: false, error: 'RATE_LIMITED', message: 'Inference quota exceeded. Retry shortly.' };
     }
-    return { ok: false, error: 'UPSTREAM_UNAVAILABLE', message: 'The inference service is unavailable.' };
+    return { success: false, error: 'UPSTREAM_UNAVAILABLE', message: 'The inference service is unavailable.' };
   }
   console.error('[nova-inference] unexpected error', err instanceof Error ? err.name : 'unknown');
-  return { ok: false, error: 'UNKNOWN', message: 'Triage generation failed. Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
+  return { success: false, error: 'UNKNOWN', message: 'Triage generation failed. Please describe your symptoms in a bit more detail (e.g., how long have you had the cough?).' };
 }
+

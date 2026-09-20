@@ -163,7 +163,7 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
 
   // Derive clinical guidance from the AI result
   const guidance = useMemo(() => {
-    if (!result?.ok) return null;
+    if (!result?.success) return null;
     const { data } = result;
     const severity = confidenceToSeverity(data.confidence, data.recommendedSpecialty);
     return getVoiceTriageGuidance(data.recommendedSpecialty, severity);
@@ -211,7 +211,7 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Or type your symptoms manually here..."
-            disabled={isPending || (result?.ok === true)}
+            disabled={isPending || (result?.success === true)}
             rows={4}
             className={cn(
               'w-full resize-none rounded-2xl border bg-white/[0.03] px-5 py-4 text-[15px] leading-relaxed text-white/90 placeholder:text-white/25',
@@ -238,7 +238,7 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
 
         {/* Actions */}
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          {(!result?.ok) && (
+          {(!result?.success) && (
             <button
               type="button"
               onClick={handleSubmit}
@@ -283,9 +283,9 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
               exit={{ opacity: 0, height: 0 }}
               className="mt-8 overflow-hidden"
             >
-              {result.ok ? (
+              {result.success ? (
                 <>
-                  <TriageResultCard data={result.data} />
+                  <TriageResultCard data={result.data!} />
                   
                   {/* Clinical Next Steps */}
                   {guidance && (
@@ -307,7 +307,7 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
                           </div>
                         ) : (
                           <button
-                            onClick={() => handleEscalate(result.caseId)}
+                            onClick={() => handleEscalate(result.caseId!)}
                             disabled={escalating}
                             className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-rose-500/10 px-5 py-2.5 text-sm font-medium text-rose-400 transition-all hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500/50 disabled:opacity-50"
                           >
@@ -342,7 +342,9 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
                 <div className="flex items-start gap-3 rounded-2xl border border-rose-400/20 bg-rose-500/[0.06] p-5">
                   <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" strokeWidth={1.75} />
                   <div>
-                    <p className="text-[14px] font-medium text-rose-200">{result.error}</p>
+                    <p className="text-[14px] font-medium text-rose-200">
+                      {result.error === 'INCOMPLETE_INPUT' ? 'Incomplete Details' : result.error}
+                    </p>
                     <p className="mt-1 text-[13px] text-white/50">{result.message}</p>
                   </div>
                 </div>
@@ -354,3 +356,4 @@ export function ManualSymptomInput({ patientId }: { patientId: string }) {
     </motion.section>
   );
 }
+
