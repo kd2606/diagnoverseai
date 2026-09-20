@@ -2,7 +2,7 @@
 
 import { GoogleGenAI, Type } from '@google/genai';
 
-const MODEL_ID = process.env.NOVA_GEMINI_MODEL ?? 'gemini-3.8-flash';
+const MODEL_ID = process.env.NOVA_GEMINI_MODEL ?? 'gemini-1.5-flash-8b';
 
 function getClient(): GoogleGenAI {
   const apiKey = process.env.GEMINI_API_KEY;
