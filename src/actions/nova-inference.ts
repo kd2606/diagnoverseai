@@ -202,7 +202,7 @@ Context: Rural users will provide sparse, comma-separated keywords. You MUST acc
 /* 5. Client                                                           */
 /* ------------------------------------------------------------------ */
 
-const MODEL_ID = process.env.NOVA_GEMINI_MODEL ?? 'gemini-1.5-flash-8b';
+const MODEL_ID = process.env.NOVA_GEMINI_MODEL ?? 'gemini-1.5-pro';
 
 let cachedClient: GoogleGenAI | null = null;
 
