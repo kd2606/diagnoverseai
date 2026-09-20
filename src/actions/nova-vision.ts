@@ -92,6 +92,7 @@ export type Finding = { label: string; confidence: number; note: string };
 export type Severity = "clear" | "watch" | "review";
 
 import { createClient } from '@/lib/supabase/server';
+import { ensurePatientRecord } from '@/lib/patient-provisioning';
 
 export type VisionResult = {
   id: string; // The saved case ID
@@ -219,15 +220,8 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
   let savedId = "";
   try {
     // Lazily ensure a parent 'patients' record exists to satisfy foreign key constraints.
-    // Uses the authenticated client securely scoped to the current user.
-    await (supabase as any).from('patients').upsert({
-      id: patientId, // patientId is safely pulled from user.id
-      profile_id: patientId,
-      mrn: `MRN-${patientId.substring(0, 8)}`,
-      age: 30,
-      sex: 'unknown',
-      chief_complaint: 'Self-triage auto-provisioned'
-    }, { onConflict: 'id' });
+    // We delegate to an isolated provisioning service to keep the triage action strictly RLS-bound.
+    await ensurePatientRecord(patientId);
 
     const { data: savedCase, error: insertError } = await (supabase as any).from('triage_cases').insert({
       patient_id: patientId,

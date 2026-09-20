@@ -3,6 +3,7 @@
 import { generateClinicalTriage } from '@/actions/nova-inference';
 import type { ClinicalTriageReport } from '@/actions/nova-inference';
 import { createClient } from '@/lib/supabase/server';
+import { ensurePatientRecord } from '@/lib/patient-provisioning';
 
 /* ------------------------------------------------------------------ */
 /* Contract                                                            */
@@ -54,15 +55,8 @@ export async function submitVoiceTriage(
   /* ---------- Step 2: Vault Insert ---------- */
   try {
     // Lazily ensure a parent 'patients' record exists to satisfy foreign key constraints.
-    // We use the authenticated client to respect RLS and strictly bind to the user's session ID.
-    await (supabase as any).from('patients').upsert({
-      id: authoritativePatientId,
-      profile_id: authoritativePatientId,
-      mrn: `MRN-${authoritativePatientId.substring(0, 8)}`,
-      age: 30,
-      sex: 'unknown',
-      chief_complaint: 'Self-triage auto-provisioned'
-    }, { onConflict: 'id' });
+    // We delegate to an isolated provisioning service to keep the triage action strictly RLS-bound.
+    await ensurePatientRecord(authoritativePatientId);
 
     const { data: savedCase, error: insertError } = await (supabase as any)
       .from('triage_cases')
@@ -89,7 +83,7 @@ export async function submitVoiceTriage(
       return {
         success: false,
         error: 'DB_WRITE_FAILED',
-        message: 'Failed to save triage record to the clinical vault. Please try again.',
+        message: `Failed to save triage record to the clinical vault. DB Error: ${insertError.message} (Code: ${insertError.code})`,
       };
     }
 
