@@ -474,8 +474,13 @@ export default function UnifiedScannerPage() {
                         onClick={async () => {
                           if (!result.id) return;
                           try {
-                            await markForAdjudication(result.id);
-                            alert('Sent to Clinician Command Center.');
+                            const res = await markForAdjudication(result.id);
+                            if (res.success) {
+                              alert('Sent to Clinician Command Center.');
+                            } else {
+                              console.error(res.error);
+                              alert('Failed to send to Clinician: ' + res.error);
+                            }
                           } catch (err) {
                             console.error(err);
                             alert('Failed to send to Clinician.');

@@ -10,7 +10,7 @@ export async function markForAdjudication(scanId: string) {
     .eq('id', scanId);
 
   if (error) {
-    throw new Error(error.message);
+    return { success: false, error: error.message };
   }
   return { success: true };
 }
