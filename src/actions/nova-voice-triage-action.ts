@@ -76,6 +76,7 @@ export async function submitVoiceTriage(
     return { success: true, caseId: savedCase.id, data: data as ClinicalTriageReport, meta: meta! };
   } catch (err) {
     console.error('[voice-triage] unexpected DB error', err);
+    console.error("SERVER_ACTION_ERROR:", err);
     return {
       success: false,
       error: 'DB_WRITE_FAILED',

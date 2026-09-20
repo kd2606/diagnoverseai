@@ -279,6 +279,8 @@ export async function generateClinicalTriage(transcript: string): Promise<Triage
 
     const candidate = response.candidates?.[0];
     const finishReason = candidate?.finishReason;
+    
+    console.log("RAW_AI_OUTPUT:", response.text);
 
     if (!response.text) {
       if (finishReason && finishReason !== 'STOP') {
@@ -318,6 +320,7 @@ export async function generateClinicalTriage(transcript: string): Promise<Triage
     return { success: true, data, meta: { model: MODEL_ID, latencyMs: Date.now() - startedAt } };
   } catch (err) {
     console.error("[TRIAGE_FATAL_ERROR]", err);
+    console.error("SERVER_ACTION_ERROR:", err);
     return toErrorResult(err);
   }
 }
