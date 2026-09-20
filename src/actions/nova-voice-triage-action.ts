@@ -3,7 +3,7 @@
 import { generateClinicalTriage } from '@/actions/nova-inference';
 import type { ClinicalTriageReport } from '@/actions/nova-inference';
 import { createClient } from '@/lib/supabase/server';
-import { ensurePatientRecord } from '@/lib/patient-provisioning';
+import { ensurePatientRecord, secureInsertTriageCase } from '@/lib/patient-provisioning';
 
 /* ------------------------------------------------------------------ */
 /* Contract                                                            */
@@ -58,9 +58,7 @@ export async function submitVoiceTriage(
     // We delegate to an isolated provisioning service to keep the triage action strictly RLS-bound.
     await ensurePatientRecord(authoritativePatientId);
 
-    const { data: savedCase, error: insertError } = await (supabase as any)
-      .from('triage_cases')
-      .insert({
+    const { data: savedCase, error: insertError } = await secureInsertTriageCase({
         patient_id: authoritativePatientId,
         chief_complaint: transcript.slice(0, 500),
         ai_diagnosis: data?.aiAssessment,
@@ -70,9 +68,7 @@ export async function submitVoiceTriage(
         reasoning: JSON.stringify(data?.reasoning),
         differentials: JSON.stringify(data?.differentials),
         status: 'pending',
-      })
-      .select('id')
-      .single();
+      });
 
     if (insertError) {
       console.error("SUPABASE_INSERT_ERROR:", insertError);

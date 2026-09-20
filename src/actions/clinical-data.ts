@@ -482,7 +482,7 @@ export async function getPatientPanel(): Promise<
     return fail(safeError('Unable to load patient panel', err));
   }
 }
-import { ensurePatientRecord } from '@/lib/patient-provisioning';
+import { ensurePatientRecord, secureInsertTriageCase } from '@/lib/patient-provisioning';
 
 export async function createTriageCase(data: {
   patient_id: string;
@@ -494,9 +494,7 @@ export async function createTriageCase(data: {
   try {
     await ensurePatientRecord(data.patient_id);
     
-    const { error } = await (supabase as any)
-      .from('triage_cases')
-      .insert({
+    const { error } = await secureInsertTriageCase({
         patient_id: data.patient_id,
         chief_complaint: data.chief_complaint,
         ai_diagnosis: data.ai_diagnosis || null,

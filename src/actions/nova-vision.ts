@@ -92,7 +92,7 @@ export type Finding = { label: string; confidence: number; note: string };
 export type Severity = "clear" | "watch" | "review";
 
 import { createClient } from '@/lib/supabase/server';
-import { ensurePatientRecord } from '@/lib/patient-provisioning';
+import { ensurePatientRecord, secureInsertTriageCase } from '@/lib/patient-provisioning';
 
 export type VisionResult = {
   id: string; // The saved case ID
@@ -259,14 +259,14 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
     // We delegate to an isolated provisioning service to keep the triage action strictly RLS-bound.
     await ensurePatientRecord(patientId);
 
-    const { data: savedCase, error: insertError } = await (supabase as any).from('triage_cases').insert({
+    const { data: savedCase, error: insertError } = await secureInsertTriageCase({
       patient_id: patientId,
       chief_complaint: `Visual scan: ${mode}`,
       ai_diagnosis: JSON.stringify({ headline, findings }),
       icd10_code: data.icd10Category || null,
       confidence_score: 0.9,
       status: 'pending'
-    }).select('id').single();
+    });
 
     if (insertError) {
       throw insertError;
