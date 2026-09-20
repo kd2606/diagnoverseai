@@ -2,7 +2,7 @@
 
 import { generateClinicalTriage } from '@/actions/nova-inference';
 import type { ClinicalTriageReport } from '@/actions/nova-inference';
-import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 /* ------------------------------------------------------------------ */
 /* Contract                                                            */
@@ -43,7 +43,7 @@ export async function submitVoiceTriage(
 
   /* ---------- Step 2: Vault Insert ---------- */
   try {
-    const supabase = await createClient();
+    const supabase = getSupabaseAdmin();
 
     const { data: savedCase, error: insertError } = await (supabase as any)
       .from('triage_cases')
@@ -62,6 +62,7 @@ export async function submitVoiceTriage(
       .single();
 
     if (insertError) {
+      console.error("SUPABASE_INSERT_ERROR:", insertError);
       console.error('[voice-triage] vault insert failed', {
         code: insertError.code,
         hint: insertError.hint,
