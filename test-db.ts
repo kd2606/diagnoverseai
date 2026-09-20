@@ -11,14 +11,8 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PU
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function main() {
-  console.log("Fetching schema...");
-  const { data, error } = await supabase.from('triage_cases').select('*').limit(1);
-
-  if (error) {
-    console.error("DB Error:", error);
-  } else {
-    console.log("Columns:", data && data.length > 0 ? Object.keys(data[0]) : "No rows, but query succeeded");
-  }
+  const { data } = await supabase.from('patients').select('id').limit(1);
+  console.log("Patient UUIDs:", data);
 }
 
 main();

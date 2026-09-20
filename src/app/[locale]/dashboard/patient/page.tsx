@@ -34,7 +34,7 @@ export default async function PatientDashboardPage({ params }: { params: Promise
   
   let firstName = "John";
   let fullName = "John Doe";
-  let patientId = "pat_8f3c19";
+  let patientId = "39bbb160-558e-4ab7-9b68-09ad472af4c6";
 
   if (user) {
     const { data } = await supabase.from('profiles').select('id, full_name').eq('id', user.id).single() as any;

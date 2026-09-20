@@ -575,7 +575,7 @@ export function FloatingChat() {
                                 onClick={async () => {
                                   try {
                                     await createTriageCase({
-                                      patient_id: user?.uid || 'pat_8f3c19',
+                                      patient_id: user?.uid || '39bbb160-558e-4ab7-9b68-09ad472af4c6',
                                       chief_complaint: messages.filter(m => m.role === 'user').map(m => m.content).join(' '),
                                       ai_diagnosis: msg.content
                                     });
