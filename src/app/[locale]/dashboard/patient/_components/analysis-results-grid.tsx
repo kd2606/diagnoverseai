@@ -205,6 +205,9 @@ function ScanCard({ scan, index }: { scan: ScanRecord; index: number }) {
 
             <button
               type="button"
+              onClick={() => {
+                alert(`REPORT DETAILS\n\nTitle: ${scan.title}\nStatus: ${status.label}\nFinding: ${scan.finding || 'Pending'}\nConfidence: ${typeof scan.confidence === 'number' ? (scan.confidence * 100).toFixed(1) + '%' : 'N/A'}`);
+              }}
               className="group/btn flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35 transition-colors hover:text-white/85"
             >
               Report

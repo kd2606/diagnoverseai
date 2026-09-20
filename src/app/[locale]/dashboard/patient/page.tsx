@@ -54,31 +54,6 @@ export default async function PatientDashboardPage({ params }: { params: Promise
     .eq('patient_id', patientId)
     .order('created_at', { ascending: false });
 
-  const MOCK_SCANS: ScanRecord[] = [
-    {
-      id: 'scn_01', modality: 'xray', title: 'Chest radiograph · PA view',
-      fileName: 'chest_pa_2026.heic', bytesIn: 8_594_432, bytesOut: 421_888,
-      status: 'uploading', progress: 0.64, chunk: { index: 11, total: 17 },
-      capturedAt: new Date(Date.now() - 0.15 * 3600000).toISOString(),
-    },
-    {
-      id: 'scn_02', modality: 'derm', title: 'Dermoscopy · left forearm lesion',
-      fileName: 'derm_forearm_L.jpg', bytesIn: 6_291_456, bytesOut: 312_320,
-      status: 'adjudication', confidence: 0.912,
-      finding: 'Asymmetric pigment network with irregular borders. Flagged for specialist review.',
-      clinician: { name: 'Dr. M. Kovač', specialty: 'Dermatology · Queued 12m', initials: 'MK' },
-      capturedAt: new Date(Date.now() - 3.4 * 3600000).toISOString(),
-    },
-    {
-      id: 'scn_03', modality: 'retina', title: 'Fundus photograph · right eye',
-      fileName: 'fundus_OD.png', bytesIn: 4_194_304, bytesOut: 268_288,
-      status: 'verified', confidence: 0.974,
-      finding: 'No referable diabetic retinopathy. Repeat screening in 12 months.',
-      clinician: { name: 'Dr. Kovač', specialty: 'Ophthalmology · Signed', initials: 'MK' },
-      capturedAt: new Date(Date.now() - 24 * 3600000).toISOString(),
-    }
-  ];
-
   const dbScans: ScanRecord[] = (casesData || []).map((c: any) => {
     let modality: import('@/lib/patient/types').ScanModality = 'text';
     let isVision = false;
@@ -102,7 +77,7 @@ export default async function PatientDashboardPage({ params }: { params: Promise
     };
   });
 
-  const SCANS: ScanRecord[] = [...dbScans, ...MOCK_SCANS];
+  const SCANS: ScanRecord[] = dbScans;
 
   const openCasesCount = SCANS.filter(s => s.status !== 'verified').length;
 
