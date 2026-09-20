@@ -1,7 +1,6 @@
 'use server';
 
 import { GoogleGenAI, Type } from '@google/genai';
-import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 const MODEL_ID = process.env.NOVA_GEMINI_MODEL ?? 'gemini-1.5-flash-8b';
 
@@ -219,7 +218,6 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
   // STEP 3: Save to Vault (triage_cases)
   let savedId = "";
   try {
-    const supabase = getSupabaseAdmin();
     const { data: savedCase, error: insertError } = await (supabase as any).from('triage_cases').insert({
       patient_id: patientId,
       chief_complaint: `Visual scan: ${mode}`,

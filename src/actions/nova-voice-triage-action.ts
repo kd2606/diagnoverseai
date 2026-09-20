@@ -2,7 +2,7 @@
 
 import { generateClinicalTriage } from '@/actions/nova-inference';
 import type { ClinicalTriageReport } from '@/actions/nova-inference';
-import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 
 /* ------------------------------------------------------------------ */
 /* Contract                                                            */
@@ -23,15 +23,25 @@ export type VoiceTriageResult =
 
 /**
  * End-to-end voice triage: AI inference → WORM vault insert.
- *
- * 1. Sends the transcript to `generateClinicalTriage` (Gemini structured output).
- * 2. On success, inserts the structured report into `triage_cases`.
- * 3. Returns the saved case ID so the frontend can reference it for escalation.
  */
 export async function submitVoiceTriage(
-  patientId: string,
+  patientId: string, // kept for signature compatibility, but we will override for security
   transcript: string,
 ): Promise<VoiceTriageResult> {
+  
+  const supabase = await createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.user) {
+    return {
+      success: false,
+      error: 'UNAUTHORIZED',
+      message: 'Strict Security: You must be logged in to save a triage record.',
+    };
+  }
+
+  const authoritativePatientId = session.user.id;
+
   /* ---------- Step 1: AI Inference ---------- */
   const aiResult = await generateClinicalTriage(transcript);
 
@@ -43,12 +53,10 @@ export async function submitVoiceTriage(
 
   /* ---------- Step 2: Vault Insert ---------- */
   try {
-    const supabase = getSupabaseAdmin();
-
     const { data: savedCase, error: insertError } = await (supabase as any)
       .from('triage_cases')
       .insert({
-        patient_id: patientId,
+        patient_id: authoritativePatientId,
         chief_complaint: transcript.slice(0, 500),
         ai_diagnosis: data?.aiAssessment,
         icd10_code: data?.icd10,
