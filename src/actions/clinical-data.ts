@@ -482,23 +482,34 @@ export async function getPatientPanel(): Promise<
     return fail(safeError('Unable to load patient panel', err));
   }
 }
+import { ensurePatientRecord } from '@/lib/patient-provisioning';
+
 export async function createTriageCase(data: {
   patient_id: string;
   chief_complaint: string;
   ai_diagnosis?: string;
 }) {
   const supabase = await createClient();
-  const { error } = await (supabase as any)
-    .from('triage_cases')
-    .insert({
-      patient_id: data.patient_id,
-      chief_complaint: data.chief_complaint,
-      ai_diagnosis: data.ai_diagnosis || null,
-      status: 'pending'
-    });
+  
+  try {
+    await ensurePatientRecord(data.patient_id);
+    
+    const { error } = await (supabase as any)
+      .from('triage_cases')
+      .insert({
+        patient_id: data.patient_id,
+        chief_complaint: data.chief_complaint,
+        ai_diagnosis: data.ai_diagnosis || null,
+        status: 'pending'
+      });
 
-  if (error) {
-    throw new Error(error.message);
+    if (error) {
+      console.error("createTriageCase error:", error);
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err) {
+    console.error("createTriageCase unexpected error:", err);
+    return { success: false, error: "Failed to create case" };
   }
-  return { success: true };
 }
