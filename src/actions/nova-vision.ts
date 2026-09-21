@@ -138,7 +138,7 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
             { inlineData }
           ]
         }],
-        config: { responseMimeType: 'application/json', responseJsonSchema: skinClassifierSchema }
+        config: { responseMimeType: 'application/json', responseJsonSchema: skinClassifierSchema, temperature: 0.0, topK: 1, topP: 0.1 }
       });
       const cleanClassText = classifyRes.text ? classifyRes.text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim() : '{}';
       const parsedClass = JSON.parse(cleanClassText);
@@ -158,21 +158,23 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
   let schema: any;
   let systemPrompt = "";
 
+  const skinPrompt = "You are a board-certified dermatologist and clinical diagnostician. Perform a strict morphological analysis of the provided skin image.\\n\\nMANDATORY RULES:\\n\\nNEVER use cosmetic terms like 'clear skin', 'glowing', or 'blemish'.\\n\\nLook explicitly for pathology: Erythema, comedones, papules, pustules, nodules, cysts, scaling, or hyperpigmentation.\\n\\nIf you see acne, classify its severity (mild/moderate/severe) based on lesion count and inflammation.\\n\\nBe brutally objective and clinically accurate. If lesions are present, report them strictly. Output an ICD-10 Category and a severity level from 1 to 3.";
+
   if (activeCategory === 'LESION_MOLE') {
     schema = lesionSchema;
-    systemPrompt = "You are a clinical AI. Analyze this mole/lesion using ABCDE metrics. Output an ICD-10 Category and a severity level from 1 (benign/clear) to 3 (needs review).";
+    systemPrompt = skinPrompt;
   } else if (activeCategory === 'RASH_INFLAMMATION') {
     schema = rashSchema;
-    systemPrompt = "You are a clinical AI. Analyze this rash/inflammation. Output an ICD-10 Category and a severity level from 1 (mild/clear) to 3 (severe/needs review).";
+    systemPrompt = skinPrompt;
   } else if (activeCategory === 'FACE') {
     schema = faceSchema;
     systemPrompt = "You are a clinical AI. Analyze this face for asymmetry, pallor, and periorbital swelling. Output an ICD-10 Category and a severity level from 1 (normal/clear) to 3 (abnormal/needs review).";
   } else if (activeCategory === 'EYE') {
     schema = eyeSchema;
-    systemPrompt = "You are a clinical AI. Analyze this eye for conjunctival redness, scleral yellowing, and pupil appearance. Output an ICD-10 Category and a severity level from 1 (normal/clear) to 3 (abnormal/needs review).";
+    systemPrompt = "You are an expert ophthalmologist. Perform a clinical assessment of the provided eye image. Look specifically for scleral icterus (jaundice), conjunctival injection (redness/pink eye), corneal opacity, or subconjunctival hemorrhage. Provide a strict medical observation without any generic wellness advice. Output an ICD-10 Category and a severity level from 1 to 3.";
   } else {
     schema = lesionSchema;
-    systemPrompt = "You are a clinical AI. Output an ICD-10 Category and a severity level from 1 to 3.";
+    systemPrompt = skinPrompt;
   }
 
   let cleanAssessText = '{}';
@@ -183,7 +185,7 @@ export async function processVisionScan(mode: ScanMode, base64DataUrl: string): 
         role: 'user',
         parts: [{ text: systemPrompt }, { inlineData }]
       }],
-      config: { responseMimeType: 'application/json', responseJsonSchema: schema }
+      config: { responseMimeType: 'application/json', responseJsonSchema: schema, temperature: 0.0, topK: 1, topP: 0.1 }
     });
     cleanAssessText = assessRes.text ? assessRes.text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim() : '{}';
   } catch (err) {
